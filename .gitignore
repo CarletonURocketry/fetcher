@@ -1,9 +1,11 @@
-# Prerequisites
-*.d
+# Documentation
+/docs/html/
+*.pinfo
 
 # Object files
 *.o
 *.ko
+/obj/
 *.obj
 *.elf
 
@@ -29,6 +31,7 @@
 *.dylib
 
 # Executables
+packager
 *.exe
 *.out
 *.app
@@ -41,6 +44,8 @@
 *.su
 *.idb
 *.pdb
+compile_commands.json
+.cache
 
 # Kernel Module Compile Results
 *.mod*
