@@ -5,11 +5,12 @@
 #include <stdlib.h>
 
 int main(int argc, char **argv) {
-    int c;
-    bool endless = false;
 
+    int c;                // Holder for choice
+    bool endless = false; // Flag for endless mode
     opterr = 0;
 
+    /* Get command line options. */
     while ((c = getopt(argc, argv, "e")) != -1)
         switch (c) {
         case 'e':
@@ -23,6 +24,7 @@ int main(int argc, char **argv) {
             exit(EXIT_FAILURE);
         }
 
+    /* Check to see if we also received the file argument after all the flags. */
     if (optind >= argc) {
         fputs("You must provide a file argument.", stderr);
         exit(EXIT_FAILURE);
