@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define BUFFER_SIZE 100
+
 int main(int argc, char **argv) {
 
     int c;                // Holder for choice
@@ -39,15 +41,15 @@ int main(int argc, char **argv) {
     }
 
     /* Loop over file to get data. */
-    uint8_t buffer[100];
+    uint8_t buffer[BUFFER_SIZE] = {0};
     for (;;) {
-        fread(&buffer, sizeof(uint8_t), 100, f);
-        fwrite(&buffer, sizeof(uint8_t), 100, stdout);
+        size_t items_read = fread(&buffer, sizeof(uint8_t), BUFFER_SIZE, f);
+        fwrite(&buffer, sizeof(uint8_t), items_read, stdout);
 
         // In endless mode, go back to the file start when we reach the end of the file
         if (feof(f)) {
             if (endless) {
-                fseek(f, 0, SEEK_SET);
+                rewind(f);
             } else {
                 return 0; // Otherwise complete
             }
