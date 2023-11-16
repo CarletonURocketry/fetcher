@@ -41,6 +41,9 @@ EXTRA_INCVPATH += $(PROJECT_ROOT)/src/include
 ### SOURCE FILES ###
 EXTRA_SRCVPATH += $(PROJECT_ROOT)/src
 
+### EXTRA LIBRARIES ###
+LIBS += i2c-master
+
 include $(MKFILES_ROOT)/qtargets.mk
 
 $(info VAR='$(SRCVPATH)')

@@ -1,4 +1,6 @@
+#include <fcntl.h>
 #include <getopt.h>
+#include <hw/i2c.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -14,7 +16,7 @@ int main(int argc, char **argv) {
     opterr = 0;
 
     /* Get command line options. */
-    while ((c = getopt(argc, argv, ":e:")) != -1)
+    while ((c = getopt(argc, argv, ":e:")) != -1) {
         switch (c) {
         case 'e':
             endless = true;
@@ -30,6 +32,17 @@ int main(int argc, char **argv) {
             fputs("Something went wrong. Please check 'use fetcher' to see example usage.", stderr);
             exit(EXIT_FAILURE);
         }
+    }
+
+    /* Open I2C. */
+    i2c_master_funcs_t masterf;
+
+    i2c_master_getfuncs(&masterf, sizeof(masterf));
+
+    char *device = "/dev/i2c1";
+    void *hdl = masterf.init(1, &device);
+
+    masterf.fini(hdl); // Free handle
 
     // Only read from a file if in endless mode
     if (endless) {
