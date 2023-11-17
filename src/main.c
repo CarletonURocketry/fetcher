@@ -1,3 +1,5 @@
+#include <devctl.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
 #include <hw/i2c.h>
@@ -5,9 +7,11 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 static bool endless = false; // Flag for endless mode
 static char *filename = NULL;
+static const i2c_addr_t alt_sensor = {.addr = 0x76, .fmt = I2C_ADDRFMT_7BIT};
 #define BUFFER_SIZE 100
 
 int main(int argc, char **argv) {
@@ -35,14 +39,41 @@ int main(int argc, char **argv) {
     }
 
     /* Open I2C. */
-    i2c_master_funcs_t masterf;
+    int bus = open("/dev/i2c1", O_RDWR);
+    uint32_t speed = I2C_SPEED_STANDARD;
+    printf("speed: %s\n", strerror(devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL)));
 
-    i2c_master_getfuncs(&masterf, sizeof(masterf));
+    i2c_driver_info_t info;
+    printf("Drv res: %s\n", strerror(devctl(bus, DCMD_I2C_DRIVER_INFO, &info, sizeof(info), NULL)));
+    printf("Driver info: %u, %u, %u\n", info.addr_mode, info.verbosity, info.speed_mode);
 
-    char *device = "/dev/i2c1";
-    void *hdl = masterf.init(1, &device);
+    /* Send request */
+    i2c_send_t send = {
+        .slave = alt_sensor,
+        .stop = 1,
+        .len = 1,
+    };
+    uint8_t command[sizeof(send) + 1] = {0};
+    memcpy(command, &send, sizeof(send));
+    command[sizeof(send)] = 0x48; // Conversion request command
+    int sent = devctl(bus, DCMD_I2C_SEND, command, sizeof(command), NULL);
+    printf("%s\n", strerror(sent));
 
-    masterf.fini(hdl); // Free handle
+    /* Read response. */
+    uint8_t buf[100] = {0};
+    i2c_recv_t receive = {.slave = alt_sensor, .len = sizeof(buf) - sizeof(receive), .stop = 1};
+    memcpy(buf, &receive, sizeof(receive));
+
+    int result = devctl(bus, DCMD_I2C_RECV, &buf, sizeof(buf), NULL);
+    printf("Return: %s, %d\n", strerror(result), result);
+
+    for (uint8_t i = 0; i < sizeof(receive); i++) {
+        printf("%x\n", buf[i]);
+    }
+    putchar('\n');
+    for (uint8_t i = sizeof(receive) - 1; i < 50; i++) {
+        printf("%x\n", buf[i]);
+    }
 
     // Only read from a file if in endless mode
     if (endless) {
