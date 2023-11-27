@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/dispatch.h>
 
 static bool endless = false; // Flag for endless mode
 static char *filename = NULL;
@@ -40,40 +41,27 @@ int main(int argc, char **argv) {
 
     /* Open I2C. */
     int bus = open("/dev/i2c1", O_RDWR);
-    uint32_t speed = I2C_SPEED_STANDARD;
-    printf("speed: %s\n", strerror(devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL)));
-
-    i2c_driver_info_t info;
-    printf("Drv res: %s\n", strerror(devctl(bus, DCMD_I2C_DRIVER_INFO, &info, sizeof(info), NULL)));
-    printf("Driver info: %u, %u, %u\n", info.addr_mode, info.verbosity, info.speed_mode);
-
-    /* Send request */
-    i2c_send_t send = {
-        .slave = alt_sensor,
-        .stop = 1,
-        .len = 1,
-    };
-    uint8_t command[sizeof(send) + 1] = {0};
-    memcpy(command, &send, sizeof(send));
-    command[sizeof(send)] = 0x48; // Conversion request command
-    int sent = devctl(bus, DCMD_I2C_SEND, command, sizeof(command), NULL);
-    printf("%s\n", strerror(sent));
-
-    /* Read response. */
-    uint8_t buf[100] = {0};
-    i2c_recv_t receive = {.slave = alt_sensor, .len = sizeof(buf) - sizeof(receive), .stop = 1};
-    memcpy(buf, &receive, sizeof(receive));
-
-    int result = devctl(bus, DCMD_I2C_RECV, &buf, sizeof(buf), NULL);
-    printf("Return: %s, %d\n", strerror(result), result);
-
-    for (uint8_t i = 0; i < sizeof(receive); i++) {
-        printf("%x\n", buf[i]);
+    if (bus < 0) {
+        fprintf(stderr, "Could not open I2C bus.\n");
+        exit(EXIT_FAILURE);
     }
-    putchar('\n');
-    for (uint8_t i = sizeof(receive) - 1; i < 50; i++) {
-        printf("%x\n", buf[i]);
+
+    /* Data for I2C sending and receiving */
+    typedef struct my_send_rcv_t {
+        i2c_sendrecv_t sendrcv;
+        uint8_t buf[4];
+    } MySendRcv;
+
+    // Attempt read
+    MySendRcv i2c_data = {.sendrcv = {.stop = 1, .slave = alt_sensor, .send_len = 1, .recv_len = 2}, .buf = {0}};
+    i2c_data.buf[0] = 0xA0;
+
+    errno_t result = devctl(bus, DCMD_I2C_SENDRECV, &i2c_data, sizeof(i2c_data), NULL);
+    if (result != EOK) {
+        fprintf(stderr, "Error while writing command I2C: %s\n", strerror(result));
+        exit(EXIT_FAILURE);
     }
+    printf("data: %x %x\n", i2c_data.buf[0], i2c_data.buf[1]);
 
     // Only read from a file if in endless mode
     if (endless) {
