@@ -52,16 +52,38 @@ int main(int argc, char **argv) {
         uint8_t buf[4];
     } MySendRcv;
 
-    // Attempt read
-    MySendRcv i2c_data = {.sendrcv = {.stop = 1, .slave = alt_sensor, .send_len = 1, .recv_len = 2}, .buf = {0}};
-    i2c_data.buf[0] = 0xA0;
+    /* Data for I2C sending */
+    typedef struct my_send_t {
+        i2c_send_t send;
+        uint8_t buf[4];
+    } MySend;
 
-    errno_t result = devctl(bus, DCMD_I2C_SENDRECV, &i2c_data, sizeof(i2c_data), NULL);
+    // Conversion command
+    MySend i2c_send_data = {
+        .send = {.stop = 1, .slave = alt_sensor, .len = 1},
+        .buf = {0},
+    };
+    i2c_send_data.buf[0] = 0x40; // Command to convert
+    errno_t result = devctl(bus, DCMD_I2C_SEND, &i2c_send_data, sizeof(i2c_send_data), NULL);
+    if (result != EOK) {
+        fprintf(stderr, "Could not request ADC conversion: %s\n", strerror(result));
+        exit(EXIT_FAILURE);
+    }
+    usleep(900); // Wait for conversion
+
+    // Attempt read
+    MySendRcv i2c_sendrcv_data = {.sendrcv = {.stop = 1, .slave = alt_sensor, .send_len = 1, .recv_len = 3},
+                                  .buf = {0}};
+    i2c_sendrcv_data.buf[0] = 0x00; // Command to read
+
+    result = devctl(bus, DCMD_I2C_SENDRECV, &i2c_sendrcv_data, sizeof(i2c_sendrcv_data), NULL);
     if (result != EOK) {
         fprintf(stderr, "Error while writing command I2C: %s\n", strerror(result));
         exit(EXIT_FAILURE);
     }
-    printf("data: %x %x\n", i2c_data.buf[0], i2c_data.buf[1]);
+    int32_t temperature = 0;
+    memcpy(&temperature, i2c_sendrcv_data.buf, 3);
+    printf("data: %x\n", temperature);
 
     // Only read from a file if in endless mode
     if (endless) {
