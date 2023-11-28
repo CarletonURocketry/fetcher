@@ -174,14 +174,40 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, ui
     double off = coefs[2] * pow(2, 16) + dt * coefs[4] / pow(2, 7);
     double sens = coefs[1] * pow(2, 15) + dt * coefs[3] / pow(2, 8);
 
+    double temperature = (2000 + ((dt * coefs[6]) / pow(2, 23)));
+
+    // Second order algorithm (only if high precision was chosen)
+    if (sensor->precision == PRECISION_HIGH) {
+        double t2 = 0;
+        double off2 = 0;
+        double sens2 = 0;
+
+        if (temperature < 20) {
+            t2 = (dt * dt) / pow(2, 31);
+            double temp_square = pow((temperature - 2000), 2);
+            off2 = (5 * temp_square) / 2;
+            sens2 = (5 * temp_square) / 4;
+
+            if (temperature < -15) {
+                temp_square = pow((temperature + 1500), 2);
+                off2 = off2 + 7 * temp_square;
+                sens2 = sens2 + 11 * temp_square / 2;
+            }
+        }
+
+        temperature -= t2;
+        off -= off2;
+        sens -= sens2;
+    }
+
     switch (tag) {
     case TAG_TEMPERATURE: {
-        float temperature = (2000 + ((dt * coefs[6]) / pow(2, 23))) / 100; // Degrees C
+        temperature /= 100; // Degrees C
         memcpy(buf, &temperature, sizeof(temperature));
         *nbytes = sizeof(temperature);
     } break;
     case TAG_PRESSURE: {
-        float pressure = (((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000; // kiloPascals
+        double pressure = (((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000; // kPa
         memcpy(buf, &pressure, sizeof(pressure));
         *nbytes = sizeof(pressure);
         break;
@@ -203,7 +229,7 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, ui
 void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
-    sensor->max_return_size = sizeof(float);
+    sensor->max_return_size = sizeof(double);
     sensor->tag_list = (SensorTagList){.tags = TAGS, .tag_count = sizeof(TAGS) / sizeof(SensorTag)};
     sensor->context.size = (NUM_COEFFICIENTS * sizeof(COEF_TYPE)); // Size of all calibration data
     sensor->open = &ms5611_open;

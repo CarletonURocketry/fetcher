@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
     // Read temperature and pressure data
     while (!endless) {
         uint8_t nbytes;
-        float data;
+        double data;
         errno_t read_res = ms5611.read(&ms5611, TAG_TEMPERATURE, (uint8_t *)&data, &nbytes);
         if (read_res != EOK) {
             fprintf(stderr, "Could not read MS5611 temp: %s\n", strerror(read_res));
