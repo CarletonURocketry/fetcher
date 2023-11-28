@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: Globals</title>
+<title>fetcher: SensorLocation Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -47,7 +47,6 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -69,13 +68,58 @@ $(function() {
 </div>
 </div>
 
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
+  <div class="headertitle"><div class="title">SensorLocation Struct Reference</div></div>
+</div><!--header-->
 <div class="contents">
-&#160;<ul>
-<li>main()&#160;:&#160;<a class="el" href="main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main.c</a></li>
-<li>memcpy_be()&#160;:&#160;<a class="el" href="sensor__api_8c.html#a75eceb540ea61058f80f337782cd64e7">sensor_api.c</a>, <a class="el" href="sensor__api_8h.html#a75eceb540ea61058f80f337782cd64e7">sensor_api.h</a></li>
-<li>ms5611_init()&#160;:&#160;<a class="el" href="ms5611_8c.html#aba9274ab1665fc5f5404b96b49860605">ms5611.c</a>, <a class="el" href="ms5611_8h.html#aba9274ab1665fc5f5404b96b49860605">ms5611.h</a></li>
-<li>senapi_strtag()&#160;:&#160;<a class="el" href="sensor__api_8c.html#ad781d6686bf76608e106d4a067c36e7e">sensor_api.c</a>, <a class="el" href="sensor__api_8h.html#ad781d6686bf76608e106d4a067c36e7e">sensor_api.h</a></li>
-<li>senapi_tag_unit()&#160;:&#160;<a class="el" href="sensor__api_8c.html#a8fa6b9dbc2a897ba5c3b88ea5afc65b3">sensor_api.c</a>, <a class="el" href="sensor__api_8h.html#a8fa6b9dbc2a897ba5c3b88ea5afc65b3">sensor_api.h</a></li>
+
+<p><code>#include &lt;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a19f80f6f28e1df846d58e58a89099b97"><td class="memItemLeft" align="right" valign="top">i2c_addr_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensorLocation.html#a19f80f6f28e1df846d58e58a89099b97">addr</a></td></tr>
+<tr class="separator:a19f80f6f28e1df846d58e58a89099b97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b86112a0ac8e1b3cf5f7ebcb1d10288"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensorLocation.html#a3b86112a0ac8e1b3cf5f7ebcb1d10288">bus</a></td></tr>
+<tr class="separator:a3b86112a0ac8e1b3cf5f7ebcb1d10288"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Provides an interface to describe the sensor location. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="a19f80f6f28e1df846d58e58a89099b97" name="a19f80f6f28e1df846d58e58a89099b97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19f80f6f28e1df846d58e58a89099b97">&#9670;&#160;</a></span>addr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">i2c_addr_t SensorLocation::addr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The address of the sensor on the bus. </p>
+
+</div>
+</div>
+<a id="a3b86112a0ac8e1b3cf5f7ebcb1d10288" name="a3b86112a0ac8e1b3cf5f7ebcb1d10288"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b86112a0ac8e1b3cf5f7ebcb1d10288">&#9670;&#160;</a></span>bus</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SensorLocation::bus</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The I2C bus file descriptor. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/sensors/<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

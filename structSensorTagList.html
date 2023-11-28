@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: Globals</title>
+<title>fetcher: SensorTagList Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -47,7 +47,6 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -69,13 +68,58 @@ $(function() {
 </div>
 </div>
 
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
+  <div class="headertitle"><div class="title">SensorTagList Struct Reference</div></div>
+</div><!--header-->
 <div class="contents">
-&#160;<ul>
-<li>main()&#160;:&#160;<a class="el" href="main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main.c</a></li>
-<li>memcpy_be()&#160;:&#160;<a class="el" href="sensor__api_8c.html#a75eceb540ea61058f80f337782cd64e7">sensor_api.c</a>, <a class="el" href="sensor__api_8h.html#a75eceb540ea61058f80f337782cd64e7">sensor_api.h</a></li>
-<li>ms5611_init()&#160;:&#160;<a class="el" href="ms5611_8c.html#aba9274ab1665fc5f5404b96b49860605">ms5611.c</a>, <a class="el" href="ms5611_8h.html#aba9274ab1665fc5f5404b96b49860605">ms5611.h</a></li>
-<li>senapi_strtag()&#160;:&#160;<a class="el" href="sensor__api_8c.html#ad781d6686bf76608e106d4a067c36e7e">sensor_api.c</a>, <a class="el" href="sensor__api_8h.html#ad781d6686bf76608e106d4a067c36e7e">sensor_api.h</a></li>
-<li>senapi_tag_unit()&#160;:&#160;<a class="el" href="sensor__api_8c.html#a8fa6b9dbc2a897ba5c3b88ea5afc65b3">sensor_api.c</a>, <a class="el" href="sensor__api_8h.html#a8fa6b9dbc2a897ba5c3b88ea5afc65b3">sensor_api.h</a></li>
+
+<p><code>#include &lt;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:af5d1d200437422ef04e0796291170e59"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensorTagList.html#af5d1d200437422ef04e0796291170e59">tags</a></td></tr>
+<tr class="separator:af5d1d200437422ef04e0796291170e59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdb5183db15d3d24ba1fd74b6124d91d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensorTagList.html#acdb5183db15d3d24ba1fd74b6124d91d">len</a></td></tr>
+<tr class="separator:acdb5183db15d3d24ba1fd74b6124d91d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Stores a list of tags (data types) that the sensor is capable of reading. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="acdb5183db15d3d24ba1fd74b6124d91d" name="acdb5183db15d3d24ba1fd74b6124d91d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdb5183db15d3d24ba1fd74b6124d91d">&#9670;&#160;</a></span>len</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t SensorTagList::len</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The number of tags the sensor can read. </p>
+
+</div>
+</div>
+<a id="af5d1d200437422ef04e0796291170e59" name="af5d1d200437422ef04e0796291170e59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5d1d200437422ef04e0796291170e59">&#9670;&#160;</a></span>tags</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>* SensorTagList::tags</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A pointer to which tags the sensor can read. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/sensors/<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
