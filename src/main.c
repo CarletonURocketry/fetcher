@@ -1,12 +1,30 @@
+/**
+ * @file main.c
+ * @brief The main function for the fetcher module, where program logic is used to create a console application.
+ *
+ * The main function for the fetcher module, where program logic is used to create a console application.
+ */
+#include "sensors/ms5611/ms5611.h"
+#include "sensors/sensor_api.h"
+#include <devctl.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <getopt.h>
+#include <hw/i2c.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-static bool endless = false; // Flag for endless mode
-static char *filename = NULL;
+/** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
+
+/** Flag to indicate reading from file in endless mode for debugging. */
+static bool endless = false;
+
+/** Name of file to read from, if one is provided. */
+static char *filename = NULL;
 
 int main(int argc, char **argv) {
 
@@ -14,7 +32,7 @@ int main(int argc, char **argv) {
     opterr = 0;
 
     /* Get command line options. */
-    while ((c = getopt(argc, argv, ":e:")) != -1)
+    while ((c = getopt(argc, argv, ":e:")) != -1) {
         switch (c) {
         case 'e':
             endless = true;
@@ -30,6 +48,42 @@ int main(int argc, char **argv) {
             fputs("Something went wrong. Please check 'use fetcher' to see example usage.", stderr);
             exit(EXIT_FAILURE);
         }
+    }
+
+    /* Open I2C. */
+    int bus = open("/dev/i2c1", O_RDWR);
+    if (bus < 0) {
+        fprintf(stderr, "Could not open I2C bus.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Create MS5611 instance
+    Sensor ms5611;
+    ms5611_init(&ms5611, bus, 0x76, PRECISION_HIGH);
+
+    uint8_t context_data[ms5611.context.size];
+    ms5611.context.data = context_data;
+    errno_t setup_res = ms5611.open(&ms5611);
+    if (setup_res != EOK) {
+        fprintf(stderr, "%s\n", strerror(setup_res));
+        exit(EXIT_FAILURE);
+    }
+
+    // Read temperature and pressure data
+    while (!endless) {
+        errno_t read_result;
+        uint8_t nbytes;
+        double data;
+        for (uint8_t i = 0; i < ms5611.tag_list.len; i++) {
+            SensorTag tag = ms5611.tag_list.tags[i];
+            read_result = ms5611.read(&ms5611, tag, (uint8_t *)&data, &nbytes);
+            if (read_result != EOK) {
+                fprintf(stderr, "Could not read '%s' from MS5611: %s\n", senapi_strtag(tag), strerror(read_result));
+            } else {
+                printf("%s: %.2f %s\n", senapi_strtag(tag), data, senapi_tag_unit(tag));
+            }
+        }
+    }
 
     // Only read from a file if in endless mode
     if (endless) {
