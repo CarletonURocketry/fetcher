@@ -66,17 +66,17 @@ int main(int argc, char **argv) {
     // Read temperature and pressure data
     while (!endless) {
         uint8_t nbytes;
-        double data;
+        float data;
         errno_t read_res = ms5611.read(&ms5611.loc, TAG_TEMPERATURE, &ms5611.context, (uint8_t *)&data, &nbytes);
         if (read_res != EOK) {
             fprintf(stderr, "Could not read MS5611 temp: %s\n", strerror(read_res));
         }
-        printf("Temperature: %f C\n", data);
+        printf("Temperature: %2f C\n", data);
         read_res = ms5611.read(&ms5611.loc, TAG_PRESSURE, &ms5611.context, (uint8_t *)&data, &nbytes);
         if (read_res != EOK) {
             fprintf(stderr, "Could not read MS5611 pressure: %s\n", strerror(read_res));
         }
-        printf("Pressure: %f kPa\n", data);
+        printf("Pressure: %.2f kPa\n", data);
     }
 
     // Only read from a file if in endless mode

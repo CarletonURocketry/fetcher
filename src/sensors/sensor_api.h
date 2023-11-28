@@ -11,6 +11,12 @@ typedef enum sensor_tag_t {
     TAG_PRESSURE,    /**< Pressure */
 } SensorTag;
 
+typedef enum sensor_precision_t {
+    PRECISION_HIGH, /**< High precision measurements */
+    PRECISION_MED, /**< Medium precision measurements */
+    PRECISION_LOW, /**< Low precision measurements */
+} SensorPrecision;
+
 /** Stores a list of tags (data types) that the sensor is capable of reading. */
 typedef struct tag_list_t {
     /** A pointer to which tags the sensor can read. */
@@ -45,25 +51,26 @@ typedef struct sensor_t {
     SensorTagList tag_list;
     /** Data structure for the sensor to store context it needs between operations. */
     SensorContext context;
+    /** What precision the sensor should measure. Can be changed between reads. */
+    SensorPrecision precision;
     /**
      * Function responsible for opening and setting up the sensor.
-     * @param loc The location of the sensor on the I2C bus.
-     * @param context A pointer to the sensor context required between operations. Size bytes must be allocated in the
-     * data member before calling this function.
+     * @param sensor The sensor who this open method belongs to.
      * @return Error status of setting up the sensor. EOK if successful.
      */
-    errno_t (*open)(SensorLocation *loc, SensorContext *context);
+    errno_t (*open)(struct sensor_t *sensor);
     /**
      * Function responsible for reading the data associated with tag from the sensor.
-     * @param loc The location of the sensor on the I2C bus.
+     * @param sensor The sensor who this read method belongs to.
      * @param tag The tag of the data type that should be read.
-     * @param context The sensor context (context member).
      * @param buf A pointer to the byte array to store the data. Should be large enough to fit the max_return_size
      * bytes.
      * @param nbytes The number of bytes that were written into the byte array buffer.
      * @return Error status of reading from the sensor. EOK if successful.
      */
-    errno_t (*read)(SensorLocation *loc, SensorTag tag, SensorContext *context, uint8_t *buf, uint8_t *nbytes);
+    errno_t (*read)(struct sensor_t *sensor, const SensorTag tag, uint8_t *buf, uint8_t *nbytes);
 } Sensor;
+
+void memcpy_be(void *dest, const void *src, const size_t nbytes);
 
 #endif // _SENSOR_API_H

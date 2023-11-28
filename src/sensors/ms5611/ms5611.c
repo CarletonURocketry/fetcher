@@ -31,6 +31,13 @@ typedef enum ms5611_resolution_t {
     MS5611_ADC_RES_4096 = 0x08, /** ADC OSR=4096 */
 } MS5611Resolution;
 
+/** Implementation of precision in sensor API for read resolution. */
+static const MS5611Resolution PRECISIONS[] = {
+    [PRECISION_LOW] = MS5611_ADC_RES_256,
+    [PRECISION_MED] = MS5611_ADC_RES_1024,
+    [PRECISION_HIGH] = MS5611_ADC_RES_4096,
+};
+
 /**
  * Resets the MS5611 sensor, ensuring that calibration data is loaded into the PROM.
  * @param loc The sensor's location on the I2C bus.
@@ -61,7 +68,7 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint8_t *buf)
     errno_t result = devctl(loc->bus, DCMD_I2C_SEND, &conversion_cmd, sizeof(conversion_cmd), NULL);
     if (result != EOK) return result;
 
-    // Wait appropriate conversion time
+    // Wait for appropriate conversion time
     switch (dreg & 0xF) {
     case MS5611_ADC_RES_256:
         usleep(900);
@@ -88,93 +95,94 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint8_t *buf)
     result = devctl(loc->bus, DCMD_I2C_SENDRECV, &read_cmd, sizeof(read_cmd), NULL);
     if (result != EOK) return result;
 
-    memcpy(buf, (read_cmd + sizeof(read)), 3); // Copy data into user buffer
+    memcpy_be(buf, &read_cmd[sizeof(read)], 3);
     return EOK;
 }
 
 /**
  * Prepares the MS5611 for reading and initializes the sensor context with the calibration coefficients.
- * @param loc The location of the sensor on the I2C bus.
- * @param context The sensor context to initialize with calibration coefficients.
+ * @param sensor A reference to an MS5611 sensor.
  * @return The error status of the call. EOK if successful.
  */
-static errno_t ms5611_open(SensorLocation *loc, SensorContext *context) {
+static errno_t ms5611_open(Sensor *sensor) {
     // Load calibration into PROM
-    errno_t reset_status = ms5611_reset(loc);
+    errno_t reset_status = ms5611_reset(&sensor->loc);
     if (reset_status != EOK) return reset_status;
     usleep(10000); // Takes some time to reset
 
     // PROM read command buffer
-    i2c_sendrecv_t prom_read = {.stop = 1, .slave = loc->addr, .send_len = 1, .recv_len = 2};
-    uint8_t prom_read_cmd[sizeof(prom_read) + sizeof(COEF_TYPE)];
+    i2c_sendrecv_t prom_read = {.stop = 1, .slave = sensor->loc.addr, .send_len = 1, .recv_len = 2};
+    uint8_t prom_read_cmd[sizeof(prom_read) + sizeof(COEF_TYPE)] = {0};
     memcpy(prom_read_cmd, &prom_read, sizeof(prom_read));
 
     // Read calibration data into sensor context
-    COEF_TYPE *cal_coefs = (COEF_TYPE *)context->data;
+    COEF_TYPE *cal_coefs = (COEF_TYPE *)sensor->context.data;
     for (uint8_t i = 0; i < NUM_COEFFICIENTS; i++) {
 
         // Read from PROM
         prom_read_cmd[sizeof(prom_read)] = CMD_PROM_RD + sizeof(COEF_TYPE) * i; // Command to read next coefficient
-        errno_t read_status = devctl(loc->bus, DCMD_I2C_SENDRECV, &prom_read_cmd, sizeof(prom_read_cmd), NULL);
+        errno_t read_status = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, &prom_read_cmd, sizeof(prom_read_cmd), NULL);
         if (read_status != EOK) return read_status;
 
         // Store calibration coefficient
-        memcpy(&cal_coefs[i], (prom_read_cmd + sizeof(prom_read)), sizeof(COEF_TYPE));
+        memcpy_be(&cal_coefs[i], &prom_read_cmd[sizeof(prom_read)], sizeof(COEF_TYPE));
     }
     return EOK;
 }
 
 /**
  * Reads the specified data from the MS5611.
- * @param loc The location of the sensor on the I2C bus.
+ * @param sensor A reference to an MS5611 sensor.
  * @param tag The tag of the data type that should be read.
- * @param context The sensor context (calibration coefficients).
  * @param buf A pointer to the byte array to store the data.
  * @param nbytes The number of bytes that were written into the byte array buffer.
  * @return Error status of reading from the sensor. EOK if successful.
  */
-static errno_t ms5611_read(SensorLocation *loc, SensorTag tag, SensorContext *context, uint8_t *buf, uint8_t *nbytes) {
+static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, uint8_t *nbytes) {
 
-    // Read D registers with highest precision
+    // Read D registers with configured precision
     uint32_t d1, d2;
-    errno_t dread_res = ms5611_read_dreg(loc, CMD_ADC_D1 + MS5611_ADC_RES_4096, (uint8_t *)&d1);
+    errno_t dread_res = ms5611_read_dreg(&sensor->loc, CMD_ADC_D1 + PRECISIONS[sensor->precision], (uint8_t *)&d1);
     if (dread_res != EOK) return dread_res;
-    dread_res = ms5611_read_dreg(loc, CMD_ADC_D2 + MS5611_ADC_RES_4096, (uint8_t *)&d2);
+    dread_res = ms5611_read_dreg(&sensor->loc, CMD_ADC_D2 + PRECISIONS[sensor->precision], (uint8_t *)&d2);
     if (dread_res != EOK) return dread_res;
 
     // Calculate 1st order pressure and temperature (MS5607 1st order algorithm)
-    uint8_t *coefs = (uint8_t *)context->data;
+    COEF_TYPE *coefs = (COEF_TYPE *)sensor->context.data;
     double dt = d2 - coefs[5] * pow(2, 8);
     double off = coefs[2] * pow(2, 17) + dt * coefs[4] / pow(2, 6);
     double sens = coefs[1] * pow(2, 16) + dt * coefs[3] / pow(2, 7);
 
     switch (tag) {
     case TAG_TEMPERATURE: {
-        double temperature = (2000 + (dt * coefs[6]) / pow(2, 23)) / 100; // C
-        memcpy(buf, &temperature, sizeof(double));
-        *nbytes = sizeof(double);
-        return EOK;
+        float temperature = (2000 + (dt * coefs[6]) / pow(2, 23)) / 100; // C
+        memcpy(buf, &temperature, sizeof(temperature));
+        *nbytes = sizeof(temperature);
     } break;
     case TAG_PRESSURE: {
-        double pressure = (((d1 * sens) / pow(2, 21) - off) / pow(2, 15)) / 10; // kPa
-        memcpy(buf, &pressure, sizeof(double));
-        *nbytes = sizeof(double);
-        return EOK;
+        float pressure = (((d1 * sens) / pow(2, 21) - off) / pow(2, 15)) / 1000; // kPa
+        memcpy(buf, &pressure, sizeof(pressure));
+        *nbytes = sizeof(pressure);
         break;
     }
     default:
         return EINVAL;
     }
+
+    return EOK;
 }
 
 /**
  * Initializes a sensor struct with the interface to interact with the MS5611.
  * @param sensor The sensor interface to be initialized.
+ * @param bus The file descriptor of the I2C bus.
  * @param addr The address of the sensor on the I2C bus.
+ * @param precision The precision to read measurements with.
  */
-void ms5611_init(Sensor *sensor, int bus, uint8_t addr) {
+void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
+    sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
-    sensor->max_return_size = 3;
+    sensor->max_return_size = sizeof(float);
     sensor->tag_list = (SensorTagList){.tags = TAGS, .tag_count = sizeof(TAGS) / sizeof(SensorTag)};
     sensor->context.size = (NUM_COEFFICIENTS * sizeof(COEF_TYPE)); // Size of all calibration data
     sensor->open = &ms5611_open;

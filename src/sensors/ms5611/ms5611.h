@@ -9,6 +9,6 @@
 #include "../sensor_api.h"
 #include <stdint.h>
 
-void ms5611_init(Sensor *sensor, int bus, uint8_t addr);
+void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision);
 
 #endif // _MS5611_H_
