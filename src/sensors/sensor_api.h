@@ -1,3 +1,10 @@
+/**
+ * @file sensor_api.h
+ * @brief Types and function prototypes for the sensor API used to communicate with I2C bus sensors.
+ * Types and function prototypes for the sensor API used to communicate with I2C bus sensors. This API provides a way to
+ * set up and read sensors easily. Sensors can read multiple data types in standard measurements. Sensors also have a
+ * configurable precision.
+ */
 #ifndef _SENSOR_API_H
 #define _SENSOR_API_H
 
@@ -13,8 +20,8 @@ typedef enum sensor_tag_t {
 
 typedef enum sensor_precision_t {
     PRECISION_HIGH, /**< High precision measurements */
-    PRECISION_MED, /**< Medium precision measurements */
-    PRECISION_LOW, /**< Low precision measurements */
+    PRECISION_MED,  /**< Medium precision measurements */
+    PRECISION_LOW,  /**< Low precision measurements */
 } SensorPrecision;
 
 /** Stores a list of tags (data types) that the sensor is capable of reading. */

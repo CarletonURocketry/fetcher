@@ -1,3 +1,8 @@
+/**
+ * @file ms5611.c
+ * @brief Sensor API interface implementation for the MS5611 pressure and temperature sensor.
+ * Sensor API interface implementation for the MS5611 pressure and temperature sensor which uses I2C communication.
+ */
 #include "ms5611.h"
 #include "../sensor_api.h"
 #include <errno.h>
@@ -7,35 +12,46 @@
 #include <string.h>
 #include <unistd.h>
 
-#define CMD_RESET 0x1E    // ADC reset command
-#define CMD_PROM_RD 0xA0  // Prom read command
-#define CMD_ADC_CONV 0x40 // ADC conversion command
-#define CMD_ADC_READ 0x00 // ADC read command
-#define CMD_ADC_D1 0x00   // ADC D1 conversion
-#define CMD_ADC_D2 0x10   // ADC D2 conversion
-
 /** Number of calibration coefficients */
 #define NUM_COEFFICIENTS 8
 /** Size of coefficients in bytes */
 #define COEF_TYPE uint16_t
 
+/** Macro to early return an error. */
+#define return_err(err)                                                                                                \
+    if (err != EOK) return err
+
 /** A list of data types that can be read by the MS5611 */
 static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_PRESSURE};
 
+/** All of the I2C commands that can be used on the MS5611 sensor. */
+typedef enum ms5611_cmd_t {
+    CMD_RESET = 0x1E,    /**< ADC reset command */
+    CMD_PROM_RD = 0xA0,  /**< Prom read command */
+    CMD_ADC_CONV = 0x40, /**< ADC conversion command */
+    CMD_ADC_READ = 0x00, /**< ADC read command */
+} MS5611Cmd;
+
+/** The D registers on the MS5611 sensor. */
+typedef enum ms5611_dregs_t {
+    D1 = 0x00, /**< D register 1 */
+    D2 = 0x10, /**< D register 2 */
+} MS5611DReg;
+
 /** The resolution that is used to read the data of the MS5611 */
 typedef enum ms5611_resolution_t {
-    MS5611_ADC_RES_256 = 0x00,  /** ADC OSR=256 */
-    MS5611_ADC_RES_512 = 0x02,  /** ADC OSR=512 */
-    MS5611_ADC_RES_1024 = 0x04, /** ADC OSR=1024 */
-    MS5611_ADC_RES_2048 = 0x06, /** ADC OSR=2048 */
-    MS5611_ADC_RES_4096 = 0x08, /** ADC OSR=4096 */
+    ADC_RES_256 = 0x00,  /**< ADC OSR=256 */
+    ADC_RES_512 = 0x02,  /**< ADC OSR=512 */
+    ADC_RES_1024 = 0x04, /**< ADC OSR=1024 */
+    ADC_RES_2048 = 0x06, /**< ADC OSR=2048 */
+    ADC_RES_4096 = 0x08, /**< ADC OSR=4096 */
 } MS5611Resolution;
 
 /** Implementation of precision in sensor API for read resolution. */
 static const MS5611Resolution PRECISIONS[] = {
-    [PRECISION_LOW] = MS5611_ADC_RES_256,
-    [PRECISION_MED] = MS5611_ADC_RES_1024,
-    [PRECISION_HIGH] = MS5611_ADC_RES_4096,
+    [PRECISION_LOW] = ADC_RES_256,
+    [PRECISION_MED] = ADC_RES_1024,
+    [PRECISION_HIGH] = ADC_RES_4096,
 };
 
 /**
@@ -66,23 +82,23 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint8_t *buf)
     memcpy(conversion_cmd, &conversion, sizeof(conversion));
     conversion_cmd[sizeof(conversion)] = CMD_ADC_CONV + dreg;
     errno_t result = devctl(loc->bus, DCMD_I2C_SEND, &conversion_cmd, sizeof(conversion_cmd), NULL);
-    if (result != EOK) return result;
+    return_err(result);
 
     // Wait for appropriate conversion time
     switch (dreg & 0xF) {
-    case MS5611_ADC_RES_256:
+    case ADC_RES_256:
         usleep(900);
         break;
-    case MS5611_ADC_RES_512:
+    case ADC_RES_512:
         usleep(3000);
         break;
-    case MS5611_ADC_RES_1024:
+    case ADC_RES_1024:
         usleep(4000);
         break;
-    case MS5611_ADC_RES_2048:
+    case ADC_RES_2048:
         usleep(6000);
         break;
-    case MS5611_ADC_RES_4096:
+    case ADC_RES_4096:
         usleep(10000);
         break;
     }
@@ -93,7 +109,7 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint8_t *buf)
     memcpy(read_cmd, &read, sizeof(read));
     read_cmd[sizeof(read)] = CMD_ADC_READ;
     result = devctl(loc->bus, DCMD_I2C_SENDRECV, &read_cmd, sizeof(read_cmd), NULL);
-    if (result != EOK) return result;
+    return_err(result);
 
     memcpy_be(buf, &read_cmd[sizeof(read)], 3);
     return EOK;
@@ -105,9 +121,10 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint8_t *buf)
  * @return The error status of the call. EOK if successful.
  */
 static errno_t ms5611_open(Sensor *sensor) {
+
     // Load calibration into PROM
-    errno_t reset_status = ms5611_reset(&sensor->loc);
-    if (reset_status != EOK) return reset_status;
+    errno_t op_status = ms5611_reset(&sensor->loc);
+    return_err(op_status);
     usleep(10000); // Takes some time to reset
 
     // PROM read command buffer
@@ -121,8 +138,8 @@ static errno_t ms5611_open(Sensor *sensor) {
 
         // Read from PROM
         prom_read_cmd[sizeof(prom_read)] = CMD_PROM_RD + sizeof(COEF_TYPE) * i; // Command to read next coefficient
-        errno_t read_status = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, &prom_read_cmd, sizeof(prom_read_cmd), NULL);
-        if (read_status != EOK) return read_status;
+        op_status = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, &prom_read_cmd, sizeof(prom_read_cmd), NULL);
+        return_err(op_status);
 
         // Store calibration coefficient
         memcpy_be(&cal_coefs[i], &prom_read_cmd[sizeof(prom_read)], sizeof(COEF_TYPE));
@@ -142,10 +159,10 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, ui
 
     // Read D registers with configured precision
     uint32_t d1, d2;
-    errno_t dread_res = ms5611_read_dreg(&sensor->loc, CMD_ADC_D1 + PRECISIONS[sensor->precision], (uint8_t *)&d1);
-    if (dread_res != EOK) return dread_res;
-    dread_res = ms5611_read_dreg(&sensor->loc, CMD_ADC_D2 + PRECISIONS[sensor->precision], (uint8_t *)&d2);
-    if (dread_res != EOK) return dread_res;
+    errno_t dread_res = ms5611_read_dreg(&sensor->loc, D1 + PRECISIONS[sensor->precision], (uint8_t *)&d1);
+    return_err(dread_res);
+    dread_res = ms5611_read_dreg(&sensor->loc, D2 + PRECISIONS[sensor->precision], (uint8_t *)&d2);
+    return_err(dread_res);
 
     // Calculate 1st order pressure and temperature (MS5607 1st order algorithm)
     COEF_TYPE *coefs = (COEF_TYPE *)sensor->context.data;
