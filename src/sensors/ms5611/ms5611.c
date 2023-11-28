@@ -8,7 +8,6 @@
 #include <errno.h>
 #include <hw/i2c.h>
 #include <math.h>
-#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -71,10 +70,10 @@ static errno_t ms5611_reset(SensorLocation *loc) {
  * Reads the ADC D registers of the MS5611.
  * @param loc The location of the MS5611 on the I2C bus.
  * @param dreg The D-register to read and the precision to read at.
- * @param buf The buffer to store the D-register value in (at least 3 bytes)
+ * @param value The location to store the D register value in.
  * @return Any error which occurred during the read. EOK if successful.
  */
-static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint8_t *buf) {
+static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint32_t *value) {
 
     // Request conversion start
     i2c_send_t conversion = {.len = 1, .stop = 1, .slave = loc->addr};
@@ -111,7 +110,11 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint8_t *buf)
     result = devctl(loc->bus, DCMD_I2C_SENDRECV, &read_cmd, sizeof(read_cmd), NULL);
     return_err(result);
 
-    memcpy_be(buf, &read_cmd[sizeof(read)], 3);
+    *value = 0;
+    *value += read_cmd[sizeof(read)] * 65536;
+    *value += read_cmd[sizeof(read) + 1] * 256;
+    *value += read_cmd[sizeof(read) + 2];
+
     return EOK;
 }
 
@@ -159,9 +162,9 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, ui
 
     // Read D registers with configured precision
     uint32_t d1, d2;
-    errno_t dread_res = ms5611_read_dreg(&sensor->loc, D1 + PRECISIONS[sensor->precision], (uint8_t *)&d1);
+    errno_t dread_res = ms5611_read_dreg(&sensor->loc, D1 + PRECISIONS[sensor->precision], &d1);
     return_err(dread_res);
-    dread_res = ms5611_read_dreg(&sensor->loc, D2 + PRECISIONS[sensor->precision], (uint8_t *)&d2);
+    dread_res = ms5611_read_dreg(&sensor->loc, D2 + PRECISIONS[sensor->precision], &d2);
     return_err(dread_res);
 
     // Calculate 1st order pressure and temperature (MS5607 1st order algorithm)

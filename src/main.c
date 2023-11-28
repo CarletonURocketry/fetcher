@@ -53,11 +53,11 @@ int main(int argc, char **argv) {
 
     // Create MS5611 instance
     Sensor ms5611;
-    ms5611_init(&ms5611, bus, 0x76);
+    ms5611_init(&ms5611, bus, 0x76, PRECISION_HIGH);
 
     uint8_t context_data[ms5611.context.size];
     ms5611.context.data = context_data;
-    errno_t setup_res = ms5611.open(&ms5611.loc, &ms5611.context);
+    errno_t setup_res = ms5611.open(&ms5611);
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
@@ -67,12 +67,12 @@ int main(int argc, char **argv) {
     while (!endless) {
         uint8_t nbytes;
         float data;
-        errno_t read_res = ms5611.read(&ms5611.loc, TAG_TEMPERATURE, &ms5611.context, (uint8_t *)&data, &nbytes);
+        errno_t read_res = ms5611.read(&ms5611, TAG_TEMPERATURE, (uint8_t *)&data, &nbytes);
         if (read_res != EOK) {
             fprintf(stderr, "Could not read MS5611 temp: %s\n", strerror(read_res));
         }
         printf("Temperature: %2f C\n", data);
-        read_res = ms5611.read(&ms5611.loc, TAG_PRESSURE, &ms5611.context, (uint8_t *)&data, &nbytes);
+        read_res = ms5611.read(&ms5611, TAG_PRESSURE, (uint8_t *)&data, &nbytes);
         if (read_res != EOK) {
             fprintf(stderr, "Could not read MS5611 pressure: %s\n", strerror(read_res));
         }
