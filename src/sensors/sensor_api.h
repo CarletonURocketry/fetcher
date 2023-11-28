@@ -1,6 +1,7 @@
 /**
  * @file sensor_api.h
  * @brief Types and function prototypes for the sensor API used to communicate with I2C bus sensors.
+ *
  * Types and function prototypes for the sensor API used to communicate with I2C bus sensors. This API provides a way to
  * set up and read sensors easily. Sensors can read multiple data types in standard measurements. Sensors also have a
  * configurable precision.

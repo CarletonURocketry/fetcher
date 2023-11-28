@@ -1,6 +1,7 @@
 /**
  * @file ms5611.c
  * @brief Sensor API interface implementation for the MS5611 pressure and temperature sensor.
+ *
  * Sensor API interface implementation for the MS5611 pressure and temperature sensor which uses I2C communication.
  */
 #include "ms5611.h"

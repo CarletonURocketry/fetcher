@@ -1,3 +1,9 @@
+/**
+ * @file main.c
+ * @brief The main function for the fetcher module, where program logic is used to create a console application.
+ *
+ * The main function for the fetcher module, where program logic is used to create a console application.
+ */
 #include "sensors/ms5611/ms5611.h"
 #include "sensors/sensor_api.h"
 #include <devctl.h>
