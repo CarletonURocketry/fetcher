@@ -15,8 +15,8 @@
 
 /** Describes what data type the sensor is able to read. */
 typedef enum sensor_tag_t {
-    TAG_TEMPERATURE, /**< Temperature */
-    TAG_PRESSURE,    /**< Pressure */
+    TAG_TEMPERATURE, /**< Temperature in degrees Celsius */
+    TAG_PRESSURE,    /**< Pressure in kilo Pascals */
 } SensorTag;
 
 typedef enum sensor_precision_t {
