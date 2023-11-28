@@ -169,18 +169,19 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, ui
 
     // Calculate 1st order pressure and temperature (MS5607 1st order algorithm)
     COEF_TYPE *coefs = (COEF_TYPE *)sensor->context.data;
+
     double dt = d2 - coefs[5] * pow(2, 8);
-    double off = coefs[2] * pow(2, 17) + dt * coefs[4] / pow(2, 6);
-    double sens = coefs[1] * pow(2, 16) + dt * coefs[3] / pow(2, 7);
+    double off = coefs[2] * pow(2, 16) + dt * coefs[4] / pow(2, 7);
+    double sens = coefs[1] * pow(2, 15) + dt * coefs[3] / pow(2, 8);
 
     switch (tag) {
     case TAG_TEMPERATURE: {
-        float temperature = (2000 + (dt * coefs[6]) / pow(2, 23)) / 100; // C
+        float temperature = (2000 + ((dt * coefs[6]) / pow(2, 23))) / 100; // Degrees C
         memcpy(buf, &temperature, sizeof(temperature));
         *nbytes = sizeof(temperature);
     } break;
     case TAG_PRESSURE: {
-        float pressure = (((d1 * sens) / pow(2, 21) - off) / pow(2, 15)) / 1000; // kPa
+        float pressure = (((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000; // kiloPascals
         memcpy(buf, &pressure, sizeof(pressure));
         *nbytes = sizeof(pressure);
         break;
