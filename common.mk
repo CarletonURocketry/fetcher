@@ -36,10 +36,12 @@ CCFLAGS += -std=$(CSTD) $(OPTIMIZATION) $(WARNINGS)
 #### PROJECT SPECIFIC ####
 
 # Project includes
-EXTRA_INCVPATH += $(PROJECT_ROOT)/src/include
+#EXTRA_INCVPATH += $(PROJECT_ROOT)/src/sensors/include
 
 ### SOURCE FILES ###
 EXTRA_SRCVPATH += $(PROJECT_ROOT)/src
+EXTRA_SRCVPATH += $(PROJECT_ROOT)/src/sensors
+EXTRA_SRCVPATH += $(PROJECT_ROOT)/src/sensors/ms5611
 
 ### EXTRA LIBRARIES ###
 LIBS += i2c-master

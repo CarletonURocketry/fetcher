@@ -1,3 +1,5 @@
+#include "sensors/ms5611/ms5611.h"
+#include "sensors/sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -8,12 +10,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/dispatch.h>
 
-static bool endless = false; // Flag for endless mode
-static char *filename = NULL;
-static const i2c_addr_t alt_sensor = {.addr = 0x76, .fmt = I2C_ADDRFMT_7BIT};
+/** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
+
+/** Flag to indicate reading from file in endless mode for debugging. */
+static bool endless = false;
+
+/** Name of file to read from, if one is provided. */
+static char *filename = NULL;
 
 int main(int argc, char **argv) {
 
@@ -46,44 +51,33 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    /* Data for I2C sending and receiving */
-    typedef struct my_send_rcv_t {
-        i2c_sendrecv_t sendrcv;
-        uint8_t buf[4];
-    } MySendRcv;
+    // Create MS5611 instance
+    Sensor ms5611;
+    ms5611_init(&ms5611, bus, 0x76);
 
-    /* Data for I2C sending */
-    typedef struct my_send_t {
-        i2c_send_t send;
-        uint8_t buf[4];
-    } MySend;
-
-    // Conversion command
-    MySend i2c_send_data = {
-        .send = {.stop = 1, .slave = alt_sensor, .len = 1},
-        .buf = {0},
-    };
-    i2c_send_data.buf[0] = 0x40; // Command to convert
-    errno_t result = devctl(bus, DCMD_I2C_SEND, &i2c_send_data, sizeof(i2c_send_data), NULL);
-    if (result != EOK) {
-        fprintf(stderr, "Could not request ADC conversion: %s\n", strerror(result));
+    uint8_t context_data[ms5611.context.size];
+    ms5611.context.data = context_data;
+    errno_t setup_res = ms5611.open(&ms5611.loc, &ms5611.context);
+    if (setup_res != EOK) {
+        fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
     }
-    usleep(900); // Wait for conversion
 
-    // Attempt read
-    MySendRcv i2c_sendrcv_data = {.sendrcv = {.stop = 1, .slave = alt_sensor, .send_len = 1, .recv_len = 3},
-                                  .buf = {0}};
-    i2c_sendrcv_data.buf[0] = 0x00; // Command to read
-
-    result = devctl(bus, DCMD_I2C_SENDRECV, &i2c_sendrcv_data, sizeof(i2c_sendrcv_data), NULL);
-    if (result != EOK) {
-        fprintf(stderr, "Error while writing command I2C: %s\n", strerror(result));
-        exit(EXIT_FAILURE);
+    // Read temperature and pressure data
+    while (!endless) {
+        uint8_t nbytes;
+        double data;
+        errno_t read_res = ms5611.read(&ms5611.loc, TAG_TEMPERATURE, &ms5611.context, (uint8_t *)&data, &nbytes);
+        if (read_res != EOK) {
+            fprintf(stderr, "Could not read MS5611 temp: %s\n", strerror(read_res));
+        }
+        printf("Temperature: %f C\n", data);
+        read_res = ms5611.read(&ms5611.loc, TAG_PRESSURE, &ms5611.context, (uint8_t *)&data, &nbytes);
+        if (read_res != EOK) {
+            fprintf(stderr, "Could not read MS5611 pressure: %s\n", strerror(read_res));
+        }
+        printf("Pressure: %f kPa\n", data);
     }
-    int32_t temperature = 0;
-    memcpy(&temperature, i2c_sendrcv_data.buf, 3);
-    printf("data: %x\n", temperature);
 
     // Only read from a file if in endless mode
     if (endless) {
