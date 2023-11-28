@@ -71,18 +71,18 @@ int main(int argc, char **argv) {
 
     // Read temperature and pressure data
     while (!endless) {
+        errno_t read_result;
         uint8_t nbytes;
         double data;
-        errno_t read_res = ms5611.read(&ms5611, TAG_TEMPERATURE, (uint8_t *)&data, &nbytes);
-        if (read_res != EOK) {
-            fprintf(stderr, "Could not read MS5611 temp: %s\n", strerror(read_res));
+        for (uint8_t i = 0; i < ms5611.tag_list.len; i++) {
+            SensorTag tag = ms5611.tag_list.tags[i];
+            read_result = ms5611.read(&ms5611, tag, (uint8_t *)&data, &nbytes);
+            if (read_result != EOK) {
+                fprintf(stderr, "Could not read '%s' from MS5611: %s\n", senapi_strtag(tag), strerror(read_result));
+            } else {
+                printf("%s: %.2f %s\n", senapi_strtag(tag), data, senapi_tag_unit(tag));
+            }
         }
-        printf("Temperature: %2f C\n", data);
-        read_res = ms5611.read(&ms5611, TAG_PRESSURE, (uint8_t *)&data, &nbytes);
-        if (read_res != EOK) {
-            fprintf(stderr, "Could not read MS5611 pressure: %s\n", strerror(read_res));
-        }
-        printf("Pressure: %.2f kPa\n", data);
     }
 
     // Only read from a file if in endless mode

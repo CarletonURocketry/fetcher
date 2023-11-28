@@ -231,7 +231,7 @@ void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
     sensor->max_return_size = sizeof(double);
-    sensor->tag_list = (SensorTagList){.tags = TAGS, .tag_count = sizeof(TAGS) / sizeof(SensorTag)};
+    sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
     sensor->context.size = (NUM_COEFFICIENTS * sizeof(COEF_TYPE)); // Size of all calibration data
     sensor->open = &ms5611_open;
     sensor->read = &ms5611_read;

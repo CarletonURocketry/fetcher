@@ -30,7 +30,7 @@ typedef struct tag_list_t {
     /** A pointer to which tags the sensor can read. */
     const SensorTag *tags;
     /** The number of tags the sensor can read. */
-    uint8_t tag_count;
+    uint8_t len;
 } SensorTagList;
 
 /** Provides an interface for the sensor to store operations between context. */
@@ -80,5 +80,8 @@ typedef struct sensor_t {
 } Sensor;
 
 void memcpy_be(void *dest, const void *src, const size_t nbytes);
+
+const char *senapi_strtag(const SensorTag tag);
+const char *senapi_tag_unit(const SensorTag tag);
 
 #endif // _SENSOR_API_H
