@@ -17,6 +17,7 @@
 typedef enum sensor_tag_t {
     TAG_TEMPERATURE, /**< Temperature in degrees Celsius */
     TAG_PRESSURE,    /**< Pressure in kilo Pascals */
+    TAG_TIME,        /**< Time in seconds */
 } SensorTag;
 
 typedef enum sensor_precision_t {
@@ -81,7 +82,7 @@ typedef struct sensor_t {
 
 void memcpy_be(void *dest, const void *src, const size_t nbytes);
 
-const char *senapi_strtag(const SensorTag tag);
-const char *senapi_tag_unit(const SensorTag tag);
+const char *sensor_strtag(const SensorTag tag);
+const char *sensor_tag_unit(const SensorTag tag);
 
 #endif // _SENSOR_API_H

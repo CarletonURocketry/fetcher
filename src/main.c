@@ -4,8 +4,6 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
-#include "sensors/ms5611/ms5611.h"
-#include "sensors/sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -16,6 +14,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* Sensor includes */
+#include "sensors/ms5611/ms5611.h"
+#include "sensors/sensor_api.h"
+#include "sensors/sysclock/sysclock.h"
 
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
@@ -61,12 +64,31 @@ int main(int argc, char **argv) {
     Sensor ms5611;
     ms5611_init(&ms5611, bus, 0x76, PRECISION_HIGH);
 
-    uint8_t context_data[ms5611.context.size];
-    ms5611.context.data = context_data;
+    uint8_t ms5611_context[ms5611.context.size];
+    ms5611.context.data = &ms5611_context;
     errno_t setup_res = ms5611.open(&ms5611);
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
+    }
+
+    // Create system clock instance
+    Sensor sysclock;
+    sysclock_init(&sysclock, bus, 0x00, PRECISION_HIGH);
+    uint8_t sysclock_context[sysclock.context.size];
+    sysclock.context.data = &sysclock_context;
+    setup_res = sysclock.open(&sysclock);
+    if (setup_res != EOK) {
+        fprintf(stderr, "%s\n", strerror(setup_res));
+        exit(EXIT_FAILURE);
+    }
+
+    for (;;) {
+        uint32_t data;
+        uint8_t nbytes;
+        sysclock.read(&sysclock, TAG_TIME, (uint8_t *)&data, &nbytes);
+        printf("%u ms\n", data);
+        usleep(10000);
     }
 
     // Read temperature and pressure data
@@ -78,9 +100,9 @@ int main(int argc, char **argv) {
             SensorTag tag = ms5611.tag_list.tags[i];
             read_result = ms5611.read(&ms5611, tag, (uint8_t *)&data, &nbytes);
             if (read_result != EOK) {
-                fprintf(stderr, "Could not read '%s' from MS5611: %s\n", senapi_strtag(tag), strerror(read_result));
+                fprintf(stderr, "Could not read '%s' from MS5611: %s\n", sensor_strtag(tag), strerror(read_result));
             } else {
-                printf("%s: %.2f %s\n", senapi_strtag(tag), data, senapi_tag_unit(tag));
+                printf("%s: %.2f %s\n", sensor_strtag(tag), data, sensor_tag_unit(tag));
             }
         }
     }
