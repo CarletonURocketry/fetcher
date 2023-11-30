@@ -14,20 +14,45 @@
 #include <stdint.h>
 
 /** Describes what data type the sensor is able to read. */
-typedef enum sensor_tag_t {
+typedef enum {
     TAG_TEMPERATURE, /**< Temperature in degrees Celsius */
     TAG_PRESSURE,    /**< Pressure in kilo Pascals */
     TAG_TIME,        /**< Time in milliseconds */
 } SensorTag;
 
-typedef enum sensor_precision_t {
+/** Describes the C data type of the data associated with a tag. */
+typedef enum {
+    TYPE_FLOAT, /**< float */
+    TYPE_U32,   /**< uint32_t */
+    TYPE_U16,   /**< uint16_t */
+    TYPE_U8,    /**< uint8_t */
+    TYPE_I32,   /**< int32_t */
+    TYPE_I16,   /**< int16_t */
+    TYPE_I8,    /**< int8_t */
+} SensorTagDType;
+
+/** Stores information about each tag. */
+typedef struct {
+    /** The name of the data the tag is associated with. */
+    const char *name;
+    /** The name of the unit the tag's measurements are measured in. */
+    const char *unit;
+    /** The format string used to print the data associated with the tag. */
+    const char *fmt_str;
+    /** The size of the data this tag is associated with. */
+    const size_t dsize;
+    /** The C data type this data is associated with. */
+    const SensorTagDType dtype;
+} SensorTagData;
+
+typedef enum {
     PRECISION_HIGH, /**< High precision measurements */
     PRECISION_MED,  /**< Medium precision measurements */
     PRECISION_LOW,  /**< Low precision measurements */
 } SensorPrecision;
 
 /** Stores a list of tags (data types) that the sensor is capable of reading. */
-typedef struct tag_list_t {
+typedef struct {
     /** A pointer to which tags the sensor can read. */
     const SensorTag *tags;
     /** The number of tags the sensor can read. */
@@ -35,7 +60,7 @@ typedef struct tag_list_t {
 } SensorTagList;
 
 /** Provides an interface for the sensor to store operations between context. */
-typedef struct sensor_context_t {
+typedef struct {
     /** The sensor context itself. 'size' bytes of memory for this must be allocated by the user. */
     void *data;
     /** The size of the sensor context data in bytes. */
@@ -43,7 +68,7 @@ typedef struct sensor_context_t {
 } SensorContext;
 
 /** Provides an interface to describe the sensor location. */
-typedef struct sensor_loc_t {
+typedef struct {
     /** The address of the sensor on the bus. */
     i2c_addr_t addr;
     /** The I2C bus file descriptor. */

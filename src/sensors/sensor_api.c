@@ -8,18 +8,16 @@
 #include <stdio.h>
 #include <string.h>
 
-/** Stores information about each tag. */
-typedef struct {
-    const char *name;
-    const char *unit;
-    const char *fmt_str;
-} TagData;
+/** Macro to cast a pointer to a different type and dereferencing it. */
+#define drefcast(type, data) (*((type *)data))
 
 /** A list of the possible sensor tags and their metadata. */
-static const TagData TAG_DATA[] = {
-    [TAG_PRESSURE] = {.name = "Pressure", .unit = "kPa", .fmt_str = "%p"},
-    [TAG_TEMPERATURE] = {.name = "Temperature", .unit = "C", .fmt_str = "%p"},
-    [TAG_TIME] = {.name = "Time", .unit = "ms", .fmt_str = "%p"},
+const SensorTagData SENSOR_TAG_DATA[] = {
+    [TAG_PRESSURE] =
+        {.name = "Pressure", .unit = "kPa", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
+    [TAG_TEMPERATURE] =
+        {.name = "Temperature", .unit = "C", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
+    [TAG_TIME] = {.name = "Time", .unit = "ms", .fmt_str = "%u", .dsize = sizeof(uint32_t), .dtype = TYPE_U32},
 };
 
 /**
@@ -39,7 +37,7 @@ void memcpy_be(void *dest, const void *src, const size_t nbytes) {
  * @param tag The tag to stringify.
  * @return The tag's data type as a string.
  */
-const char *sensor_strtag(const SensorTag tag) { return TAG_DATA[tag].unit; }
+const char *sensor_strtag(const SensorTag tag) { return SENSOR_TAG_DATA[tag].unit; }
 
 /**
  * Prints sensor data in a standard format.
@@ -47,11 +45,36 @@ const char *sensor_strtag(const SensorTag tag) { return TAG_DATA[tag].unit; }
  * @param data A pointer to the sensor data to be printed.
  */
 void sensor_print_data(const SensorTag tag, const void *data) {
-    char format_str[40] = "%s: ";              // Format specifier for data name
-    strcat(format_str, TAG_DATA[tag].fmt_str); // Format specifier for data
-    strcat(format_str, " %s\n");               // Format specifier for unit
+    char format_str[40] = "%s: ";                     // Format specifier for data name
+    strcat(format_str, SENSOR_TAG_DATA[tag].fmt_str); // Format specifier for data
+    strcat(format_str, " %s\n");                      // Format specifier for unit
 
-// Ignore GCC warning just for this line
+    // Ignore GCC warning about not using string literal in printf
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
-    printf(format_str, TAG_DATA[tag].name, data, TAG_DATA[tag].unit);
+    // Decide how to cast data pointer for printing
+    switch (SENSOR_TAG_DATA[tag].dtype) {
+    case TYPE_FLOAT:
+        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const float, data), SENSOR_TAG_DATA[tag].unit);
+        break;
+    case TYPE_U32:
+        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint32_t, data), SENSOR_TAG_DATA[tag].unit);
+        break;
+    case TYPE_U16:
+        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint16_t, data), SENSOR_TAG_DATA[tag].unit);
+        break;
+    case TYPE_U8:
+        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint8_t, data), SENSOR_TAG_DATA[tag].unit);
+        break;
+    case TYPE_I32:
+        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int32_t, data), SENSOR_TAG_DATA[tag].unit);
+        break;
+    case TYPE_I16:
+        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int16_t, data), SENSOR_TAG_DATA[tag].unit);
+        break;
+    case TYPE_I8:
+        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int8_t, data), SENSOR_TAG_DATA[tag].unit);
+        break;
+    default:
+        return;
+    }
 }
