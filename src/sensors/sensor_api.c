@@ -5,19 +5,21 @@
  * This file contains the implementations for the sensor API interface.
  */
 #include "sensor_api.h"
+#include <stdio.h>
+#include <string.h>
 
-/** A list of the possible sensor tags and their string representation. */
-static const char *TAG_STRINGS[] = {
-    [TAG_PRESSURE] = "Pressure",
-    [TAG_TEMPERATURE] = "Temperature",
-    [TAG_TIME] = "Time",
-};
+/** Stores information about each tag. */
+typedef struct {
+    const char *name;
+    const char *unit;
+    const char *fmt_str;
+} TagData;
 
-/** A list of the possible sensor tags and their units in string representation. */
-static const char *TAG_UNITS[] = {
-    [TAG_PRESSURE] = "kPa",
-    [TAG_TEMPERATURE] = "C",
-    [TAG_TIME] = "ms",
+/** A list of the possible sensor tags and their metadata. */
+static const TagData TAG_DATA[] = {
+    [TAG_PRESSURE] = {.name = "Pressure", .unit = "kPa", .fmt_str = "%p"},
+    [TAG_TEMPERATURE] = {.name = "Temperature", .unit = "C", .fmt_str = "%p"},
+    [TAG_TIME] = {.name = "Time", .unit = "ms", .fmt_str = "%p"},
 };
 
 /**
@@ -33,15 +35,23 @@ void memcpy_be(void *dest, const void *src, const size_t nbytes) {
 }
 
 /**
- * Converts a sensor tag to its string representation.
- * @param tag The sensor tag to stringify.
- * @return The sensor tag string representation.
+ * Converts a tag into the string representation of its associated data type's name.
+ * @param tag The tag to stringify.
+ * @return The tag's data type as a string.
  */
-const char *sensor_strtag(const SensorTag tag) { return TAG_STRINGS[tag]; }
+const char *sensor_strtag(const SensorTag tag) { return TAG_DATA[tag].unit; }
 
 /**
- * Converts a sensor tag to its unit in string representation.
- * @param tag The sensor tag to its unit in stringify.
- * @return The sensor tag unit in string representation.
+ * Prints sensor data in a standard format.
+ * @param tag The tag describing the kind of sensor data.
+ * @param data A pointer to the sensor data to be printed.
  */
-const char *sensor_tag_unit(const SensorTag tag) { return TAG_UNITS[tag]; }
+void sensor_print_data(const SensorTag tag, const void *data) {
+    char format_str[40] = "%s: ";              // Format specifier for data name
+    strcat(format_str, TAG_DATA[tag].fmt_str); // Format specifier for data
+    strcat(format_str, " %s\n");               // Format specifier for unit
+
+// Ignore GCC warning just for this line
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+    printf(format_str, TAG_DATA[tag].name, data, TAG_DATA[tag].unit);
+}

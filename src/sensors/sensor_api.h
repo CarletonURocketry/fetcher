@@ -81,8 +81,7 @@ typedef struct sensor_t {
 } Sensor;
 
 void memcpy_be(void *dest, const void *src, const size_t nbytes);
-
 const char *sensor_strtag(const SensorTag tag);
-const char *sensor_tag_unit(const SensorTag tag);
+void sensor_print_data(const SensorTag tag, const void *data);
 
 #endif // _SENSOR_API_H

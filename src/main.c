@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
         uint32_t data;
         uint8_t nbytes;
         sysclock.read(&sysclock, TAG_TIME, (uint8_t *)&data, &nbytes);
-        printf("%s: %u %s\n", sensor_strtag(TAG_TIME), data, sensor_tag_unit(TAG_TIME));
+        sensor_print_data(TAG_TIME, &data);
         usleep(10000);
     }
 
@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
             if (read_result != EOK) {
                 fprintf(stderr, "Could not read '%s' from MS5611: %s\n", sensor_strtag(tag), strerror(read_result));
             } else {
-                printf("%s: %.2f %s\n", sensor_strtag(tag), data, sensor_tag_unit(tag));
+                sensor_print_data(tag, &data);
             }
         }
     }
