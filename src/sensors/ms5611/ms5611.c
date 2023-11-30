@@ -233,8 +233,8 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, ui
 void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
-    sensor->max_return_size = sizeof(float);
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
+    sensor->max_dsize = sensor_max_dsize(&sensor->tag_list);
     sensor->context.size = (NUM_COEFFICIENTS * sizeof(COEF_TYPE)); // Size of all calibration data
     sensor->open = &ms5611_open;
     sensor->read = &ms5611_read;

@@ -32,6 +32,16 @@ void memcpy_be(void *dest, const void *src, const size_t nbytes) {
     }
 }
 
+uint8_t sensor_max_dsize(const SensorTagList *tag_list) {
+    uint8_t max = 0;
+    for (uint8_t i = 0; i < tag_list->len; i++) {
+        if (tag_list->tags[i] > max) {
+            max = SENSOR_TAG_DATA[tag_list->tags[i]].dsize;
+        }
+    }
+    return max;
+}
+
 /**
  * Converts a tag into the string representation of its associated data type's name.
  * @param tag The tag to stringify.

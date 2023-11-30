@@ -8,6 +8,9 @@
 /** The types of measurements the system clock can perform. */
 static const SensorTag TAGS[] = {TAG_TIME};
 
+/** Access sensor tag data from sensor API. */
+extern const SensorTagData SENSOR_TAG_DATA[];
+
 /** The structure containing the context the system clock needs between reads. */
 typedef struct {
     /** The offset of the current timezone from the GMT timezone. */
@@ -93,8 +96,8 @@ static errno_t sysclock_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, 
 void sysclock_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
-    sensor->max_return_size = sizeof(uint32_t);
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
+    sensor->max_dsize = sensor_max_dsize(&sensor->tag_list);
     sensor->context.size = sizeof(long);
     sensor->open = &sysclock_open;
     sensor->read = &sysclock_read;

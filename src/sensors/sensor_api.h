@@ -80,7 +80,7 @@ typedef struct sensor_t {
     /** The I2C address and bus of the sensor. */
     SensorLocation loc;
     /** The maximum return size of any data that is read. */
-    uint8_t max_return_size;
+    uint8_t max_dsize;
     /** A list of all the tags the sensor is capable of reading. */
     SensorTagList tag_list;
     /** Data structure for the sensor to store context it needs between operations. */
@@ -106,6 +106,7 @@ typedef struct sensor_t {
 } Sensor;
 
 void memcpy_be(void *dest, const void *src, const size_t nbytes);
+uint8_t sensor_max_dsize(const SensorTagList *tag_list);
 const char *sensor_strtag(const SensorTag tag);
 void sensor_print_data(const SensorTag tag, const void *data);
 
