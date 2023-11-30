@@ -1,3 +1,7 @@
+/**
+ * @file sysclock.c
+ * @brief Contains the types and function definitions required for the system clock sensor to function.
+ */
 #include "sysclock.h"
 #include "../sensor_api.h"
 #include <stdio.h>

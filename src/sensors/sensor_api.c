@@ -32,6 +32,11 @@ void memcpy_be(void *dest, const void *src, const size_t nbytes) {
     }
 }
 
+/**
+ * Gets the maximum dsize value of the tags in the tag list.
+ * @param tag_list The tag list to get the maximum dsize of.
+ * @return The maximum dsize of all the tags in the tag list.
+ */
 uint8_t sensor_max_dsize(const SensorTagList *tag_list) {
     uint8_t max = 0;
     for (uint8_t i = 0; i < tag_list->len; i++) {

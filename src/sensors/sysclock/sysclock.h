@@ -1,3 +1,7 @@
+/**
+ * @file sysclock.h
+ * @brief Contains the sensor API interface implemented by the system clock sensor.
+ */
 #ifndef _SYS_CLOCK_H_
 #define _SYS_CLOCK_H_
 
