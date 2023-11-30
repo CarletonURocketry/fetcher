@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['max_5freturn_5fsize_0',['max_return_size',['../structSensor.html#a39414eeb13eab9ca2c4b6f76c93c39e9',1,'Sensor']]]
+  ['len_0',['len',['../structSensorTagList.html#acdb5183db15d3d24ba1fd74b6124d91d',1,'SensorTagList']]],
+  ['loc_1',['loc',['../structSensor.html#aee84ea1743e4d2981a44f5975d7f5c1f',1,'Sensor']]]
 ];

@@ -82,8 +82,8 @@ $(function() {
 Data Fields</h2></td></tr>
 <tr class="memitem:aee84ea1743e4d2981a44f5975d7f5c1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSensorLocation.html">SensorLocation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#aee84ea1743e4d2981a44f5975d7f5c1f">loc</a></td></tr>
 <tr class="separator:aee84ea1743e4d2981a44f5975d7f5c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39414eeb13eab9ca2c4b6f76c93c39e9"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a39414eeb13eab9ca2c4b6f76c93c39e9">max_return_size</a></td></tr>
-<tr class="separator:a39414eeb13eab9ca2c4b6f76c93c39e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f705c41ca5f97afb1d30ce1fa6bec8d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a0f705c41ca5f97afb1d30ce1fa6bec8d">max_dsize</a></td></tr>
+<tr class="separator:a0f705c41ca5f97afb1d30ce1fa6bec8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a810cfcc9bbfaf705f69c353b7d26acfb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSensorTagList.html">SensorTagList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a810cfcc9bbfaf705f69c353b7d26acfb">tag_list</a></td></tr>
 <tr class="separator:a810cfcc9bbfaf705f69c353b7d26acfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f3139bb67729fe6381e7de18ddedbfb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSensorContext.html">SensorContext</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a8f3139bb67729fe6381e7de18ddedbfb">context</a></td></tr>
@@ -92,8 +92,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:aab8250f2beb3f7bd73af566c03a16ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae609668d0669ccdfbf525651997823b1"><td class="memItemLeft" align="right" valign="top">errno_t(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#ae609668d0669ccdfbf525651997823b1">open</a> )(struct sensor_t *sensor)</td></tr>
 <tr class="separator:ae609668d0669ccdfbf525651997823b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e8a73792bbcac509e4d6e299e6d6457"><td class="memItemLeft" align="right" valign="top">errno_t(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a3e8a73792bbcac509e4d6e299e6d6457">read</a> )(struct sensor_t *sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, uint8_t *buf, uint8_t *nbytes)</td></tr>
-<tr class="separator:a3e8a73792bbcac509e4d6e299e6d6457"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6df73a634ea4b0da061a2b0408d29fa6"><td class="memItemLeft" align="right" valign="top">errno_t(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a6df73a634ea4b0da061a2b0408d29fa6">read</a> )(struct sensor_t *sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, void *buf, uint8_t *nbytes)</td></tr>
+<tr class="separator:a6df73a634ea4b0da061a2b0408d29fa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The generic interface to interact with all sensors. </p>
@@ -128,14 +128,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a39414eeb13eab9ca2c4b6f76c93c39e9" name="a39414eeb13eab9ca2c4b6f76c93c39e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39414eeb13eab9ca2c4b6f76c93c39e9">&#9670;&#160;</a></span>max_return_size</h2>
+<a id="a0f705c41ca5f97afb1d30ce1fa6bec8d" name="a0f705c41ca5f97afb1d30ce1fa6bec8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f705c41ca5f97afb1d30ce1fa6bec8d">&#9670;&#160;</a></span>max_dsize</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t Sensor::max_return_size</td>
+          <td class="memname">uint8_t Sensor::max_dsize</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -179,14 +179,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a3e8a73792bbcac509e4d6e299e6d6457" name="a3e8a73792bbcac509e4d6e299e6d6457"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e8a73792bbcac509e4d6e299e6d6457">&#9670;&#160;</a></span>read</h2>
+<a id="a6df73a634ea4b0da061a2b0408d29fa6" name="a6df73a634ea4b0da061a2b0408d29fa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6df73a634ea4b0da061a2b0408d29fa6">&#9670;&#160;</a></span>read</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">errno_t(* Sensor::read) (struct sensor_t *sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, uint8_t *buf, uint8_t *nbytes)</td>
+          <td class="memname">errno_t(* Sensor::read) (struct sensor_t *sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, void *buf, uint8_t *nbytes)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -194,7 +194,7 @@ Data Fields</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">sensor</td><td>The sensor who this read method belongs to. </td></tr>
     <tr><td class="paramname">tag</td><td>The tag of the data type that should be read. </td></tr>
-    <tr><td class="paramname">buf</td><td>A pointer to the byte array to store the data. Should be large enough to fit the max_return_size bytes. </td></tr>
+    <tr><td class="paramname">buf</td><td>A pointer to the memory location to store the data. Should be large enough to fit the max_return_size bytes. </td></tr>
     <tr><td class="paramname">nbytes</td><td>The number of bytes that were written into the byte array buffer. </td></tr>
   </table>
   </dd>

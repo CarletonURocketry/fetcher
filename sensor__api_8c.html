@@ -75,7 +75,9 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">sensor_api.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -83,20 +85,64 @@ $(function() {
 <p>This file contains the implementations for the sensor API interface.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a027be96558c283856700fd3531351fa9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#a027be96558c283856700fd3531351fa9">drefcast</a>(type,  data)&#160;&#160;&#160;(*((type *)data))</td></tr>
+<tr class="separator:a027be96558c283856700fd3531351fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a75eceb540ea61058f80f337782cd64e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#a75eceb540ea61058f80f337782cd64e7">memcpy_be</a> (void *dest, const void *src, const size_t nbytes)</td></tr>
 <tr class="separator:a75eceb540ea61058f80f337782cd64e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad781d6686bf76608e106d4a067c36e7e"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#ad781d6686bf76608e106d4a067c36e7e">senapi_strtag</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag)</td></tr>
-<tr class="separator:ad781d6686bf76608e106d4a067c36e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fa6b9dbc2a897ba5c3b88ea5afc65b3"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#a8fa6b9dbc2a897ba5c3b88ea5afc65b3">senapi_tag_unit</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag)</td></tr>
-<tr class="separator:a8fa6b9dbc2a897ba5c3b88ea5afc65b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affe72b0d1beb51fb8bfa71d4150774b8"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#affe72b0d1beb51fb8bfa71d4150774b8">sensor_max_dsize</a> (const <a class="el" href="structSensorTagList.html">SensorTagList</a> *tag_list)</td></tr>
+<tr class="separator:affe72b0d1beb51fb8bfa71d4150774b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace7895479a67be7201443272719e5172"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#ace7895479a67be7201443272719e5172">sensor_strtag</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag)</td></tr>
+<tr class="separator:ace7895479a67be7201443272719e5172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabaa1ef601f5829a17a3b60205b5d3f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#aabaa1ef601f5829a17a3b60205b5d3f1">sensor_print_data</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, const void *data)</td></tr>
+<tr class="separator:aabaa1ef601f5829a17a3b60205b5d3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a67fcb881ec33516e2a6b60c5439bdd6f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structSensorTagData.html">SensorTagData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#a67fcb881ec33516e2a6b60c5439bdd6f">SENSOR_TAG_DATA</a> []</td></tr>
+<tr class="separator:a67fcb881ec33516e2a6b60c5439bdd6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This file contains the implementations for the sensor API interface. </p>
 <p >This file contains the implementations for the sensor API interface. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a027be96558c283856700fd3531351fa9" name="a027be96558c283856700fd3531351fa9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a027be96558c283856700fd3531351fa9">&#9670;&#160;</a></span>drefcast</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define drefcast</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">type, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">data&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;(*((type *)data))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Macro to cast a pointer to a different type and dereferencing it. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a75eceb540ea61058f80f337782cd64e7" name="a75eceb540ea61058f80f337782cd64e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a75eceb540ea61058f80f337782cd64e7">&#9670;&#160;</a></span>memcpy_be()</h2>
 
@@ -139,14 +185,74 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad781d6686bf76608e106d4a067c36e7e" name="ad781d6686bf76608e106d4a067c36e7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad781d6686bf76608e106d4a067c36e7e">&#9670;&#160;</a></span>senapi_strtag()</h2>
+<a id="affe72b0d1beb51fb8bfa71d4150774b8" name="affe72b0d1beb51fb8bfa71d4150774b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affe72b0d1beb51fb8bfa71d4150774b8">&#9670;&#160;</a></span>sensor_max_dsize()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const char * senapi_strtag </td>
+          <td class="memname">uint8_t sensor_max_dsize </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSensorTagList.html">SensorTagList</a> *&#160;</td>
+          <td class="paramname"><em>tag_list</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the maximum dsize value of the tags in the tag list. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tag_list</td><td>The tag list to get the maximum dsize of. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The maximum dsize of all the tags in the tag list. </dd></dl>
+
+</div>
+</div>
+<a id="aabaa1ef601f5829a17a3b60205b5d3f1" name="aabaa1ef601f5829a17a3b60205b5d3f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabaa1ef601f5829a17a3b60205b5d3f1">&#9670;&#160;</a></span>sensor_print_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sensor_print_data </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>&#160;</td>
+          <td class="paramname"><em>tag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Prints sensor data in a standard format. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tag</td><td>The tag describing the kind of sensor data. </td></tr>
+    <tr><td class="paramname">data</td><td>A pointer to the sensor data to be printed. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ace7895479a67be7201443272719e5172" name="ace7895479a67be7201443272719e5172"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace7895479a67be7201443272719e5172">&#9670;&#160;</a></span>sensor_strtag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * sensor_strtag </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>&#160;</td>
           <td class="paramname"><em>tag</em></td><td>)</td>
@@ -154,38 +260,41 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Converts a sensor tag to its string representation. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Converts a tag into the string representation of its associated data type's name. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tag</td><td>The sensor tag to stringify. </td></tr>
+    <tr><td class="paramname">tag</td><td>The tag to stringify. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The sensor tag string representation. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The tag's data type as a string. </dd></dl>
 
 </div>
 </div>
-<a id="a8fa6b9dbc2a897ba5c3b88ea5afc65b3" name="a8fa6b9dbc2a897ba5c3b88ea5afc65b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fa6b9dbc2a897ba5c3b88ea5afc65b3">&#9670;&#160;</a></span>senapi_tag_unit()</h2>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a67fcb881ec33516e2a6b60c5439bdd6f" name="a67fcb881ec33516e2a6b60c5439bdd6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67fcb881ec33516e2a6b60c5439bdd6f">&#9670;&#160;</a></span>SENSOR_TAG_DATA</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const char * senapi_tag_unit </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>&#160;</td>
-          <td class="paramname"><em>tag</em></td><td>)</td>
-          <td></td>
+          <td class="memname">const <a class="el" href="structSensorTagData.html">SensorTagData</a> SENSOR_TAG_DATA[]</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Converts a sensor tag to its unit in string representation. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tag</td><td>The sensor tag to its unit in stringify. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The sensor tag unit in string representation. </dd></dl>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    [<a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13">TAG_PRESSURE</a>] =</div>
+<div class="line">        {.name = <span class="stringliteral">&quot;Pressure&quot;</span>, .unit = <span class="stringliteral">&quot;kPa&quot;</span>, .fmt_str = <span class="stringliteral">&quot;%.2f&quot;</span>, .dsize = <span class="keyword">sizeof</span>(float), .dtype = <a class="code hl_enumvalue" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f">TYPE_FLOAT</a>},</div>
+<div class="line">    [<a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08">TAG_TEMPERATURE</a>] =</div>
+<div class="line">        {.name = <span class="stringliteral">&quot;Temperature&quot;</span>, .unit = <span class="stringliteral">&quot;C&quot;</span>, .fmt_str = <span class="stringliteral">&quot;%.2f&quot;</span>, .dsize = <span class="keyword">sizeof</span>(float), .dtype = <a class="code hl_enumvalue" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f">TYPE_FLOAT</a>},</div>
+<div class="line">    [<a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba">TAG_TIME</a>] = {.name = <span class="stringliteral">&quot;Time&quot;</span>, .unit = <span class="stringliteral">&quot;ms&quot;</span>, .fmt_str = <span class="stringliteral">&quot;%u&quot;</span>, .dsize = <span class="keyword">sizeof</span>(uint32_t), .dtype = <a class="code hl_enumvalue" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a9727de420e0b9c249da040949489481e">TYPE_U32</a>},</div>
+<div class="line">}</div>
+<div class="ttc" id="asensor__api_8h_html_a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f"><div class="ttname"><a href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f">TYPE_FLOAT</a></div><div class="ttdeci">@ TYPE_FLOAT</div><div class="ttdef"><b>Definition:</b> sensor_api.h:25</div></div>
+<div class="ttc" id="asensor__api_8h_html_a12c516a9f3375ec72e5b9a1a2eb74b84a9727de420e0b9c249da040949489481e"><div class="ttname"><a href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a9727de420e0b9c249da040949489481e">TYPE_U32</a></div><div class="ttdeci">@ TYPE_U32</div><div class="ttdef"><b>Definition:</b> sensor_api.h:26</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08">TAG_TEMPERATURE</a></div><div class="ttdeci">@ TAG_TEMPERATURE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:18</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba">TAG_TIME</a></div><div class="ttdeci">@ TAG_TIME</div><div class="ttdef"><b>Definition:</b> sensor_api.h:20</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13">TAG_PRESSURE</a></div><div class="ttdeci">@ TAG_PRESSURE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:19</div></div>
+</div><!-- fragment --><p >A list of the possible sensor tags and their metadata. </p>
 
 </div>
 </div>

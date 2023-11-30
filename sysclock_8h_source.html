@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: src/sensors/ms5611/ms5611.h Source File</title>
+<title>fetcher: src/sensors/sysclock/sysclock.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,26 +70,26 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7349e89ef19c117195f8e371603e1b1f.html">sensors</a></li><li class="navelem"><a class="el" href="dir_87162838b525fd464187784ce9eaf8e5.html">ms5611</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7349e89ef19c117195f8e371603e1b1f.html">sensors</a></li><li class="navelem"><a class="el" href="dir_8796005d11c96c291c82aa45b0b3e085.html">sysclock</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="headertitle"><div class="title">ms5611.h</div></div>
+  <div class="headertitle"><div class="title">sysclock.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="ms5611_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#ifndef _MS5611_H_</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#define _MS5611_H_</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;../sensor_api.h&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keywordtype">void</span> <a class="code hl_function" href="ms5611_8h.html#aba9274ab1665fc5f5404b96b49860605">ms5611_init</a>(<a class="code hl_struct" href="structSensor.html">Sensor</a> *sensor, <span class="keyword">const</span> <span class="keywordtype">int</span> bus, <span class="keyword">const</span> uint8_t addr, <span class="keyword">const</span> <a class="code hl_enumeration" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif </span><span class="comment">// _MS5611_H_</span></div>
-<div class="ttc" id="ams5611_8h_html_aba9274ab1665fc5f5404b96b49860605"><div class="ttname"><a href="ms5611_8h.html#aba9274ab1665fc5f5404b96b49860605">ms5611_init</a></div><div class="ttdeci">void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision)</div><div class="ttdef"><b>Definition:</b> ms5611.c:233</div></div>
+<a href="sysclock_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#ifndef _SYS_CLOCK_H_</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#define _SYS_CLOCK_H_</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;../sensor_api.h&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keywordtype">void</span> <a class="code hl_function" href="sysclock_8h.html#a6f4e93b4481db219550202ee9c590193">sysclock_init</a>(<a class="code hl_struct" href="structSensor.html">Sensor</a> *sensor, <span class="keyword">const</span> <span class="keywordtype">int</span> bus, <span class="keyword">const</span> uint8_t addr, <span class="keyword">const</span> <a class="code hl_enumeration" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#endif </span><span class="comment">// _SYS_CLOCK_H_</span></div>
 <div class="ttc" id="asensor__api_8h_html_a39ae9cf64d9489717d5ec612e4039587"><div class="ttname"><a href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a></div><div class="ttdeci">SensorPrecision</div><div class="ttdef"><b>Definition:</b> sensor_api.h:48</div></div>
 <div class="ttc" id="astructSensor_html"><div class="ttname"><a href="structSensor.html">Sensor</a></div><div class="ttdef"><b>Definition:</b> sensor_api.h:79</div></div>
+<div class="ttc" id="asysclock_8h_html_a6f4e93b4481db219550202ee9c590193"><div class="ttname"><a href="sysclock_8h.html#a6f4e93b4481db219550202ee9c590193">sysclock_init</a></div><div class="ttdeci">void sysclock_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision)</div><div class="ttdef"><b>Definition:</b> sysclock.c:100</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

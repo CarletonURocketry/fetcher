@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['open_0',['open',['../structSensor.html#ae609668d0669ccdfbf525651997823b1',1,'Sensor']]]
+  ['max_5fdsize_0',['max_dsize',['../structSensor.html#a0f705c41ca5f97afb1d30ce1fa6bec8d',1,'Sensor']]]
 ];

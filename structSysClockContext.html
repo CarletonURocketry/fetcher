@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: src/sensors Directory Reference</title>
+<title>fetcher: SysClockContext Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,32 +68,57 @@ $(function() {
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7349e89ef19c117195f8e371603e1b1f.html">sensors</a></li>  </ul>
-</div>
 </div><!-- top -->
 <div class="header">
-  <div class="headertitle"><div class="title">sensors Directory Reference</div></div>
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
+  <div class="headertitle"><div class="title">SysClockContext Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="subdirs" name="subdirs"></a>
-Directories</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">directory &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_87162838b525fd464187784ce9eaf8e5.html">ms5611</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">directory &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_8796005d11c96c291c82aa45b0b3e085.html">sysclock</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="files" name="files"></a>
-Files</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html">sensor_api.c</a></td></tr>
-<tr class="memdesc:sensor__api_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This file contains the implementations for the sensor API interface. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html">sensor_api.h</a> <a href="sensor__api_8h_source.html">[code]</a></td></tr>
-<tr class="memdesc:sensor__api_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types and function prototypes for the sensor API used to communicate with I2C bus sensors. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:afb2cbd538e160d478f67b90631d73a8d"><td class="memItemLeft" align="right" valign="top">long int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSysClockContext.html#afb2cbd538e160d478f67b90631d73a8d">tm_gmtoff</a></td></tr>
+<tr class="separator:afb2cbd538e160d478f67b90631d73a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d6ba1cef96c3ec5f59b263f888a9d7a"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSysClockContext.html#a4d6ba1cef96c3ec5f59b263f888a9d7a">start_unix_time</a></td></tr>
+<tr class="separator:a4d6ba1cef96c3ec5f59b263f888a9d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >The structure containing the context the system clock needs between reads. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="a4d6ba1cef96c3ec5f59b263f888a9d7a" name="a4d6ba1cef96c3ec5f59b263f888a9d7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d6ba1cef96c3ec5f59b263f888a9d7a">&#9670;&#160;</a></span>start_unix_time</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">time_t SysClockContext::start_unix_time</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The start time (when the sensor was opened) in Unix time. </p>
+
+</div>
+</div>
+<a id="afb2cbd538e160d478f67b90631d73a8d" name="afb2cbd538e160d478f67b90631d73a8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb2cbd538e160d478f67b90631d73a8d">&#9670;&#160;</a></span>tm_gmtoff</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long int SysClockContext::tm_gmtoff</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The offset of the current timezone from the GMT timezone. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/sensors/sysclock/<a class="el" href="sysclock_8c.html">sysclock.c</a></li>
+</ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

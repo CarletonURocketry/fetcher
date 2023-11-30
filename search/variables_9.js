@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size_0',['size',['../structSensorContext.html#a5610f1972bc480fe549e0564bca9f47c',1,'SensorContext']]]
+  ['precision_0',['precision',['../structSensor.html#aab8250f2beb3f7bd73af566c03a16ce5',1,'Sensor']]]
 ];
