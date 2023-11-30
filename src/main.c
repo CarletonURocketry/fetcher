@@ -86,13 +86,8 @@ int main(int argc, char **argv) {
     for (int i = 0; i < 50; i++) {
         uint32_t data;
         uint8_t nbytes;
-
-        if (i > 25) {
-            sysclock.precision = PRECISION_LOW;
-        }
-
         sysclock.read(&sysclock, TAG_TIME, (uint8_t *)&data, &nbytes);
-        printf("%u ms\n", data);
+        printf("%s: %u %s\n", sensor_strtag(TAG_TIME), data, sensor_tag_unit(TAG_TIME));
         usleep(10000);
     }
 

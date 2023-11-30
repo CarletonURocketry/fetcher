@@ -17,7 +17,7 @@
 typedef enum sensor_tag_t {
     TAG_TEMPERATURE, /**< Temperature in degrees Celsius */
     TAG_PRESSURE,    /**< Pressure in kilo Pascals */
-    TAG_TIME,        /**< Time in seconds */
+    TAG_TIME,        /**< Time in milliseconds */
 } SensorTag;
 
 typedef enum sensor_precision_t {

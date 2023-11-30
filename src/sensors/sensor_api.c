@@ -17,7 +17,7 @@ static const char *TAG_STRINGS[] = {
 static const char *TAG_UNITS[] = {
     [TAG_PRESSURE] = "kPa",
     [TAG_TEMPERATURE] = "C",
-    [TAG_TIME] = "s",
+    [TAG_TIME] = "ms",
 };
 
 /**
