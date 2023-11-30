@@ -97,12 +97,12 @@ typedef struct sensor_t {
      * Function responsible for reading the data associated with tag from the sensor.
      * @param sensor The sensor who this read method belongs to.
      * @param tag The tag of the data type that should be read.
-     * @param buf A pointer to the byte array to store the data. Should be large enough to fit the max_return_size
+     * @param buf A pointer to the memory location to store the data. Should be large enough to fit the max_return_size
      * bytes.
      * @param nbytes The number of bytes that were written into the byte array buffer.
      * @return Error status of reading from the sensor. EOK if successful.
      */
-    errno_t (*read)(struct sensor_t *sensor, const SensorTag tag, uint8_t *buf, uint8_t *nbytes);
+    errno_t (*read)(struct sensor_t *sensor, const SensorTag tag, void *buf, uint8_t *nbytes);
 } Sensor;
 
 void memcpy_be(void *dest, const void *src, const size_t nbytes);

@@ -48,11 +48,11 @@ static errno_t sysclock_open(Sensor *sensor) {
  * Reads the specified data from the system clock.
  * @param sensor A reference to a system clock sensor.
  * @param tag The tag of the data type that should be read.
- * @param buf A pointer to the byte array to store the data.
+ * @param buf A pointer to the memory location to store the data.
  * @param nbytes The number of bytes that were written into the byte array buffer.
  * @return Error status of reading from the sensor. EOK if successful.
  */
-static errno_t sysclock_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, uint8_t *nbytes) {
+static errno_t sysclock_read(Sensor *sensor, const SensorTag tag, void *buf, uint8_t *nbytes) {
 
     (void)sensor; // Avoid unused parameter error
 
