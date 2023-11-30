@@ -51,16 +51,29 @@ static errno_t sysclock_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, 
 
     switch (tag) {
     case TAG_TIME: {
+        uint32_t ms;
+        // Low precision only has 1 second precision
+        if (sensor->precision == PRECISION_LOW) {
+            // Get current time
+            time_t cur_time;
+            time(&cur_time);
 
-        // Set timezone, no daylight savings correct and with the correct GMT offset
-        struct timezone tz = {.tz_dsttime = 0, .tz_minuteswest = derefctx(sensor->context).tm_gmtoff};
-        struct timeval tval;
+            // Calculate difference between start and end time in milliseconds
+            ms = (cur_time - derefctx(sensor->context).start_unix_time) * 1000;
+        } else {
+            // Set timezone, no daylight savings correct and with the correct GMT offset
+            struct timezone tz = {.tz_dsttime = 0, .tz_minuteswest = derefctx(sensor->context).tm_gmtoff};
+            struct timeval tval;
 
-        gettimeofday(&tval, &tz);
-        time_t elapsed_s = tval.tv_sec - derefctx(sensor->context).start_unix_time;
+            // Get current time
+            gettimeofday(&tval, &tz);
 
-        // Convert to milliseconds
-        uint32_t ms = (elapsed_s * 1000) + (tval.tv_usec / 1000);
+            // Calculate difference between start and end time in milliseconds
+            time_t elapsed_s = tval.tv_sec - derefctx(sensor->context).start_unix_time;
+            ms = (elapsed_s * 1000) + (tval.tv_usec / 1000);
+        }
+
+        // Copy to caller's buffer
         memcpy(buf, &ms, sizeof(ms));
         *nbytes = sizeof(ms);
         return EOK;
