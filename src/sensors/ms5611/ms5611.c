@@ -24,6 +24,9 @@
 /** A list of data types that can be read by the MS5611 */
 static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_PRESSURE};
 
+/** Access sensor tag data from sensor API. */
+extern const SensorTagData SENSOR_TAG_DATA[];
+
 /** All of the I2C commands that can be used on the MS5611 sensor. */
 typedef enum ms5611_cmd_t {
     CMD_RESET = 0x1E,    /**< ADC reset command */
@@ -155,11 +158,11 @@ static errno_t ms5611_open(Sensor *sensor) {
  * Reads the specified data from the MS5611.
  * @param sensor A reference to an MS5611 sensor.
  * @param tag The tag of the data type that should be read.
- * @param buf A pointer to the byte array to store the data.
+ * @param buf A pointer to the memory location to store the data.
  * @param nbytes The number of bytes that were written into the byte array buffer.
  * @return Error status of reading from the sensor. EOK if successful.
  */
-static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, uint8_t *nbytes) {
+static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, uint8_t *nbytes) {
 
     // Read D registers with configured precision
     uint32_t d1, d2;
@@ -203,12 +206,12 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, ui
 
     switch (tag) {
     case TAG_TEMPERATURE: {
-        temperature /= 100; // Degrees C
-        memcpy(buf, &temperature, sizeof(temperature));
-        *nbytes = sizeof(temperature);
+        float f_temp = temperature / 100; // Degrees C
+        memcpy(buf, &f_temp, sizeof(f_temp));
+        *nbytes = sizeof(f_temp);
     } break;
     case TAG_PRESSURE: {
-        double pressure = (((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000; // kPa
+        float pressure = (((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000; // kPa
         memcpy(buf, &pressure, sizeof(pressure));
         *nbytes = sizeof(pressure);
         break;
@@ -230,8 +233,8 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, uint8_t *buf, ui
 void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
-    sensor->max_return_size = sizeof(double);
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
+    sensor->max_dsize = sensor_max_dsize(&sensor->tag_list);
     sensor->context.size = (NUM_COEFFICIENTS * sizeof(COEF_TYPE)); // Size of all calibration data
     sensor->open = &ms5611_open;
     sensor->read = &ms5611_read;
