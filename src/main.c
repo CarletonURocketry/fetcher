@@ -23,6 +23,9 @@
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
 
+/* The speed of the I2C bus in kilobits per second. */
+#define BUS_SPEED 400000
+
 /** Flag to indicate reading from file in endless mode for debugging. */
 static bool endless = false;
 
@@ -56,7 +59,15 @@ int main(int argc, char **argv) {
     /* Open I2C. */
     int bus = open("/dev/i2c1", O_RDWR);
     if (bus < 0) {
-        fprintf(stderr, "Could not open I2C bus.\n");
+        fprintf(stderr, "Could not open I2C bus with error %s.\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    /* Set I2C bus speed. */
+    uint32_t speed = BUS_SPEED;
+    errno_t bus_speed = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
+    if (bus_speed != EOK) {
+        fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(bus_speed));
         exit(EXIT_FAILURE);
     }
 
@@ -64,9 +75,9 @@ int main(int argc, char **argv) {
     Sensor ms5611;
     ms5611_init(&ms5611, bus, 0x76, PRECISION_HIGH);
 
-    uint8_t ms5611_context[ms5611.context.size];
-    ms5611.context.data = &ms5611_context;
-    errno_t setup_res = ms5611.open(&ms5611);
+    uint8_t ms5611_context[sensor_get_ctx_size(ms5611)];
+    sensor_set_ctx(ms5611, ms5611_context);
+    errno_t setup_res = sensor_open(ms5611);
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
@@ -75,9 +86,9 @@ int main(int argc, char **argv) {
     // Create system clock instance
     Sensor sysclock;
     sysclock_init(&sysclock, bus, 0x00, PRECISION_HIGH);
-    uint8_t sysclock_context[sysclock.context.size];
-    sysclock.context.data = &sysclock_context;
-    setup_res = sysclock.open(&sysclock);
+    uint8_t sysclock_context[sensor_get_ctx_size(sysclock)];
+    sensor_set_ctx(sysclock, &sysclock_context);
+    setup_res = sensor_open(sysclock);
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
@@ -86,7 +97,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < 50; i++) {
         uint32_t data;
         uint8_t nbytes;
-        sysclock.read(&sysclock, TAG_TIME, (uint8_t *)&data, &nbytes);
+        sensor_read(sysclock, TAG_TIME, (uint8_t *)&data, &nbytes);
         sensor_print_data(TAG_TIME, &data);
         usleep(10000);
     }
@@ -98,7 +109,7 @@ int main(int argc, char **argv) {
         double data;
         for (uint8_t i = 0; i < ms5611.tag_list.len; i++) {
             SensorTag tag = ms5611.tag_list.tags[i];
-            read_result = ms5611.read(&ms5611, tag, (uint8_t *)&data, &nbytes);
+            read_result = sensor_read(ms5611, tag, (uint8_t *)&data, &nbytes);
             if (read_result != EOK) {
                 fprintf(stderr, "Could not read '%s' from MS5611: %s\n", sensor_strtag(tag), strerror(read_result));
             } else {
