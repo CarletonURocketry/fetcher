@@ -114,6 +114,6 @@ extern void sensor_set_precision(Sensor sensor, const SensorPrecision precision)
 extern errno_t sensor_open(Sensor sensor);
 extern errno_t sensor_read(Sensor sensor, const SensorTag tag, void *buf, uint8_t *nbytes);
 extern size_t sensor_get_ctx_size(Sensor sensor);
-extern void sensor_set_ctx(Sensor sensor, void *buf);
+extern void sensor_set_ctx(Sensor *sensor, void *buf);
 
 #endif // _SENSOR_API_H

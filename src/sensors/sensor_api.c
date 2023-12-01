@@ -56,7 +56,7 @@ inline size_t __attribute__((always_inline)) sensor_get_ctx_size(Sensor sensor) 
  * @param buf The memory block to set the sensor context to.
  */
 #pragma GCC diagnostic ignored "-Wunused-but-set-parameter"
-inline void __attribute__((always_inline)) sensor_set_ctx(Sensor sensor, void *buf) { sensor.context.data = buf; }
+inline void __attribute__((always_inline)) sensor_set_ctx(Sensor *sensor, void *buf) { sensor->context.data = buf; }
 
 /**
  * Open and set up the sensor.
