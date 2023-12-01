@@ -74,20 +74,20 @@ inline errno_t __attribute__((always_inline)) sensor_open(Sensor sensor) { retur
  * @return Error status of setting up the sensor. EOK if successful.
  */
 inline errno_t __attribute__((always_inline))
-sensor_read(Sensor sensor, const SensorTag tag, void *buf, uint8_t *nbytes) {
+sensor_read(Sensor sensor, const SensorTag tag, void *buf, size_t *nbytes) {
     return sensor.read(&sensor, tag, buf, nbytes);
 }
 
 /**
- * Gets the maximum dsize value of the tags in the tag list.
- * @param tag_list The tag list to get the maximum dsize of.
+ * Gets the maximum data size returned when reading the sensor.
+ * @param sensor The sensor to find the maximum data size of.
  * @return The maximum dsize of all the tags in the tag list.
  */
-uint8_t sensor_max_dsize(const SensorTagList *tag_list) {
+size_t sensor_max_dsize(const Sensor *sensor) {
     uint8_t max = 0;
-    for (uint8_t i = 0; i < tag_list->len; i++) {
-        if (tag_list->tags[i] > max) {
-            max = SENSOR_TAG_DATA[tag_list->tags[i]].dsize;
+    for (uint8_t i = 0; i < sensor->tag_list.len; i++) {
+        if (sensor->tag_list.tags[i] > max) {
+            max = SENSOR_TAG_DATA[sensor->tag_list.tags[i]].dsize;
         }
     }
     return max;
