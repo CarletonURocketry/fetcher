@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <hw/i2c.h>
 #include <math.h>
+#include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -22,7 +23,7 @@
     if (err != EOK) return err
 
 /** A list of data types that can be read by the MS5611 */
-static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_PRESSURE};
+static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_PRESSURE, TAG_ALTITUDE};
 
 /** Access sensor tag data from sensor API. */
 extern const SensorTagData SENSOR_TAG_DATA[];
@@ -140,7 +141,7 @@ static errno_t ms5611_open(Sensor *sensor) {
     memcpy(prom_read_cmd, &prom_read, sizeof(prom_read));
 
     // Read calibration data into sensor context
-    COEF_TYPE *cal_coefs = (COEF_TYPE *)sensor->context.data;
+    COEF_TYPE *cal_coefs = (COEF_TYPE *)sensor->context.data; // change this
     for (uint8_t i = 0; i < NUM_COEFFICIENTS; i++) {
 
         // Read from PROM
@@ -149,8 +150,10 @@ static errno_t ms5611_open(Sensor *sensor) {
         return_err(op_status);
 
         // Store calibration coefficient
-        memcpy_be(&cal_coefs[i], &prom_read_cmd[sizeof(prom_read)], sizeof(COEF_TYPE));
+        memcpy_be(&cal_coefs[i], &prom_read_cmd[sizeof(prom_read)], sizeof(COEF_TYPE)); // my_struct.coeffs[i]
     }
+
+    // ms5611_read(pressure)
     return EOK;
 }
 
@@ -214,6 +217,16 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, uint8
         float pressure = (((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000; // kPa
         memcpy(buf, &pressure, sizeof(pressure));
         *nbytes = sizeof(pressure);
+        break;
+    }
+    case TAG_ALTITUDE: {
+        float pressure = ((((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000); // kPa
+        float R = 8.31432f;
+        float g = 9.80665f;
+        float M = 0.0289644f;
+        float altitude = (R * (temperature + 273) * log(pressure / pressure) / (g * M)); // Measured AGL in m
+        memcpy(buf, &altitude, sizeof(altitude));
+        *nbytes = sizeof(altitude);
         break;
     }
     default:
