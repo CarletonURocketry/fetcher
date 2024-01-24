@@ -79,8 +79,6 @@ typedef struct {
 typedef struct sensor_t {
     /** The I2C address and bus of the sensor. */
     SensorLocation loc;
-    /** The maximum return size of any data that is read. */
-    uint8_t max_dsize;
     /** A list of all the tags the sensor is capable of reading. */
     SensorTagList tag_list;
     /** Data structure for the sensor to store context it needs between operations. */
@@ -102,12 +100,18 @@ typedef struct sensor_t {
      * @param nbytes The number of bytes that were written into the byte array buffer.
      * @return Error status of reading from the sensor. EOK if successful.
      */
-    errno_t (*read)(struct sensor_t *sensor, const SensorTag tag, void *buf, uint8_t *nbytes);
+    errno_t (*read)(struct sensor_t *sensor, const SensorTag tag, void *buf, size_t *nbytes);
 } Sensor;
 
 void memcpy_be(void *dest, const void *src, const size_t nbytes);
-uint8_t sensor_max_dsize(const SensorTagList *tag_list);
+size_t sensor_max_dsize(const Sensor *sensor);
 const char *sensor_strtag(const SensorTag tag);
 void sensor_print_data(const SensorTag tag, const void *data);
+
+extern void sensor_set_precision(Sensor sensor, const SensorPrecision precision);
+extern errno_t sensor_open(Sensor sensor);
+extern errno_t sensor_read(Sensor sensor, const SensorTag tag, void *buf, size_t *nbytes);
+extern size_t sensor_get_ctx_size(Sensor sensor);
+extern void sensor_set_ctx(Sensor *sensor, void *buf);
 
 #endif // _SENSOR_API_H

@@ -4,6 +4,7 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
+#include "sensors/sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -15,13 +16,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Sensor includes */
+/* Implemented sensors. */
 #include "sensors/ms5611/ms5611.h"
-#include "sensors/sensor_api.h"
 #include "sensors/sysclock/sysclock.h"
 
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
+
+/* The speed of the I2C bus in kilobits per second. */
+#define BUS_SPEED 400000
 
 /** Flag to indicate reading from file in endless mode for debugging. */
 static bool endless = false;
@@ -56,53 +59,62 @@ int main(int argc, char **argv) {
     /* Open I2C. */
     int bus = open("/dev/i2c1", O_RDWR);
     if (bus < 0) {
-        fprintf(stderr, "Could not open I2C bus.\n");
+        fprintf(stderr, "Could not open I2C bus with error %s.\n", strerror(errno));
         exit(EXIT_FAILURE);
     }
 
-    // Create MS5611 instance
-    Sensor ms5611;
-    ms5611_init(&ms5611, bus, 0x76, PRECISION_HIGH);
+    /* Set I2C bus speed. */
+    uint32_t speed = BUS_SPEED;
+    errno_t bus_speed = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
+    if (bus_speed != EOK) {
+        fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(bus_speed));
+        exit(EXIT_FAILURE);
+    }
 
-    uint8_t ms5611_context[ms5611.context.size];
-    ms5611.context.data = &ms5611_context;
-    errno_t setup_res = ms5611.open(&ms5611);
+    /* Create sensor list. */
+    Sensor sensors[2];
+
+    // Create MS5611 instance
+    ms5611_init(&sensors[0], bus, 0x76, PRECISION_HIGH);
+
+    uint8_t ms5611_context[sensor_get_ctx_size(sensors[0])];
+    sensor_set_ctx(&sensors[0], ms5611_context);
+    errno_t setup_res = sensor_open(sensors[0]);
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
     }
 
     // Create system clock instance
-    Sensor sysclock;
-    sysclock_init(&sysclock, bus, 0x00, PRECISION_HIGH);
-    uint8_t sysclock_context[sysclock.context.size];
-    sysclock.context.data = &sysclock_context;
-    setup_res = sysclock.open(&sysclock);
+    sysclock_init(&sensors[1], bus, 0x00, PRECISION_HIGH);
+
+    uint8_t sysclock_context[sensor_get_ctx_size(sensors[1])];
+    sensor_set_ctx(&sensors[1], sysclock_context);
+    setup_res = sensor_open(sensors[1]);
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < 50; i++) {
-        uint32_t data;
-        uint8_t nbytes;
-        sysclock.read(&sysclock, TAG_TIME, (uint8_t *)&data, &nbytes);
-        sensor_print_data(TAG_TIME, &data);
-        usleep(10000);
-    }
-
-    // Read temperature and pressure data
+    // Read all sensor data
     while (!endless) {
-        errno_t read_result;
-        uint8_t nbytes;
-        double data;
-        for (uint8_t i = 0; i < ms5611.tag_list.len; i++) {
-            SensorTag tag = ms5611.tag_list.tags[i];
-            read_result = ms5611.read(&ms5611, tag, (uint8_t *)&data, &nbytes);
-            if (read_result != EOK) {
-                fprintf(stderr, "Could not read '%s' from MS5611: %s\n", sensor_strtag(tag), strerror(read_result));
-            } else {
-                sensor_print_data(tag, &data);
+        errno_t read_result; // The result of a sensor read
+        size_t nbytes;       // The number of bytes returned by a sensor read
+        for (uint8_t i = 0; i < sizeof(sensors) / sizeof(sensors[0]); i++) {
+            Sensor sensor = sensors[i];              // Grab the current sensor
+            uint8_t data[sensor_max_dsize(&sensor)]; // Allocate sufficient data to read the sensor
+
+            /* Read all of the possible data the sensor can provide, and print it to stdout. */
+            for (uint8_t j = 0; j < sensor.tag_list.len; j++) {
+                SensorTag tag = sensor.tag_list.tags[j];
+                read_result = sensor_read(sensor, tag, data, &nbytes);
+
+                // Sensor read didn't work, skip this iteration
+                if (read_result != EOK) {
+                    fprintf(stderr, "Could not read sensor data: %s\n", sensor_strtag(tag));
+                    continue;
+                }
+                sensor_print_data(tag, data); // Sensor read worked, print out the result
             }
         }
     }
