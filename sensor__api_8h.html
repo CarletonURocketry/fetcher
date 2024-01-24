@@ -145,12 +145,22 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a75eceb540ea61058f80f337782cd64e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a75eceb540ea61058f80f337782cd64e7">memcpy_be</a> (void *dest, const void *src, const size_t nbytes)</td></tr>
 <tr class="separator:a75eceb540ea61058f80f337782cd64e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affe72b0d1beb51fb8bfa71d4150774b8"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#affe72b0d1beb51fb8bfa71d4150774b8">sensor_max_dsize</a> (const <a class="el" href="structSensorTagList.html">SensorTagList</a> *tag_list)</td></tr>
-<tr class="separator:affe72b0d1beb51fb8bfa71d4150774b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5e2052ce2670e4f1e2e4dd905ad375a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#ab5e2052ce2670e4f1e2e4dd905ad375a">sensor_max_dsize</a> (const <a class="el" href="structSensor.html">Sensor</a> *sensor)</td></tr>
+<tr class="separator:ab5e2052ce2670e4f1e2e4dd905ad375a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace7895479a67be7201443272719e5172"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#ace7895479a67be7201443272719e5172">sensor_strtag</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag)</td></tr>
 <tr class="separator:ace7895479a67be7201443272719e5172"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabaa1ef601f5829a17a3b60205b5d3f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#aabaa1ef601f5829a17a3b60205b5d3f1">sensor_print_data</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, const void *data)</td></tr>
 <tr class="separator:aabaa1ef601f5829a17a3b60205b5d3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a430b7748174467e5bde0d30f25c4238d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a430b7748174467e5bde0d30f25c4238d">sensor_set_precision</a> (<a class="el" href="structSensor.html">Sensor</a> sensor, const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision)</td></tr>
+<tr class="separator:a430b7748174467e5bde0d30f25c4238d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d7050eeccb4e8dd4e96eaf5ea4f1a36"><td class="memItemLeft" align="right" valign="top">errno_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a7d7050eeccb4e8dd4e96eaf5ea4f1a36">sensor_open</a> (<a class="el" href="structSensor.html">Sensor</a> sensor)</td></tr>
+<tr class="separator:a7d7050eeccb4e8dd4e96eaf5ea4f1a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acae3426125d6bb82b828d1896e3a3d9f"><td class="memItemLeft" align="right" valign="top">errno_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#acae3426125d6bb82b828d1896e3a3d9f">sensor_read</a> (<a class="el" href="structSensor.html">Sensor</a> sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, void *buf, size_t *nbytes)</td></tr>
+<tr class="separator:acae3426125d6bb82b828d1896e3a3d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55a8f00834e207eb93484dcdfa4b3c26"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a55a8f00834e207eb93484dcdfa4b3c26">sensor_get_ctx_size</a> (<a class="el" href="structSensor.html">Sensor</a> sensor)</td></tr>
+<tr class="separator:a55a8f00834e207eb93484dcdfa4b3c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4922c3de7878ecacbe99217e2f3522f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a4922c3de7878ecacbe99217e2f3522f9">sensor_set_ctx</a> (<a class="el" href="structSensor.html">Sensor</a> *sensor, void *buf)</td></tr>
+<tr class="separator:a4922c3de7878ecacbe99217e2f3522f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Types and function prototypes for the sensor API used to communicate with I2C bus sensors. </p>
@@ -275,28 +285,64 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="affe72b0d1beb51fb8bfa71d4150774b8" name="affe72b0d1beb51fb8bfa71d4150774b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#affe72b0d1beb51fb8bfa71d4150774b8">&#9670;&nbsp;</a></span>sensor_max_dsize()</h2>
+<a id="a55a8f00834e207eb93484dcdfa4b3c26" name="a55a8f00834e207eb93484dcdfa4b3c26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55a8f00834e207eb93484dcdfa4b3c26">&#9670;&nbsp;</a></span>sensor_get_ctx_size()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t sensor_max_dsize </td>
+          <td class="memname">size_t sensor_get_ctx_size </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structSensorTagList.html">SensorTagList</a> *&#160;</td>
-          <td class="paramname"><em>tag_list</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a>&#160;</td>
+          <td class="paramname"><em>sensor</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Gets the maximum dsize value of the tags in the tag list. </p><dl class="params"><dt>Parameters</dt><dd>
+
+</div>
+</div>
+<a id="ab5e2052ce2670e4f1e2e4dd905ad375a" name="ab5e2052ce2670e4f1e2e4dd905ad375a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5e2052ce2670e4f1e2e4dd905ad375a">&#9670;&nbsp;</a></span>sensor_max_dsize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t sensor_max_dsize </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSensor.html">Sensor</a> *&#160;</td>
+          <td class="paramname"><em>sensor</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the maximum data size returned when reading the sensor. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tag_list</td><td>The tag list to get the maximum dsize of. </td></tr>
+    <tr><td class="paramname">sensor</td><td>The sensor to find the maximum data size of. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The maximum dsize of all the tags in the tag list. </dd></dl>
+
+</div>
+</div>
+<a id="a7d7050eeccb4e8dd4e96eaf5ea4f1a36" name="a7d7050eeccb4e8dd4e96eaf5ea4f1a36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d7050eeccb4e8dd4e96eaf5ea4f1a36">&#9670;&nbsp;</a></span>sensor_open()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">errno_t sensor_open </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a>&#160;</td>
+          <td class="paramname"><em>sensor</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -335,6 +381,102 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="acae3426125d6bb82b828d1896e3a3d9f" name="acae3426125d6bb82b828d1896e3a3d9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acae3426125d6bb82b828d1896e3a3d9f">&#9670;&nbsp;</a></span>sensor_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">errno_t sensor_read </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a>&#160;</td>
+          <td class="paramname"><em>sensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>&#160;</td>
+          <td class="paramname"><em>tag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>nbytes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4922c3de7878ecacbe99217e2f3522f9" name="a4922c3de7878ecacbe99217e2f3522f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4922c3de7878ecacbe99217e2f3522f9">&#9670;&nbsp;</a></span>sensor_set_ctx()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sensor_set_ctx </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a> *&#160;</td>
+          <td class="paramname"><em>sensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>buf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a430b7748174467e5bde0d30f25c4238d" name="a430b7748174467e5bde0d30f25c4238d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a430b7748174467e5bde0d30f25c4238d">&#9670;&nbsp;</a></span>sensor_set_precision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sensor_set_precision </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a>&#160;</td>
+          <td class="paramname"><em>sensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a>&#160;</td>
+          <td class="paramname"><em>precision</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ace7895479a67be7201443272719e5172" name="ace7895479a67be7201443272719e5172"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ace7895479a67be7201443272719e5172">&#9670;&nbsp;</a></span>sensor_strtag()</h2>
 
@@ -350,13 +492,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Converts a tag into the string representation of its associated data type's name. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tag</td><td>The tag to stringify. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The tag's data type as a string. </dd></dl>
 
 </div>
 </div>

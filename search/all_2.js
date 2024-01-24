@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['cmd_5fadc_5fconv_0',['CMD_ADC_CONV',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455a73f7dc6f4bcea99d4d1ae77d213718ff',1,'ms5611.c']]],
-  ['cmd_5fadc_5fread_1',['CMD_ADC_READ',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455a55a8a2584cd1f75903a18dc657abaae9',1,'ms5611.c']]],
-  ['cmd_5fprom_5frd_2',['CMD_PROM_RD',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455a07d5f152927aab40e6321a99ebbc91f3',1,'ms5611.c']]],
-  ['cmd_5freset_3',['CMD_RESET',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455ae71f12b62f9fca54c98ef9630f8fcad1',1,'ms5611.c']]],
-  ['coef_5ftype_4',['COEF_TYPE',['../ms5611_8c.html#abb6d46e1da61561ea98e860d2f3685c2',1,'ms5611.c']]],
-  ['context_5',['context',['../structSensor.html#a8f3139bb67729fe6381e7de18ddedbfb',1,'Sensor']]]
+  ['buffer_5fsize_0',['BUFFER_SIZE',['../main_8c.html#a6b20d41d6252e9871430c242cb1a56e7',1,'main.c']]],
+  ['bus_1',['bus',['../structSensorLocation.html#a3b86112a0ac8e1b3cf5f7ebcb1d10288',1,'SensorLocation']]],
+  ['bus_5fspeed_2',['BUS_SPEED',['../main_8c.html#a0703c48aced43db01cfd05859ec6b1d0',1,'main.c']]]
 ];

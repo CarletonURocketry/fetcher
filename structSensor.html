@@ -99,8 +99,6 @@ $(document).ready(function(){initNavTree('structSensor.html',''); initResizable(
 Data Fields</h2></td></tr>
 <tr class="memitem:aee84ea1743e4d2981a44f5975d7f5c1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSensorLocation.html">SensorLocation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#aee84ea1743e4d2981a44f5975d7f5c1f">loc</a></td></tr>
 <tr class="separator:aee84ea1743e4d2981a44f5975d7f5c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f705c41ca5f97afb1d30ce1fa6bec8d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a0f705c41ca5f97afb1d30ce1fa6bec8d">max_dsize</a></td></tr>
-<tr class="separator:a0f705c41ca5f97afb1d30ce1fa6bec8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a810cfcc9bbfaf705f69c353b7d26acfb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSensorTagList.html">SensorTagList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a810cfcc9bbfaf705f69c353b7d26acfb">tag_list</a></td></tr>
 <tr class="separator:a810cfcc9bbfaf705f69c353b7d26acfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f3139bb67729fe6381e7de18ddedbfb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSensorContext.html">SensorContext</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a8f3139bb67729fe6381e7de18ddedbfb">context</a></td></tr>
@@ -109,8 +107,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:aab8250f2beb3f7bd73af566c03a16ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae609668d0669ccdfbf525651997823b1"><td class="memItemLeft" align="right" valign="top">errno_t(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#ae609668d0669ccdfbf525651997823b1">open</a> )(struct sensor_t *sensor)</td></tr>
 <tr class="separator:ae609668d0669ccdfbf525651997823b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6df73a634ea4b0da061a2b0408d29fa6"><td class="memItemLeft" align="right" valign="top">errno_t(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a6df73a634ea4b0da061a2b0408d29fa6">read</a> )(struct sensor_t *sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, void *buf, uint8_t *nbytes)</td></tr>
-<tr class="separator:a6df73a634ea4b0da061a2b0408d29fa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4da68ca9d4124f2ca84c9cf35de589ad"><td class="memItemLeft" align="right" valign="top">errno_t(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensor.html#a4da68ca9d4124f2ca84c9cf35de589ad">read</a> )(struct sensor_t *sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, void *buf, size_t *nbytes)</td></tr>
+<tr class="separator:a4da68ca9d4124f2ca84c9cf35de589ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The generic interface to interact with all sensors. </p>
@@ -142,21 +140,6 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >The I2C address and bus of the sensor. </p>
-
-</div>
-</div>
-<a id="a0f705c41ca5f97afb1d30ce1fa6bec8d" name="a0f705c41ca5f97afb1d30ce1fa6bec8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f705c41ca5f97afb1d30ce1fa6bec8d">&#9670;&nbsp;</a></span>max_dsize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t Sensor::max_dsize</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The maximum return size of any data that is read. </p>
 
 </div>
 </div>
@@ -196,14 +179,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a6df73a634ea4b0da061a2b0408d29fa6" name="a6df73a634ea4b0da061a2b0408d29fa6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6df73a634ea4b0da061a2b0408d29fa6">&#9670;&nbsp;</a></span>read</h2>
+<a id="a4da68ca9d4124f2ca84c9cf35de589ad" name="a4da68ca9d4124f2ca84c9cf35de589ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4da68ca9d4124f2ca84c9cf35de589ad">&#9670;&nbsp;</a></span>read</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">errno_t(* Sensor::read) (struct sensor_t *sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, void *buf, uint8_t *nbytes)</td>
+          <td class="memname">errno_t(* Sensor::read) (struct sensor_t *sensor, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, void *buf, size_t *nbytes)</td>
         </tr>
       </table>
 </div><div class="memdoc">
