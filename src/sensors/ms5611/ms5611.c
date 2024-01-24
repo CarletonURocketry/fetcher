@@ -165,7 +165,7 @@ static errno_t ms5611_open(Sensor *sensor) {
  * @param nbytes The number of bytes that were written into the byte array buffer.
  * @return Error status of reading from the sensor. EOK if successful.
  */
-static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, uint8_t *nbytes) {
+static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
 
     // Read D registers with configured precision
     uint32_t d1, d2;
@@ -247,7 +247,6 @@ void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
-    sensor->max_dsize = sensor_max_dsize(&sensor->tag_list);
     sensor->context.size = (NUM_COEFFICIENTS * sizeof(COEF_TYPE)); // Size of all calibration data
     sensor->open = &ms5611_open;
     sensor->read = &ms5611_read;

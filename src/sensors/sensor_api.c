@@ -33,15 +33,61 @@ void memcpy_be(void *dest, const void *src, const size_t nbytes) {
 }
 
 /**
- * Gets the maximum dsize value of the tags in the tag list.
- * @param tag_list The tag list to get the maximum dsize of.
+ * Sets the precision of the sensor to the desired value.
+ * @param sensor The sensor to set precision for.
+ * @param precision The precision to set the sensor to.
+ */
+#pragma GCC diagnostic ignored "-Wunused-but-set-parameter"
+inline void __attribute__((always_inline)) sensor_set_precision(Sensor sensor, const SensorPrecision precision) {
+    sensor.precision = precision;
+}
+
+/**
+ * Gets the size of the sensor's context.
+ * @param sensor The sensor to get the context size of.
+ * @return The size of the sensor context.
+ */
+#pragma GCC diagnostic ignored "-Wunused-but-set-parameter"
+inline size_t __attribute__((always_inline)) sensor_get_ctx_size(Sensor sensor) { return sensor.context.size; }
+
+/**
+ * Sets the sensor context to the memory block pointed to by buf.
+ * @param sensor The sensor to set the context for.
+ * @param buf The memory block to set the sensor context to.
+ */
+#pragma GCC diagnostic ignored "-Wunused-but-set-parameter"
+inline void __attribute__((always_inline)) sensor_set_ctx(Sensor *sensor, void *buf) { sensor->context.data = buf; }
+
+/**
+ * Open and set up the sensor.
+ * @param sensor The sensor to open and set up.
+ * @return Error status of setting up the sensor. EOK if successful.
+ */
+inline errno_t __attribute__((always_inline)) sensor_open(Sensor sensor) { return sensor.open(&sensor); }
+
+/**
+ * Read the specified data from the sensor.
+ * @param sensor The sensor to read from.
+ * @param tag The sensor tag (data type) to read from the sensor.
+ * @param buf The memory location to store the result of the read.
+ * @param nbytes Will be populated with the number of bytes that were stored in buf after the read.
+ * @return Error status of setting up the sensor. EOK if successful.
+ */
+inline errno_t __attribute__((always_inline))
+sensor_read(Sensor sensor, const SensorTag tag, void *buf, size_t *nbytes) {
+    return sensor.read(&sensor, tag, buf, nbytes);
+}
+
+/**
+ * Gets the maximum data size returned when reading the sensor.
+ * @param sensor The sensor to find the maximum data size of.
  * @return The maximum dsize of all the tags in the tag list.
  */
-uint8_t sensor_max_dsize(const SensorTagList *tag_list) {
+size_t sensor_max_dsize(const Sensor *sensor) {
     uint8_t max = 0;
-    for (uint8_t i = 0; i < tag_list->len; i++) {
-        if (tag_list->tags[i] > max) {
-            max = SENSOR_TAG_DATA[tag_list->tags[i]].dsize;
+    for (uint8_t i = 0; i < sensor->tag_list.len; i++) {
+        if (sensor->tag_list.tags[i] > max) {
+            max = SENSOR_TAG_DATA[sensor->tag_list.tags[i]].dsize;
         }
     }
     return max;
@@ -52,7 +98,7 @@ uint8_t sensor_max_dsize(const SensorTagList *tag_list) {
  * @param tag The tag to stringify.
  * @return The tag's data type as a string.
  */
-const char *sensor_strtag(const SensorTag tag) { return SENSOR_TAG_DATA[tag].unit; }
+const char __attribute__((const)) * sensor_strtag(const SensorTag tag) { return SENSOR_TAG_DATA[tag].name; }
 
 /**
  * Prints sensor data in a standard format.
@@ -69,6 +115,8 @@ void sensor_print_data(const SensorTag tag, const void *data) {
     // Decide how to cast data pointer for printing
     switch (SENSOR_TAG_DATA[tag].dtype) {
     case TYPE_FLOAT:
+        // Ignore warning about promoting float to double since printf doesn't support float printing
+#pragma GCC diagnostic ignored "-Wdouble-promotion"
         printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const float, data), SENSOR_TAG_DATA[tag].unit);
         break;
     case TYPE_U32:

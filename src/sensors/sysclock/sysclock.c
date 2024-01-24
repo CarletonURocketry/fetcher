@@ -52,7 +52,7 @@ static errno_t sysclock_open(Sensor *sensor) {
  * @param nbytes The number of bytes that were written into the byte array buffer.
  * @return Error status of reading from the sensor. EOK if successful.
  */
-static errno_t sysclock_read(Sensor *sensor, const SensorTag tag, void *buf, uint8_t *nbytes) {
+static errno_t sysclock_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
 
     (void)sensor; // Avoid unused parameter error
 
@@ -101,7 +101,6 @@ void sysclock_init(Sensor *sensor, const int bus, const uint8_t addr, const Sens
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
-    sensor->max_dsize = sensor_max_dsize(&sensor->tag_list);
     sensor->context.size = sizeof(long);
     sensor->open = &sysclock_open;
     sensor->read = &sysclock_read;
