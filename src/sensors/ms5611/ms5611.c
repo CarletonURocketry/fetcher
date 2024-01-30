@@ -13,6 +13,12 @@
 #include <string.h>
 #include <unistd.h>
 
+typedef struct {
+    uint16_t coef[7];
+    float ground_pressure;
+
+} MS561dContext;
+
 /** Number of calibration coefficients */
 #define NUM_COEFFICIENTS 8
 /** Size of coefficients in bytes */
@@ -207,6 +213,9 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, size_
         sens -= sens2;
     }
 
+    float GROUND = ms5611_read(sensor, TAG_ALTITUDE, &GROUND,
+                               sizeof(&GROUND)); // Assigns a ground pressure value at the start of the mission
+
     switch (tag) {
     case TAG_TEMPERATURE: {
         float f_temp = temperature / 100; // Degrees C
@@ -224,7 +233,7 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, size_
         float R = 8.31432f;
         float g = 9.80665f;
         float M = 0.0289644f;
-        float altitude = (R * (temperature + 273) * log(pressure / pressure) / (g * M)); // Measured AGL in m
+        float altitude = (R * (temperature + 273) * log(pressure / GROUND) / (g * M)); // Measured AGL in m
         memcpy(buf, &altitude, sizeof(altitude));
         *nbytes = sizeof(altitude);
         break;
