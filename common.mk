@@ -35,9 +35,6 @@ CCFLAGS += -std=$(CSTD) $(OPTIMIZATION) $(WARNINGS)
 
 #### PROJECT SPECIFIC ####
 
-# Project includes
-#EXTRA_INCVPATH += $(PROJECT_ROOT)/src/sensors/include
-
 ### SOURCE FILES ###
 SRC_SUBDIRECTORIES = $(shell find $(PROJECT_ROOT)/src -type d)
 EXTRA_SRCVPATH += $(SRC_SUBDIRECTORIES)
@@ -46,7 +43,3 @@ EXTRA_SRCVPATH += $(SRC_SUBDIRECTORIES)
 LIBS += i2c-master
 
 include $(MKFILES_ROOT)/qtargets.mk
-
-$(info VAR='$(SRCVPATH)')
-$(info VAR='$(EXTRA_SRCVPATH)')
-$(info VAR='$(SRCVPATH)')
