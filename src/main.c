@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
     Sensor sensors[2];
 
     // Create MS5611 instance
-    ms5611_init(&sensors[0], bus, 0x76, PRECISION_HIGH);
+    ms5611_init(&sensors[0], bus, 0x77, PRECISION_HIGH);
 
     uint8_t ms5611_context[sensor_get_ctx_size(sensors[0])];
     sensor_set_ctx(&sensors[0], ms5611_context);
