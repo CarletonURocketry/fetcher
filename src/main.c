@@ -4,6 +4,7 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
+#include "eeprom/eeprom.h"
 #include "sensors/sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
@@ -69,6 +70,12 @@ int main(int argc, char **argv) {
     if (bus_speed != EOK) {
         fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(bus_speed));
         exit(EXIT_FAILURE);
+    }
+
+    /* Print out the board ID EEPROM contents. */
+    uint8_t const *board_id = eeprom_contents(bus);
+    for (uint16_t i = 0; i < EEPROM_CAP; i++) {
+        putchar(board_id[i]);
     }
 
     /* Create sensor list. */

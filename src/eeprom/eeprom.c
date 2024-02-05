@@ -11,9 +11,6 @@
 /** Address for writing to the EEPROM. */
 #define EEPROM_WRITE (EEPROM_ADDR & 0xFE)
 
-/** The maximum capacity of the EEPROM in bytes. */
-#define EEPROM_CAP 128
-
 /** Defines a small buffer for the dummy write request. */
 struct dummy_write_t {
     i2c_send_t header;    /**< The send header containing address information. */
@@ -39,6 +36,7 @@ errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
             },
     };
     dummy_write.byte_address = addr;
+
     errno_t err = devctl(bus, DCMD_I2C_SEND, &dummy_write, sizeof(dummy_write), NULL);
     if (err != EOK) return err;
 
@@ -50,7 +48,18 @@ errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
         .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_WRITE},
     };
     memcpy(buf, &read_header, sizeof(read_header));
-    err = devctl(bus, DCMD_I2C_SENDRECV, &((uint8_t *)(buf))[sizeof(read_header)], n, NULL);
+    err = devctl(bus, DCMD_I2C_SENDRECV, buf, n + sizeof(read_header), NULL);
     if (err != EOK) return err;
     return EOK;
+}
+
+/**
+ * Reads the entire contents of the EEPROM and returns a pointer to them.
+ * @param bus The I2C bus where the EEPROM is located.
+ * @return A pointer to the array of bytes containing the EEPROM contents.
+ */
+const uint8_t *eeprom_contents(int bus) {
+    static uint8_t contents[EEPROM_CAP + 20];
+    eeprom_read(0, bus, contents, EEPROM_CAP);
+    return contents + 20;
 }
