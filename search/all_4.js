@@ -6,5 +6,6 @@ var searchData=
   ['derefctx_3',['derefctx',['../sysclock_8c.html#a09a213ec4a3c274e810ec653eb801798',1,'sysclock.c']]],
   ['drefcast_4',['drefcast',['../sensor__api_8c.html#a027be96558c283856700fd3531351fa9',1,'sensor_api.c']]],
   ['dsize_5',['dsize',['../structSensorTagData.html#a541ffcea2b96538148f60b29794d5f66',1,'SensorTagData']]],
-  ['dtype_6',['dtype',['../structSensorTagData.html#a33a39a04ccac7d79e70dc57e9d568183',1,'SensorTagData']]]
+  ['dtype_6',['dtype',['../structSensorTagData.html#a33a39a04ccac7d79e70dc57e9d568183',1,'SensorTagData']]],
+  ['dummy_5fwrite_5ft_7',['dummy_write_t',['../structdummy__write__t.html',1,'']]]
 ];

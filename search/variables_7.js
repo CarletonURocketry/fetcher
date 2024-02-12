@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['open_0',['open',['../structSensor.html#ae609668d0669ccdfbf525651997823b1',1,'Sensor']]]
+  ['name_0',['name',['../structSensorTagData.html#ac1ed41a93d4ff518683d0d80b3e9bcbc',1,'SensorTagData']]]
 ];

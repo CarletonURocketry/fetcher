@@ -98,7 +98,19 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">Temperature: 25.02 C</div>
 <div class="line">Pressure: 99.94 kPa</div>
 <div class="line">...</div>
-</div><!-- fragment --><p >All sensor data output is printed in plain-text, with its type specifier (i.e. temperature), its value and its unit. </p>
+</div><!-- fragment --><p >All sensor data output is printed in plain-text, with its type specifier (i.e. temperature), its value and its unit.</p>
+<h1>Board ID EEPROM Encoding</h1>
+<p >In order for fetcher to recognize the sensors on the board, the EEPROM must encode the ID in this format:</p>
+<div class="fragment"><div class="line">CU InSpace &lt;board name&gt; REV &lt;x&gt;: &lt;manufacture date&gt;</div>
+<div class="line">&lt;sensor 1 id&gt; &lt;address&gt;</div>
+<div class="line">&lt;sensor 2 id&gt; &lt;address&gt;</div>
+</div><!-- fragment --><p ><b>Fields:</b></p>
+<ul>
+<li><code>&lt;board name&gt;</code>: The name of the board. Ex: <code><a class="el" href="structSensor.html">Sensor</a> board</code></li>
+<li><code>REV &lt;x&gt;</code>: The revision of the board. Ex: <code>REV B</code></li>
+<li><code>&lt;sensor id&gt;</code>: The identifier of the sensor. Ex: <code>MS5611</code></li>
+<li><code>&lt;address&gt;</code>: The 7 bit I2C address of the sensor in hexadecimal (without the leading 0x). Ex: <code>77</code> </li>
+</ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
