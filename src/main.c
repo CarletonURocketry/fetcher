@@ -74,9 +74,6 @@ int main(int argc, char **argv) {
 
     /* Print out the board ID EEPROM contents. */
     uint8_t const *board_id = eeprom_contents(bus);
-    for (uint16_t i = 0; i < EEPROM_CAP; i++) {
-        putchar(board_id[i]);
-    }
 
     /* Create sensor list. */
     Sensor sensors[2];
