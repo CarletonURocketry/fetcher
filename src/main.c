@@ -4,6 +4,7 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
+#include "eeprom/eeprom.h"
 #include "sensors/sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
@@ -71,11 +72,14 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
+    /* Print out the board ID EEPROM contents. */
+    uint8_t const *board_id = eeprom_contents(bus);
+
     /* Create sensor list. */
     Sensor sensors[2];
 
     // Create MS5611 instance
-    ms5611_init(&sensors[0], bus, 0x76, PRECISION_HIGH);
+    ms5611_init(&sensors[0], bus, 0x77, PRECISION_HIGH);
 
     uint8_t ms5611_context[sensor_get_ctx_size(sensors[0])];
     sensor_set_ctx(&sensors[0], ms5611_context);
