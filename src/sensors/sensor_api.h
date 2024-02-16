@@ -17,6 +17,7 @@
 typedef enum {
     TAG_TEMPERATURE, /**< Temperature in degrees Celsius */
     TAG_PRESSURE,    /**< Pressure in kilo Pascals */
+    TAG_HUMIDITY,    /**< Humidity in % relative humidity */
     TAG_TIME,        /**< Time in milliseconds */
     TAG_ALTITUDE,    /**< Altitude in meters */
 } SensorTag;

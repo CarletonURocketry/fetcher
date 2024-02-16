@@ -17,6 +17,8 @@ const SensorTagData SENSOR_TAG_DATA[] = {
         {.name = "Pressure", .unit = "kPa", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
     [TAG_TEMPERATURE] =
         {.name = "Temperature", .unit = "C", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
+    [TAG_HUMIDITY] =
+        {.name = "Humidity", .unit = "%%RH", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
     [TAG_TIME] = {.name = "Time", .unit = "ms", .fmt_str = "%u", .dsize = sizeof(uint32_t), .dtype = TYPE_U32},
     [TAG_ALTITUDE] = {.name = "Altitude", .unit = "m", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
 };
