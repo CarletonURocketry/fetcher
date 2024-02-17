@@ -75,15 +75,11 @@ int main(int argc, char **argv) {
     Sensor sensors[2];
 
     // Create MS5611 instance
-    ms5611_init(&sensors[0], bus, 0x76, PRECISION_HIGH);
-    printf("Here!\n");
+    ms5611_init(&sensors[0], bus, 0x77, PRECISION_HIGH);
 
     uint8_t ms5611_context[sensor_get_ctx_size(sensors[0])];
-    printf("Here2!\n");
     sensor_set_ctx(&sensors[0], ms5611_context);
-    printf("Here3!\n");
     errno_t setup_res = sensor_open(sensors[0]);
-    printf("Here4!\n");
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);

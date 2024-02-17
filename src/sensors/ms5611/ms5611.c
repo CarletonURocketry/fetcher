@@ -10,7 +10,6 @@
 #include <hw/i2c.h>
 #include <math.h>
 #include <stdbool.h>
-#include <stdio.h> // TODO: Remove
 #include <string.h>
 #include <unistd.h>
 
@@ -166,7 +165,6 @@ static errno_t ms5611_open(Sensor *sensor) {
         // Store calibration coefficient
         memcpy_be(&ms5611_context->coefs[i], &prom_read_cmd[sizeof(prom_read)], sizeof(uint16_t));
     }
-    printf("Here5!\n");
 
     // Get the ground pressure
     size_t nbytes;
