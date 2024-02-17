@@ -20,19 +20,21 @@
 #define return_err(err)                                                                                                \
     if (err != EOK) return err
 
-// TODO: what are these constants?
-/** Defines constant  */
+/** Defines the universal gas constant. */
 #define R 8.31432
 
-/** Defines constant for gravity. */
+/** Defines constant for acceleration due to gravity. */
 #define g 9.80665
 
-/** Defines constant  */
+/** Defines constant for the mean molar mass of atmospheric gases. */
 #define M 0.0289644
+
+/** Defines constant for the absolute temperature in Kelvins. */
+#define T 273
 
 typedef struct {
     uint16_t coefs[NUM_COEFFICIENTS]; /**< The calibration coefficients of the sensor. */
-    double ground_pressure;           /**< The pressure at the ground level; set when the sensor is started. */
+    float ground_pressure;            /**< The pressure at the ground level; set when the sensor is started. */
 } MS5611Context;
 
 /** A list of data types that can be read by the MS5611 */
@@ -237,8 +239,9 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, size_
     }
     case TAG_ALTITUDE: {
         double pressure = ((((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000); // kPa
-        float altitude =
-            (R * (temperature + 273) * log(pressure / ctx->ground_pressure) / (g * M)); // Measured AGL in m
+
+        // This calculation assumes initial altitude is 0
+        float altitude = -((R * (temperature + T)) / (g * M)) * log(pressure / (double)ctx->ground_pressure);
         memcpy(buf, &altitude, sizeof(altitude));
         *nbytes = sizeof(altitude);
         break;
