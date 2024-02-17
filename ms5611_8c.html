@@ -88,6 +88,7 @@ $(document).ready(function(){initNavTree('ms5611_8c.html',''); initResizable(); 
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
@@ -103,17 +104,29 @@ $(document).ready(function(){initNavTree('ms5611_8c.html',''); initResizable(); 
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;hw/i2c.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMS5611Context.html">MS5611Context</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a27812e95e0faa61ceede87c35827d5ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a27812e95e0faa61ceede87c35827d5ce">NUM_COEFFICIENTS</a>&#160;&#160;&#160;8</td></tr>
 <tr class="separator:a27812e95e0faa61ceede87c35827d5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb6d46e1da61561ea98e860d2f3685c2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#abb6d46e1da61561ea98e860d2f3685c2">COEF_TYPE</a>&#160;&#160;&#160;uint16_t</td></tr>
-<tr class="separator:abb6d46e1da61561ea98e860d2f3685c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c">return_err</a>(err)&#160;&#160;&#160;    if (err != EOK) return err</td></tr>
 <tr class="separator:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c71a5e59a53413cd6c270266d63b031"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a5c71a5e59a53413cd6c270266d63b031">R</a>&#160;&#160;&#160;8.31432</td></tr>
+<tr class="separator:a5c71a5e59a53413cd6c270266d63b031"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a167d2c0ec9b943d55f2124f7442b2f6d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a167d2c0ec9b943d55f2124f7442b2f6d">g</a>&#160;&#160;&#160;9.80665</td></tr>
+<tr class="separator:a167d2c0ec9b943d55f2124f7442b2f6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52037c938e3c1b126c6277da5ca689d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a52037c938e3c1b126c6277da5ca689d0">M</a>&#160;&#160;&#160;0.0289644</td></tr>
+<tr class="separator:a52037c938e3c1b126c6277da5ca689d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0acb682b8260ab1c60b918599864e2e5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a0acb682b8260ab1c60b918599864e2e5">T</a>&#160;&#160;&#160;273</td></tr>
+<tr class="separator:a0acb682b8260ab1c60b918599864e2e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -150,20 +163,37 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="structSensor.html">Sensor</a> API interface implementation for the MS5611 pressure and temperature sensor. </p>
-<p ><a class="el" href="structSensor.html">Sensor</a> API interface implementation for the MS5611 pressure and temperature sensor which uses I2C communication. </p>
+<p ><a class="el" href="structSensor.html">Sensor</a> API interface implementation for the MS5611 pressure and temperature sensor which uses I2C communication.</p>
+<p >See <a href="https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf%7FCAT-BLPS0036">https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&amp;DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf%7FCAT-BLPS0036</a> for the MS5611 data sheet.</p>
+<p >See <a href="https://www.amsys-sensor.com/downloads/notes/ms5611-precise-altitude-measurement-with-a-pressure-sensor-module-amsys-509e.pdf">https://www.amsys-sensor.com/downloads/notes/ms5611-precise-altitude-measurement-with-a-pressure-sensor-module-amsys-509e.pdf</a> for information about the MS5611 altitude measurement calculations. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="abb6d46e1da61561ea98e860d2f3685c2" name="abb6d46e1da61561ea98e860d2f3685c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb6d46e1da61561ea98e860d2f3685c2">&#9670;&nbsp;</a></span>COEF_TYPE</h2>
+<a id="a167d2c0ec9b943d55f2124f7442b2f6d" name="a167d2c0ec9b943d55f2124f7442b2f6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a167d2c0ec9b943d55f2124f7442b2f6d">&#9670;&nbsp;</a></span>g</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define COEF_TYPE&#160;&#160;&#160;uint16_t</td>
+          <td class="memname">#define g&#160;&#160;&#160;9.80665</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Size of coefficients in bytes </p>
+<p >Defines constant for acceleration due to gravity. </p>
+
+</div>
+</div>
+<a id="a52037c938e3c1b126c6277da5ca689d0" name="a52037c938e3c1b126c6277da5ca689d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52037c938e3c1b126c6277da5ca689d0">&#9670;&nbsp;</a></span>M</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define M&#160;&#160;&#160;0.0289644</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Defines constant for the mean molar mass of atmospheric gases. </p>
 
 </div>
 </div>
@@ -179,6 +209,21 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Number of calibration coefficients </p>
+
+</div>
+</div>
+<a id="a5c71a5e59a53413cd6c270266d63b031" name="a5c71a5e59a53413cd6c270266d63b031"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c71a5e59a53413cd6c270266d63b031">&#9670;&nbsp;</a></span>R</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define R&#160;&#160;&#160;8.31432</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Defines the universal gas constant. </p>
 
 </div>
 </div>
@@ -198,6 +243,21 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Macro to early return an error. </p>
+
+</div>
+</div>
+<a id="a0acb682b8260ab1c60b918599864e2e5" name="a0acb682b8260ab1c60b918599864e2e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0acb682b8260ab1c60b918599864e2e5">&#9670;&nbsp;</a></span>T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define T&#160;&#160;&#160;273</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Defines constant for the absolute temperature in Kelvins. </p>
 
 </div>
 </div>

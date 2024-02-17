@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['read_0',['read',['../structSensor.html#a4da68ca9d4124f2ca84c9cf35de589ad',1,'Sensor']]]
+  ['precision_0',['precision',['../structSensor.html#aab8250f2beb3f7bd73af566c03a16ce5',1,'Sensor']]]
 ];

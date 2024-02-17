@@ -4,6 +4,6 @@ var searchData=
   ['cmd_5fadc_5fread_1',['CMD_ADC_READ',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455a55a8a2584cd1f75903a18dc657abaae9',1,'ms5611.c']]],
   ['cmd_5fprom_5frd_2',['CMD_PROM_RD',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455a07d5f152927aab40e6321a99ebbc91f3',1,'ms5611.c']]],
   ['cmd_5freset_3',['CMD_RESET',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455ae71f12b62f9fca54c98ef9630f8fcad1',1,'ms5611.c']]],
-  ['coef_5ftype_4',['COEF_TYPE',['../ms5611_8c.html#abb6d46e1da61561ea98e860d2f3685c2',1,'ms5611.c']]],
+  ['coefs_4',['coefs',['../structMS5611Context.html#a4912b191cb73cbe5b7e34287abde04f8',1,'MS5611Context']]],
   ['context_5',['context',['../structSensor.html#a8f3139bb67729fe6381e7de18ddedbfb',1,'Sensor']]]
 ];

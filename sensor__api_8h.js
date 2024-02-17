@@ -13,7 +13,8 @@ var sensor__api_8h =
     [ "SensorTag", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627", [
       [ "TAG_TEMPERATURE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08", null ],
       [ "TAG_PRESSURE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13", null ],
-      [ "TAG_TIME", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba", null ]
+      [ "TAG_TIME", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba", null ],
+      [ "TAG_ALTITUDE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a3a098e26994f813d7552afb278aaf54f", null ]
     ] ],
     [ "SensorTagDType", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84", [
       [ "TYPE_FLOAT", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f", null ],
