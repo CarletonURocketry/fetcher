@@ -3,6 +3,14 @@
  * @brief Sensor API interface implementation for the MS5611 pressure and temperature sensor.
  *
  * Sensor API interface implementation for the MS5611 pressure and temperature sensor which uses I2C communication.
+ *
+ * See
+ * https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf%7FCAT-BLPS0036
+ * for the MS5611 data sheet.
+ *
+ * See
+ * https://www.amsys-sensor.com/downloads/notes/ms5611-precise-altitude-measurement-with-a-pressure-sensor-module-amsys-509e.pdf
+ * for information about the MS5611 altitude measurement calculations.
  */
 #include "ms5611.h"
 #include "../sensor_api.h"
@@ -241,7 +249,7 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, size_
         double pressure = ((((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000); // kPa
 
         // This calculation assumes initial altitude is 0
-        float altitude = -((R * (temperature + T)) / (g * M)) * log(pressure / (double)ctx->ground_pressure);
+        float altitude = -((R * T) / (g * M)) * log(pressure / (double)ctx->ground_pressure);
         memcpy(buf, &altitude, sizeof(altitude));
         *nbytes = sizeof(altitude);
         break;
