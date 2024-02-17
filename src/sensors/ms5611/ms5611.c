@@ -10,23 +10,31 @@
 #include <hw/i2c.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdio.h> // TODO: Remove
 #include <string.h>
 #include <unistd.h>
 
-typedef struct {
-    uint16_t coef[7];
-    float ground_pressure;
-
-} MS561dContext;
-
 /** Number of calibration coefficients */
 #define NUM_COEFFICIENTS 8
-/** Size of coefficients in bytes */
-#define COEF_TYPE uint16_t
 
 /** Macro to early return an error. */
 #define return_err(err)                                                                                                \
     if (err != EOK) return err
+
+// TODO: what are these constants?
+/** Defines constant  */
+#define R 8.31432
+
+/** Defines constant for gravity. */
+#define g 9.80665
+
+/** Defines constant  */
+#define M 0.0289644
+
+typedef struct {
+    uint16_t coefs[NUM_COEFFICIENTS]; /**< The calibration coefficients of the sensor. */
+    double ground_pressure;           /**< The pressure at the ground level; set when the sensor is started. */
+} MS5611Context;
 
 /** A list of data types that can be read by the MS5611 */
 static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_PRESSURE, TAG_ALTITUDE};
@@ -143,24 +151,27 @@ static errno_t ms5611_open(Sensor *sensor) {
 
     // PROM read command buffer
     i2c_sendrecv_t prom_read = {.stop = 1, .slave = sensor->loc.addr, .send_len = 1, .recv_len = 2};
-    uint8_t prom_read_cmd[sizeof(prom_read) + sizeof(COEF_TYPE)] = {0};
+    uint8_t prom_read_cmd[sizeof(prom_read) + sizeof(uint16_t)] = {0};
     memcpy(prom_read_cmd, &prom_read, sizeof(prom_read));
 
     // Read calibration data into sensor context
-    COEF_TYPE *cal_coefs = (COEF_TYPE *)sensor->context.data; // change this
+    MS5611Context *ms5611_context = (MS5611Context *)sensor->context.data;
     for (uint8_t i = 0; i < NUM_COEFFICIENTS; i++) {
 
         // Read from PROM
-        prom_read_cmd[sizeof(prom_read)] = CMD_PROM_RD + sizeof(COEF_TYPE) * i; // Command to read next coefficient
+        prom_read_cmd[sizeof(prom_read)] = CMD_PROM_RD + sizeof(uint16_t) * i; // Command to read next coefficient
         op_status = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, &prom_read_cmd, sizeof(prom_read_cmd), NULL);
         return_err(op_status);
 
         // Store calibration coefficient
-        memcpy_be(&cal_coefs[i], &prom_read_cmd[sizeof(prom_read)], sizeof(COEF_TYPE)); // my_struct.coeffs[i]
+        memcpy_be(&ms5611_context->coefs[i], &prom_read_cmd[sizeof(prom_read)], sizeof(uint16_t));
     }
+    printf("Here5!\n");
 
-    // ms5611_read(pressure)
-    return EOK;
+    // Get the ground pressure
+    size_t nbytes;
+    errno_t pressure_read = sensor->read(sensor, TAG_PRESSURE, &ms5611_context->ground_pressure, &nbytes);
+    return pressure_read;
 }
 
 /**
@@ -180,14 +191,15 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, size_
     dread_res = ms5611_read_dreg(&sensor->loc, D2 + PRECISIONS[sensor->precision], &d2);
     return_err(dread_res);
 
+    // Extract context
+    MS5611Context *ctx = (MS5611Context *)sensor->context.data;
+
     // Calculate 1st order pressure and temperature (MS5607 1st order algorithm)
-    COEF_TYPE *coefs = (COEF_TYPE *)sensor->context.data;
+    double dt = d2 - ctx->coefs[5] * pow(2, 8);
+    double off = ctx->coefs[2] * pow(2, 16) + dt * ctx->coefs[4] / pow(2, 7);
+    double sens = ctx->coefs[1] * pow(2, 15) + dt * ctx->coefs[3] / pow(2, 8);
 
-    double dt = d2 - coefs[5] * pow(2, 8);
-    double off = coefs[2] * pow(2, 16) + dt * coefs[4] / pow(2, 7);
-    double sens = coefs[1] * pow(2, 15) + dt * coefs[3] / pow(2, 8);
-
-    double temperature = (2000 + ((dt * coefs[6]) / pow(2, 23)));
+    double temperature = (2000 + ((dt * ctx->coefs[6]) / pow(2, 23)));
 
     // Second order algorithm (only if high precision was chosen)
     if (sensor->precision == PRECISION_HIGH) {
@@ -213,9 +225,6 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, size_
         sens -= sens2;
     }
 
-    float GROUND = ms5611_read(sensor, TAG_ALTITUDE, &GROUND,
-                               sizeof(&GROUND)); // Assigns a ground pressure value at the start of the mission
-
     switch (tag) {
     case TAG_TEMPERATURE: {
         float f_temp = temperature / 100; // Degrees C
@@ -229,11 +238,9 @@ static errno_t ms5611_read(Sensor *sensor, const SensorTag tag, void *buf, size_
         break;
     }
     case TAG_ALTITUDE: {
-        float pressure = ((((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000); // kPa
-        float R = 8.31432f;
-        float g = 9.80665f;
-        float M = 0.0289644f;
-        float altitude = (R * (temperature + 273) * log(pressure / GROUND) / (g * M)); // Measured AGL in m
+        double pressure = ((((d1 * sens) / (pow(2, 21)) - off) / pow(2, 15)) / 1000); // kPa
+        float altitude =
+            (R * (temperature + 273) * log(pressure / ctx->ground_pressure) / (g * M)); // Measured AGL in m
         memcpy(buf, &altitude, sizeof(altitude));
         *nbytes = sizeof(altitude);
         break;
@@ -256,7 +263,7 @@ void ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
-    sensor->context.size = (NUM_COEFFICIENTS * sizeof(COEF_TYPE)); // Size of all calibration data
+    sensor->context.size = sizeof(MS5611Context); // Size of all calibration data
     sensor->open = &ms5611_open;
     sensor->read = &ms5611_read;
 }
