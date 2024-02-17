@@ -32,7 +32,6 @@ WARNINGS += -Wdisabled-optimization -Wsuggest-attribute=const
 
 ### UPDATE CFLAGS ###
 CCFLAGS += -std=$(CSTD) $(OPTIMIZATION) $(WARNINGS)
-
 #### PROJECT SPECIFIC ####
 
 ### SOURCE FILES ###
@@ -40,6 +39,6 @@ SRC_SUBDIRECTORIES = $(shell find $(PROJECT_ROOT)/src -type d)
 EXTRA_SRCVPATH += $(SRC_SUBDIRECTORIES)
 
 ### EXTRA LIBRARIES ###
-LIBS += i2c-master
+LIBS += i2c-master m
 
 include $(MKFILES_ROOT)/qtargets.mk
