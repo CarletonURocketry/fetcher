@@ -19,6 +19,7 @@
 
 /* Implemented sensors. */
 #include "sensors/ms5611/ms5611.h"
+#define SHT41_USE_CRC_LOOKUP
 #include "sensors/sht41/sht41.h"
 #include "sensors/sysclock/sysclock.h"
 

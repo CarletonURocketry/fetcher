@@ -9,6 +9,8 @@
 #include "../sensor_api.h"
 #include <stdint.h>
 
+// Define SHT41_USE_CRC_LOOKUP to use a lookup table for the sht41's CRC. CRCs on the SHT41 disabled otherwise
+
 void sht41_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision);
 
 #endif // _SHT41_H_
