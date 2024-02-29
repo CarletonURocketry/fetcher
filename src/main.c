@@ -19,6 +19,8 @@
 
 /* Implemented sensors. */
 #include "sensors/ms5611/ms5611.h"
+#define SHT41_USE_CRC_LOOKUP
+#include "sensors/sht41/sht41.h"
 #include "sensors/sysclock/sysclock.h"
 
 /** Size of the buffer to read input data. */
@@ -76,7 +78,7 @@ int main(int argc, char **argv) {
     uint8_t const *board_id = eeprom_contents(bus);
 
     /* Create sensor list. */
-    Sensor sensors[2];
+    Sensor sensors[3];
 
     // Create MS5611 instance
     ms5611_init(&sensors[0], bus, 0x77, PRECISION_HIGH);
@@ -95,6 +97,17 @@ int main(int argc, char **argv) {
     uint8_t sysclock_context[sensor_get_ctx_size(sensors[1])];
     sensor_set_ctx(&sensors[1], sysclock_context);
     setup_res = sensor_open(sensors[1]);
+    if (setup_res != EOK) {
+        fprintf(stderr, "%s\n", strerror(setup_res));
+        exit(EXIT_FAILURE);
+    }
+
+    // Create SHT41 instance
+    sht41_init(&sensors[2], bus, 0x44, PRECISION_HIGH);
+
+    uint8_t sht41_context[sensor_get_ctx_size(sensors[2])];
+    sensor_set_ctx(&sensors[2], sht41_context);
+    setup_res = sensor_open(sensors[2]);
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
