@@ -13,6 +13,7 @@ var sensor__api_8h =
     [ "SensorTag", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627", [
       [ "TAG_TEMPERATURE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08", null ],
       [ "TAG_PRESSURE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13", null ],
+      [ "TAG_HUMIDITY", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e", null ],
       [ "TAG_TIME", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba", null ],
       [ "TAG_ALTITUDE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a3a098e26994f813d7552afb278aaf54f", null ]
     ] ],
