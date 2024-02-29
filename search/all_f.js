@@ -33,10 +33,11 @@ var searchData=
   ['sht41_5ft_5fmsb_30',['SHT41_T_MSB',['../sht41_8c.html#abdebdce353011a264a4f3dc39b0f605c',1,'sht41.c']]],
   ['sht41_5fuse_5fcrc_5flookup_31',['SHT41_USE_CRC_LOOKUP',['../main_8c.html#a8fbe87bdb71d397b6f726f4e1a38404e',1,'main.c']]],
   ['sht41cmd_32',['SHT41Cmd',['../sht41_8c.html#abdab13decf05c54294437091200a09a6',1,'sht41.c']]],
-  ['size_33',['size',['../structSensorContext.html#a5610f1972bc480fe549e0564bca9f47c',1,'SensorContext']]],
-  ['start_5funix_5ftime_34',['start_unix_time',['../structSysClockContext.html#a4d6ba1cef96c3ec5f59b263f888a9d7a',1,'SysClockContext']]],
-  ['sysclock_2ec_35',['sysclock.c',['../sysclock_8c.html',1,'']]],
-  ['sysclock_2eh_36',['sysclock.h',['../sysclock_8h.html',1,'']]],
-  ['sysclock_5finit_37',['sysclock_init',['../sysclock_8c.html#a6f4e93b4481db219550202ee9c590193',1,'sysclock_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision):&#160;sysclock.c'],['../sysclock_8h.html#a6f4e93b4481db219550202ee9c590193',1,'sysclock_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision):&#160;sysclock.c']]],
-  ['sysclockcontext_38',['SysClockContext',['../structSysClockContext.html',1,'']]]
+  ['size_33',['size',['../structarena__t.html#af681bcc60c277e306191b56a525a08d6',1,'arena_t::size()'],['../structSensorContext.html#a5610f1972bc480fe549e0564bca9f47c',1,'SensorContext::size()']]],
+  ['start_34',['start',['../structarena__t.html#a9e96cff6486fb7d2cb27f9b57e4ed30f',1,'arena_t']]],
+  ['start_5funix_5ftime_35',['start_unix_time',['../structSysClockContext.html#a4d6ba1cef96c3ec5f59b263f888a9d7a',1,'SysClockContext']]],
+  ['sysclock_2ec_36',['sysclock.c',['../sysclock_8c.html',1,'']]],
+  ['sysclock_2eh_37',['sysclock.h',['../sysclock_8h.html',1,'']]],
+  ['sysclock_5finit_38',['sysclock_init',['../sysclock_8c.html#a6f4e93b4481db219550202ee9c590193',1,'sysclock_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision):&#160;sysclock.c'],['../sysclock_8h.html#a6f4e93b4481db219550202ee9c590193',1,'sysclock_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision):&#160;sysclock.c']]],
+  ['sysclockcontext_39',['SysClockContext',['../structSysClockContext.html',1,'']]]
 ];

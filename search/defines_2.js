@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['eeprom_5faddr_0',['EEPROM_ADDR',['../eeprom_8c.html#a95a8626764b7fcbf81fddaa0a197def8',1,'eeprom.c']]],
-  ['eeprom_5fcap_1',['EEPROM_CAP',['../eeprom_8h.html#ab752d122e7a8e926ee9adb5db55a78fe',1,'eeprom.h']]],
-  ['eeprom_5fread_2',['EEPROM_READ',['../eeprom_8c.html#a66a49f64e7ab3993012232ac64adadd4',1,'eeprom.c']]],
-  ['eeprom_5fwrite_3',['EEPROM_WRITE',['../eeprom_8c.html#ad4c47c9a8fd4b49b337df54d56305f52',1,'eeprom.c']]]
+  ['derefctx_0',['derefctx',['../sysclock_8c.html#a09a213ec4a3c274e810ec653eb801798',1,'sysclock.c']]],
+  ['drefcast_1',['drefcast',['../sensor__api_8c.html#a027be96558c283856700fd3531351fa9',1,'sensor_api.c']]]
 ];

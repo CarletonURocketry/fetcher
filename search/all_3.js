@@ -14,5 +14,6 @@ var searchData=
   ['context_11',['context',['../structSensor.html#a8f3139bb67729fe6381e7de18ddedbfb',1,'Sensor']]],
   ['crc_2ec_12',['crc.c',['../crc_8c.html',1,'']]],
   ['crc_2eh_13',['crc.h',['../crc_8h.html',1,'']]],
-  ['crc8lookuptable_14',['CRC8LookupTable',['../structCRC8LookupTable.html',1,'']]]
+  ['crc8lookuptable_14',['CRC8LookupTable',['../structCRC8LookupTable.html',1,'']]],
+  ['cur_15',['cur',['../structarena__t.html#acc557953cf62ee308d4113cbbba0e01e',1,'arena_t']]]
 ];

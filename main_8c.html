@@ -96,7 +96,8 @@ $(document).ready(function(){initNavTree('main_8c.html',''); initResizable(); })
 
 <p>The main function for the fetcher module, where program logic is used to create a console application.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="eeprom_8h_source.html">eeprom/eeprom.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="arena__alloc_8h_source.html">arena_alloc.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="eeprom_8h_source.html">eeprom/eeprom.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensors/sensor_api.h</a>&quot;</code><br />
 <code>#include &lt;devctl.h&gt;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
@@ -120,6 +121,10 @@ Macros</h2></td></tr>
 <tr class="separator:a6b20d41d6252e9871430c242cb1a56e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0703c48aced43db01cfd05859ec6b1d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a0703c48aced43db01cfd05859ec6b1d0">BUS_SPEED</a>&#160;&#160;&#160;400000</td></tr>
 <tr class="separator:a0703c48aced43db01cfd05859ec6b1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a716f9c94eab29ae62af2ce55bf23db20"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a716f9c94eab29ae62af2ce55bf23db20">ARENA_SIZE</a>&#160;&#160;&#160;256</td></tr>
+<tr class="separator:a716f9c94eab29ae62af2ce55bf23db20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3d1fc2927eec213e6b5f9e854c392d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#aa3d1fc2927eec213e6b5f9e854c392d2">MAX_SENSORS</a>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:aa3d1fc2927eec213e6b5f9e854c392d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -130,6 +135,21 @@ Functions</h2></td></tr>
 <div class="textblock"><p >The main function for the fetcher module, where program logic is used to create a console application. </p>
 <p >The main function for the fetcher module, where program logic is used to create a console application. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a716f9c94eab29ae62af2ce55bf23db20" name="a716f9c94eab29ae62af2ce55bf23db20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a716f9c94eab29ae62af2ce55bf23db20">&#9670;&nbsp;</a></span>ARENA_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ARENA_SIZE&#160;&#160;&#160;256</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The size of the static memory buffer (in bytes) for allocating sensor contexts on. </p>
+
+</div>
+</div>
 <a id="a6b20d41d6252e9871430c242cb1a56e7" name="a6b20d41d6252e9871430c242cb1a56e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6b20d41d6252e9871430c242cb1a56e7">&#9670;&nbsp;</a></span>BUFFER_SIZE</h2>
 
@@ -156,6 +176,21 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa3d1fc2927eec213e6b5f9e854c392d2" name="aa3d1fc2927eec213e6b5f9e854c392d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3d1fc2927eec213e6b5f9e854c392d2">&#9670;&nbsp;</a></span>MAX_SENSORS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_SENSORS&#160;&#160;&#160;3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The maximum number of sensors that fetcher can support. </p>
 
 </div>
 </div>
