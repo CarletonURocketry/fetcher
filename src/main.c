@@ -4,6 +4,7 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
+#include "arena_alloc.h"
 #include "eeprom/eeprom.h"
 #include "sensors/sensor_api.h"
 #include <devctl.h>
@@ -28,6 +29,25 @@
 
 /* The speed of the I2C bus in kilobits per second. */
 #define BUS_SPEED 400000
+
+/** The size of the static memory buffer (in bytes) for allocating sensor contexts on. */
+#define ARENA_SIZE 256
+
+/** The maximum number of sensors that fetcher can support. */
+#define MAX_SENSORS 3
+
+/** Create sensor list. */
+static Sensor sensors[MAX_SENSORS];
+
+/** Create static memory for allocating sensor contexts. */
+static uint8_t arena_memory[ARENA_SIZE];
+
+/** Create the arena for allocating sensor contexts. */
+static arena_t arena = {
+    .start = arena_memory,
+    .cur = arena_memory, // The current location is also the start initially
+    .size = ARENA_SIZE,
+};
 
 /** Flag to indicate reading from file in endless mode for debugging. */
 static bool endless = false;
@@ -77,13 +97,10 @@ int main(int argc, char **argv) {
     /* Print out the board ID EEPROM contents. */
     uint8_t const *board_id = eeprom_contents(bus);
 
-    /* Create sensor list. */
-    Sensor sensors[3];
-
     // Create MS5611 instance
     ms5611_init(&sensors[0], bus, 0x77, PRECISION_HIGH);
 
-    uint8_t ms5611_context[sensor_get_ctx_size(sensors[0])];
+    uint8_t *ms5611_context = aalloc(&arena, sensor_get_ctx_size(sensors[0]));
     sensor_set_ctx(&sensors[0], ms5611_context);
     errno_t setup_res = sensor_open(sensors[0]);
     if (setup_res != EOK) {
@@ -94,7 +111,7 @@ int main(int argc, char **argv) {
     // Create system clock instance
     sysclock_init(&sensors[1], bus, 0x00, PRECISION_HIGH);
 
-    uint8_t sysclock_context[sensor_get_ctx_size(sensors[1])];
+    uint8_t *sysclock_context = aalloc(&arena, sensor_get_ctx_size(sensors[1]));
     sensor_set_ctx(&sensors[1], sysclock_context);
     setup_res = sensor_open(sensors[1]);
     if (setup_res != EOK) {
@@ -105,7 +122,7 @@ int main(int argc, char **argv) {
     // Create SHT41 instance
     sht41_init(&sensors[2], bus, 0x44, PRECISION_HIGH);
 
-    uint8_t sht41_context[sensor_get_ctx_size(sensors[2])];
+    uint8_t *sht41_context = aalloc(&arena, sensor_get_ctx_size(sensors[2]));
     sensor_set_ctx(&sensors[2], sht41_context);
     setup_res = sensor_open(sensors[2]);
     if (setup_res != EOK) {
