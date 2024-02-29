@@ -100,10 +100,7 @@ int main(int argc, char **argv) {
     // Create MS5611 instance
     ms5611_init(&sensors[0], bus, 0x77, PRECISION_HIGH);
 
-    printf("Arena: %p\n", arena.cur);
     uint8_t *ms5611_context = aalloc(&arena, sensor_get_ctx_size(sensors[0]));
-    printf("MS5611: %p\n", ms5611_context);
-    printf("Arena: %p\n", arena.cur);
     sensor_set_ctx(&sensors[0], ms5611_context);
     errno_t setup_res = sensor_open(sensors[0]);
     if (setup_res != EOK) {
@@ -114,10 +111,7 @@ int main(int argc, char **argv) {
     // Create system clock instance
     sysclock_init(&sensors[1], bus, 0x00, PRECISION_HIGH);
 
-    printf("Arena: %p\n", arena.cur);
     uint8_t *sysclock_context = aalloc(&arena, sensor_get_ctx_size(sensors[1]));
-    printf("Sysclock: %p\n", sysclock_context);
-    printf("Arena: %p\n", arena.cur);
     sensor_set_ctx(&sensors[1], sysclock_context);
     setup_res = sensor_open(sensors[1]);
     if (setup_res != EOK) {
