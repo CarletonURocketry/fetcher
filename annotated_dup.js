@@ -9,5 +9,8 @@ var annotated_dup =
     [ "SensorLocation", "structSensorLocation.html", "structSensorLocation" ],
     [ "SensorTagData", "structSensorTagData.html", "structSensorTagData" ],
     [ "SensorTagList", "structSensorTagList.html", "structSensorTagList" ],
-    [ "SysClockContext", "structSysClockContext.html", "structSysClockContext" ]
+    [ "SysClockContext", "structSysClockContext.html", "structSysClockContext" ],
+    [ "UBXHeader", "structUBXHeader.html", "structUBXHeader" ],
+    [ "UBXSecUniqId", "structUBXSecUniqId.html", "structUBXSecUniqId" ],
+    [ "UBXSecUniqidPayload", "structUBXSecUniqidPayload.html", "structUBXSecUniqidPayload" ]
 ];
