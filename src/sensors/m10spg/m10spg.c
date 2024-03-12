@@ -31,8 +31,7 @@ typedef enum i2c_config {
 // Inout protocol to enable the I2C interface
 typedef enum i2c_protocol {
     CFG_I2CINPROT_UBX = 0x10710001, /* Flag to indicate if UBX should be an input protocol on I2C */
-    CFG_I2CINPROT_NMEA = 0x10710002 /* Flag to indicate if NMEA should be an input protocol on I2C - Will most likely go
-                                       unused, keeping it just in case.*/
+    CFG_I2CINPROT_NMEA = 0x10710002 /* Flag to indicate if NMEA should be an input protocol on I2C */
 } I2cProtocol;
 
 // UBX commands to be used on the GPS sensor
