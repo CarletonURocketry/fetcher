@@ -133,7 +133,6 @@ int main(int argc, char **argv) {
 
     // Create m10spg instance
     m10spg_init(&sensors[3] m bus, 0x42);
-
     uint8_t *m10spg_context = aalloc(&arena, sensor_get_ctx_size(sensors[3]));
     sensor_set_ctx(&sensors[2], m10spg_context);
     setup_res = sensor_open(sensors[3]);
