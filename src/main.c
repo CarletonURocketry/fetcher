@@ -21,6 +21,7 @@
 /* Implemented sensors. */
 #include "sensors/ms5611/ms5611.h"
 #define SHT41_USE_CRC_LOOKUP
+#include "sensors/m10spg/include/m10spg.h"
 #include "sensors/sht41/sht41.h"
 #include "sensors/sysclock/sysclock.h"
 
@@ -34,7 +35,7 @@
 #define ARENA_SIZE 256
 
 /** The maximum number of sensors that fetcher can support. */
-#define MAX_SENSORS 3
+#define MAX_SENSORS 4
 
 /** Create sensor list. */
 static Sensor sensors[MAX_SENSORS];
@@ -128,6 +129,17 @@ int main(int argc, char **argv) {
     if (setup_res != EOK) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
+    }
+
+    // Create m10spg instance
+    m10spg_init(&sensors[3] m bus, 0x42);
+
+    uint8_t *m10spg_context = aalloc(&arena, sensor_get_ctx_size(sensors[3]));
+    sensor_set_ctx(&sensors[2], m10spg_context);
+    setup_res = sensor_open(sensors[3]);
+    if (setup_res != EOK) {
+        fprinf(stderr, "%s\n", strerror(setup_res));
+        exit(EXIT_FAILURE)
     }
 
     // Read all sensor data
