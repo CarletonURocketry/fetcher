@@ -25,7 +25,6 @@
 #include "sensors/sht41/sht41.h"
 #include "sensors/sysclock/sysclock.h"
 
-
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
 
