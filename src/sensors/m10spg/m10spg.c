@@ -93,7 +93,7 @@ typedef struct {
 
 } UBXSecUniqId;
 
-static m10spg_send(Sensor *sensor) {
+static UBXSecUniqidPayload m10spg_recv(Sensor *sensor) {
 
     i2c_sendrecv_t read_id_cmd_hdr = {.slave = sensor->loc.addr, .send_len = 6, .recv_len = 16};
     uint8_t read_id_cmd[sizeof(read_id_cmd_hdr) + 16];
@@ -103,7 +103,7 @@ static m10spg_send(Sensor *sensor) {
     errno_t err = devctl(DCMD_I2C_SENDRECV, read_id_cmd, sizeof(read_id_cmd), NULL, NULL);
     assert(err == EOK);
 
-    UBXSecUniqId *ret = (UBXSecUniqID)(&read_id_cmd[sizeof(read_id_cmd_hdr)]);
+    UBXSecUniqId *ret = (UBXSecUniqId *)(&read_id_cmd[sizeof(read_id_cmd_hdr)]);
     ret->payload.unique_id[0];
     ret->payload.version;
 
@@ -111,5 +111,7 @@ static m10spg_send(Sensor *sensor) {
 }
 
 // static errno_t m10spg_init(Sensor *sensor, const int bus, const uint8_t addr) {
+
+//    sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x42), .fmt = I2C_ADDRFMT_7BIT}};
 
 //}
