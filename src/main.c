@@ -55,17 +55,23 @@ static bool endless = false;
 /** Name of file to read from, if one is provided. */
 static char *filename = NULL;
 
+/** Name of file to write to, if one is provided. */
+static char *outfile = NULL;
+
 int main(int argc, char **argv) {
 
     int c; // Holder for choice
     opterr = 0;
 
     /* Get command line options. */
-    while ((c = getopt(argc, argv, ":e:")) != -1) {
+    while ((c = getopt(argc, argv, ":e:o:")) != -1) {
         switch (c) {
         case 'e':
             endless = true;
             filename = optarg;
+            break;
+        case 'o':
+            outfile = optarg;
             break;
         case ':':
             fprintf(stderr, "Option -%c requires an argument.\n", optopt);
@@ -75,6 +81,16 @@ int main(int argc, char **argv) {
             exit(EXIT_FAILURE);
         default:
             fputs("Something went wrong. Please check 'use fetcher' to see example usage.", stderr);
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    /** Decide on output stream. */
+    FILE *stream = stdout;
+    if (outfile != NULL) {
+        stream = fopen(outfile, "r");
+        if (stream == NULL) {
+            fprintf(stderr, "Could not open file '%s' for reading.\n", outfile);
             exit(EXIT_FAILURE);
         }
     }
@@ -148,7 +164,7 @@ int main(int argc, char **argv) {
                     fprintf(stderr, "Could not read sensor data: %s\n", sensor_strtag(tag));
                     continue;
                 }
-                sensor_print_data(tag, data); // Sensor read worked, print out the result
+                sensor_write_data(stream, tag, data); // Sensor read worked, print out the result
             }
         }
     }
