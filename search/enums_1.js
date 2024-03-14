@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['ms5611cmd_0',['MS5611Cmd',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455',1,'ms5611.c']]],
-  ['ms5611dreg_1',['MS5611DReg',['../ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18',1,'ms5611.c']]],
-  ['ms5611resolution_2',['MS5611Resolution',['../ms5611_8c.html#aab94c0c8692d1629420105ba506d49eb',1,'ms5611.c']]]
+  ['sensorprecision_0',['SensorPrecision',['../sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587',1,'sensor_api.h']]],
+  ['sensortag_1',['SensorTag',['../sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627',1,'sensor_api.h']]],
+  ['sensortagdtype_2',['SensorTagDType',['../sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84',1,'sensor_api.h']]],
+  ['sht41cmd_3',['SHT41Cmd',['../sht41_8c.html#abdab13decf05c54294437091200a09a6',1,'sht41.c']]]
 ];

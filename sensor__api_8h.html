@@ -100,6 +100,7 @@ $(document).ready(function(){initNavTree('sensor__api_8h.html',''); initResizabl
 <div class="textblock"><code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;hw/i2c.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
 </div>
 <p><a href="sensor__api_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -154,8 +155,8 @@ Functions</h2></td></tr>
 <tr class="separator:ab5e2052ce2670e4f1e2e4dd905ad375a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace7895479a67be7201443272719e5172"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#ace7895479a67be7201443272719e5172">sensor_strtag</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag)</td></tr>
 <tr class="separator:ace7895479a67be7201443272719e5172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabaa1ef601f5829a17a3b60205b5d3f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#aabaa1ef601f5829a17a3b60205b5d3f1">sensor_print_data</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, const void *data)</td></tr>
-<tr class="separator:aabaa1ef601f5829a17a3b60205b5d3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2720e3785e692faa32959f9555bc48c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a2720e3785e692faa32959f9555bc48c1">sensor_write_data</a> (FILE *stream, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, const void *data)</td></tr>
+<tr class="separator:a2720e3785e692faa32959f9555bc48c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a430b7748174467e5bde0d30f25c4238d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a430b7748174467e5bde0d30f25c4238d">sensor_set_precision</a> (<a class="el" href="structSensor.html">Sensor</a> sensor, const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision)</td></tr>
 <tr class="separator:a430b7748174467e5bde0d30f25c4238d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d7050eeccb4e8dd4e96eaf5ea4f1a36"><td class="memItemLeft" align="right" valign="top">errno_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a7d7050eeccb4e8dd4e96eaf5ea4f1a36">sensor_open</a> (<a class="el" href="structSensor.html">Sensor</a> sensor)</td></tr>
@@ -355,41 +356,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aabaa1ef601f5829a17a3b60205b5d3f1" name="aabaa1ef601f5829a17a3b60205b5d3f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabaa1ef601f5829a17a3b60205b5d3f1">&#9670;&nbsp;</a></span>sensor_print_data()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void sensor_print_data </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>&#160;</td>
-          <td class="paramname"><em>tag</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const void *&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Prints sensor data in a standard format. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tag</td><td>The tag describing the kind of sensor data. </td></tr>
-    <tr><td class="paramname">data</td><td>A pointer to the sensor data to be printed. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="acae3426125d6bb82b828d1896e3a3d9f" name="acae3426125d6bb82b828d1896e3a3d9f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acae3426125d6bb82b828d1896e3a3d9f">&#9670;&nbsp;</a></span>sensor_read()</h2>
 
@@ -501,6 +467,48 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2720e3785e692faa32959f9555bc48c1" name="a2720e3785e692faa32959f9555bc48c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2720e3785e692faa32959f9555bc48c1">&#9670;&nbsp;</a></span>sensor_write_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sensor_write_data </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>&#160;</td>
+          <td class="paramname"><em>tag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Writes sensor data in a standard format. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>The output stream for writing sensor data. </td></tr>
+    <tr><td class="paramname">tag</td><td>The tag describing the kind of sensor data. </td></tr>
+    <tr><td class="paramname">data</td><td>A pointer to the sensor data to be printed. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

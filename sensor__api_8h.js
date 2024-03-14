@@ -30,9 +30,9 @@ var sensor__api_8h =
     [ "sensor_get_ctx_size", "sensor__api_8h.html#a55a8f00834e207eb93484dcdfa4b3c26", null ],
     [ "sensor_max_dsize", "sensor__api_8h.html#ab5e2052ce2670e4f1e2e4dd905ad375a", null ],
     [ "sensor_open", "sensor__api_8h.html#a7d7050eeccb4e8dd4e96eaf5ea4f1a36", null ],
-    [ "sensor_print_data", "sensor__api_8h.html#aabaa1ef601f5829a17a3b60205b5d3f1", null ],
     [ "sensor_read", "sensor__api_8h.html#acae3426125d6bb82b828d1896e3a3d9f", null ],
     [ "sensor_set_ctx", "sensor__api_8h.html#a4922c3de7878ecacbe99217e2f3522f9", null ],
     [ "sensor_set_precision", "sensor__api_8h.html#a430b7748174467e5bde0d30f25c4238d", null ],
-    [ "sensor_strtag", "sensor__api_8h.html#ace7895479a67be7201443272719e5172", null ]
+    [ "sensor_strtag", "sensor__api_8h.html#ace7895479a67be7201443272719e5172", null ],
+    [ "sensor_write_data", "sensor__api_8h.html#a2720e3785e692faa32959f9555bc48c1", null ]
 ];

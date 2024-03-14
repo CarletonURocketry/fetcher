@@ -116,8 +116,8 @@ Functions</h2></td></tr>
 <tr class="separator:ab5e2052ce2670e4f1e2e4dd905ad375a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa078a25d53866cfc1696cce417f474f2"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#aa078a25d53866cfc1696cce417f474f2">__attribute__</a> ((const))</td></tr>
 <tr class="separator:aa078a25d53866cfc1696cce417f474f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabaa1ef601f5829a17a3b60205b5d3f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#aabaa1ef601f5829a17a3b60205b5d3f1">sensor_print_data</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, const void *data)</td></tr>
-<tr class="separator:aabaa1ef601f5829a17a3b60205b5d3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2720e3785e692faa32959f9555bc48c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8c.html#a2720e3785e692faa32959f9555bc48c1">sensor_write_data</a> (FILE *stream, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, const void *data)</td></tr>
+<tr class="separator:a2720e3785e692faa32959f9555bc48c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -314,15 +314,21 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aabaa1ef601f5829a17a3b60205b5d3f1" name="aabaa1ef601f5829a17a3b60205b5d3f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabaa1ef601f5829a17a3b60205b5d3f1">&#9670;&nbsp;</a></span>sensor_print_data()</h2>
+<a id="a2720e3785e692faa32959f9555bc48c1" name="a2720e3785e692faa32959f9555bc48c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2720e3785e692faa32959f9555bc48c1">&#9670;&nbsp;</a></span>sensor_write_data()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void sensor_print_data </td>
+          <td class="memname">void sensor_write_data </td>
           <td>(</td>
+          <td class="paramtype">FILE *&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>&#160;</td>
           <td class="paramname"><em>tag</em>, </td>
         </tr>
@@ -339,8 +345,9 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Prints sensor data in a standard format. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Writes sensor data in a standard format. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">stream</td><td>The output stream for writing sensor data. </td></tr>
     <tr><td class="paramname">tag</td><td>The tag describing the kind of sensor data. </td></tr>
     <tr><td class="paramname">data</td><td>A pointer to the sensor data to be printed. </td></tr>
   </table>
@@ -371,13 +378,13 @@ Variables</h2></td></tr>
 <div class="line">    [<a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba">TAG_TIME</a>] = {.name = <span class="stringliteral">&quot;Time&quot;</span>, .unit = <span class="stringliteral">&quot;ms&quot;</span>, .fmt_str = <span class="stringliteral">&quot;%u&quot;</span>, .dsize = <span class="keyword">sizeof</span>(uint32_t), .dtype = <a class="code hl_enumvalue" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a9727de420e0b9c249da040949489481e">TYPE_U32</a>},</div>
 <div class="line">    [<a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a3a098e26994f813d7552afb278aaf54f">TAG_ALTITUDE</a>] = {.name = <span class="stringliteral">&quot;Altitude&quot;</span>, .unit = <span class="stringliteral">&quot;m&quot;</span>, .fmt_str = <span class="stringliteral">&quot;%.2f&quot;</span>, .dsize = <span class="keyword">sizeof</span>(float), .dtype = <a class="code hl_enumvalue" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f">TYPE_FLOAT</a>},</div>
 <div class="line">}</div>
-<div class="ttc" id="asensor__api_8h_html_a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f"><div class="ttname"><a href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f">TYPE_FLOAT</a></div><div class="ttdeci">@ TYPE_FLOAT</div><div class="ttdef"><b>Definition:</b> sensor_api.h:27</div></div>
-<div class="ttc" id="asensor__api_8h_html_a12c516a9f3375ec72e5b9a1a2eb74b84a9727de420e0b9c249da040949489481e"><div class="ttname"><a href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a9727de420e0b9c249da040949489481e">TYPE_U32</a></div><div class="ttdeci">@ TYPE_U32</div><div class="ttdef"><b>Definition:</b> sensor_api.h:28</div></div>
-<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08">TAG_TEMPERATURE</a></div><div class="ttdeci">@ TAG_TEMPERATURE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:18</div></div>
-<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a3a098e26994f813d7552afb278aaf54f"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a3a098e26994f813d7552afb278aaf54f">TAG_ALTITUDE</a></div><div class="ttdeci">@ TAG_ALTITUDE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:22</div></div>
-<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba">TAG_TIME</a></div><div class="ttdeci">@ TAG_TIME</div><div class="ttdef"><b>Definition:</b> sensor_api.h:21</div></div>
-<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13">TAG_PRESSURE</a></div><div class="ttdeci">@ TAG_PRESSURE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:19</div></div>
-<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e">TAG_HUMIDITY</a></div><div class="ttdeci">@ TAG_HUMIDITY</div><div class="ttdef"><b>Definition:</b> sensor_api.h:20</div></div>
+<div class="ttc" id="asensor__api_8h_html_a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f"><div class="ttname"><a href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f">TYPE_FLOAT</a></div><div class="ttdeci">@ TYPE_FLOAT</div><div class="ttdef"><b>Definition:</b> sensor_api.h:28</div></div>
+<div class="ttc" id="asensor__api_8h_html_a12c516a9f3375ec72e5b9a1a2eb74b84a9727de420e0b9c249da040949489481e"><div class="ttname"><a href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a9727de420e0b9c249da040949489481e">TYPE_U32</a></div><div class="ttdeci">@ TYPE_U32</div><div class="ttdef"><b>Definition:</b> sensor_api.h:29</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08">TAG_TEMPERATURE</a></div><div class="ttdeci">@ TAG_TEMPERATURE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:19</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a3a098e26994f813d7552afb278aaf54f"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a3a098e26994f813d7552afb278aaf54f">TAG_ALTITUDE</a></div><div class="ttdeci">@ TAG_ALTITUDE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:23</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba">TAG_TIME</a></div><div class="ttdeci">@ TAG_TIME</div><div class="ttdef"><b>Definition:</b> sensor_api.h:22</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13">TAG_PRESSURE</a></div><div class="ttdeci">@ TAG_PRESSURE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:20</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e">TAG_HUMIDITY</a></div><div class="ttdeci">@ TAG_HUMIDITY</div><div class="ttdef"><b>Definition:</b> sensor_api.h:21</div></div>
 </div><!-- fragment --><p >A list of the possible sensor tags and their metadata. </p>
 
 </div>
