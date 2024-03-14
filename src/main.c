@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
     /** Decide on output stream. */
     FILE *stream = stdout;
     if (outfile != NULL) {
-        stream = fopen(outfile, "r");
+        stream = fopen(outfile, "w");
         if (stream == NULL) {
             fprintf(stderr, "Could not open file '%s' for reading.\n", outfile);
             exit(EXIT_FAILURE);
