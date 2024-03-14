@@ -6,10 +6,14 @@ are welcome to redistribute it under certain conditions. Please see the GNUGPLv3
 license for more details: https://www.gnu.org/licenses/
 
 DESCRIPTION:
-    A command line utility for reading sensor data over I2C and providing it over stdout.
+    A command line utility for reading sensor data over I2C and providing it
+    over stdout.
 
 SYNTAX:
-    fetcher [-e file]
+    fetcher [-e file -o file]
 
 OPTIONS:
-    -e file      Causes fetcher to run in endless mode (constantly re-reads the file it's provided).
+    -e file      Causes fetcher to run in endless mode (constantly re-reads the
+                 file it's provided).
+    -o file      Provides an output file for fetcher to write sensor data. If
+                 none provided, the stdout is used.

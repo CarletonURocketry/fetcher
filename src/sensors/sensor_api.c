@@ -104,11 +104,12 @@ size_t sensor_max_dsize(const Sensor *sensor) {
 const char __attribute__((const)) * sensor_strtag(const SensorTag tag) { return SENSOR_TAG_DATA[tag].name; }
 
 /**
- * Prints sensor data in a standard format.
+ * Writes sensor data in a standard format.
+ * @param stream The output stream for writing sensor data.
  * @param tag The tag describing the kind of sensor data.
  * @param data A pointer to the sensor data to be printed.
  */
-void sensor_print_data(const SensorTag tag, const void *data) {
+void sensor_write_data(FILE *stream, const SensorTag tag, const void *data) {
     char format_str[40] = "%s: ";                     // Format specifier for data name
     strcat(format_str, SENSOR_TAG_DATA[tag].fmt_str); // Format specifier for data
     strcat(format_str, " %s\n");                      // Format specifier for unit
@@ -120,25 +121,30 @@ void sensor_print_data(const SensorTag tag, const void *data) {
     case TYPE_FLOAT:
         // Ignore warning about promoting float to double since printf doesn't support float printing
 #pragma GCC diagnostic ignored "-Wdouble-promotion"
-        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const float, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const float, data), SENSOR_TAG_DATA[tag].unit);
         break;
     case TYPE_U32:
-        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint32_t, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint32_t, data),
+                SENSOR_TAG_DATA[tag].unit);
         break;
     case TYPE_U16:
-        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint16_t, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint16_t, data),
+                SENSOR_TAG_DATA[tag].unit);
         break;
     case TYPE_U8:
-        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint8_t, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint8_t, data),
+                SENSOR_TAG_DATA[tag].unit);
         break;
     case TYPE_I32:
-        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int32_t, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int32_t, data),
+                SENSOR_TAG_DATA[tag].unit);
         break;
     case TYPE_I16:
-        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int16_t, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int16_t, data),
+                SENSOR_TAG_DATA[tag].unit);
         break;
     case TYPE_I8:
-        printf(format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int8_t, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int8_t, data), SENSOR_TAG_DATA[tag].unit);
         break;
     default:
         return;
