@@ -9,8 +9,6 @@
 #include <assert.h>
 #include <errno.h>
 #include <hw/i2c.h>
-#include <m10spg.h>
-#include <math.h>
 #include <string.h>
 #include <unistd.h>
 

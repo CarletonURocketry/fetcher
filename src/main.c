@@ -21,7 +21,7 @@
 /* Implemented sensors. */
 #include "sensors/ms5611/ms5611.h"
 #define SHT41_USE_CRC_LOOKUP
-#include "sensors/m10spg/include/m10spg.h"
+#include "sensors/m10spg/m10spg.h"
 #include "sensors/sht41/sht41.h"
 #include "sensors/sysclock/sysclock.h"
 
@@ -132,13 +132,13 @@ int main(int argc, char **argv) {
     }
 
     // Create m10spg instance
-    m10spg_init(&sensors[3] m bus, 0x42);
+    m10spg_init(&sensors[3], bus, 0x42, PRECISION_HIGH);
     uint8_t *m10spg_context = aalloc(&arena, sensor_get_ctx_size(sensors[3]));
     sensor_set_ctx(&sensors[2], m10spg_context);
     setup_res = sensor_open(sensors[3]);
     if (setup_res != EOK) {
-        fprinf(stderr, "%s\n", strerror(setup_res));
-        exit(EXIT_FAILURE)
+        fprintf(stderr, "%s\n", strerror(setup_res));
+        exit(EXIT_FAILURE);
     }
 
     // Read all sensor data
