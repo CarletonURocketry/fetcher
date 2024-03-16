@@ -5,17 +5,13 @@
  * Sensor API interface implementation for the MAXM10S gps sensor which uses I2C communication.
  */
 
+#include "m10spg.h"
 #include "../sensor_api.h"
 #include <assert.h>
 #include <errno.h>
 #include <hw/i2c.h>
 #include <string.h>
 #include <unistd.h>
-
-#define DCMD_I2C_SENDRECV __DIOTF(_DCMD_I2C, 7, i2c_sendrecv_t)
-
-// Sets the address of the gps on the board
-uint8_t gps_address = 0x42;
 
 // static const SensorTag TAGS[] = {TAG_DOP, TAG_ODOMETER, TAG_POSITION, TAG_RESET, TAG_SATELLITE, TAG_TIME};
 
@@ -95,20 +91,16 @@ static UBXSecUniqidPayload m10spg_recv(Sensor *sensor) {
     i2c_sendrecv_t read_id_cmd_hdr = {.slave = sensor->loc.addr, .send_len = 6, .recv_len = 16};
     uint8_t read_id_cmd[sizeof(read_id_cmd_hdr) + 16];
     memcpy(read_id_cmd, &read_id_cmd_hdr, sizeof(read_id_cmd_hdr));
-    memcpy(read_id_cmd[sizeof(read_id_cmd_hdr)], &read_id_cmd, sizeof(6));
+    memcpy(&read_id_cmd[sizeof(read_id_cmd_hdr)], &read_id_cmd, 6);
 
-    errno_t err = devctl(DCMD_I2C_SENDRECV, read_id_cmd, sizeof(read_id_cmd), NULL, NULL);
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_id_cmd, sizeof(read_id_cmd), NULL, NULL);
     assert(err == EOK);
 
     UBXSecUniqId *ret = (UBXSecUniqId *)(&read_id_cmd[sizeof(read_id_cmd_hdr)]);
-    ret->payload.unique_id[0];
-    ret->payload.version;
 
     return ret->payload;
 }
 
-// static errno_t m10spg_init(Sensor *sensor, const int bus, const uint8_t addr) {
-
-//    sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x42), .fmt = I2C_ADDRFMT_7BIT}};
-
-//}
+void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
+    sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x42), .fmt = I2C_ADDRFMT_7BIT}};
+}
