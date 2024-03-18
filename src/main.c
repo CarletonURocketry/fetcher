@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    // Create m10spg instance
+    // Create M10SPG instance
     m10spg_init(&sensors[3], bus, 0x42, PRECISION_HIGH);
     uint8_t *m10spg_context = aalloc(&arena, sensor_get_ctx_size(sensors[3]));
     sensor_set_ctx(&sensors[2], m10spg_context);
@@ -140,6 +140,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
     }
+    return EXIT_SUCCESS;
 
     // Read all sensor data
     while (!endless) {
