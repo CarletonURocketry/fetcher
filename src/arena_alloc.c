@@ -9,6 +9,7 @@
  * otherwise.
  */
 void *aalloc(arena_t *arena, size_t nbytes) {
+    if (nbytes == 0) return NULL;
     if ((uint8_t *)(arena->cur) + nbytes > (uint8_t *)(arena->start) + arena->size) return NULL;
     void *allocated_memory = arena->cur;
     arena->cur = (uint8_t *)(arena->cur) + nbytes;

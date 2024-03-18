@@ -71,55 +71,44 @@ typedef struct {
     uint8_t checksum_b;
 } UBXSecUniqId;
 
-static UBXSecUniqidPayload m10spg_recv(Sensor *sensor) {
+/**
+ * Reads the specified data from the M10SPG.
+ * @param sensor A reference to an M10SPG sensor.
+ * @param tag The tag of the data type that should be read.
+ * @param buf A pointer to the memory location to store the data.
+ * @param nbytes The number of bytes that were written into the byte array buffer.
+ * @return Error status of reading from the sensor. EOK if successful.
+ */
+static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
 
-    UBXHeader ubx_header = {
-        .header_1 = H1,
-        .header_2 = H2,
-        .id = 0x03,
-        .class = 0x27,
-        .length = 0,
-        .checksum_a = 0,
-        .checksum_b = 0,
-    };
+    i2c_sendrecv_t header = {.stop = 1, .slave = sensor->loc.addr, .recv_len = 3, .send_len = 0};
 
-    // Calculate checksum
-    for (uint8_t i = 0; i < sizeof(ubx_header) - 2; i++) {
-        ubx_header.checksum_a += ((uint8_t *)(&ubx_header))[i];
-        ubx_header.checksum_b += ubx_header.checksum_a;
+    uint8_t read_cmd[sizeof(header) + 3];
+    memcpy(read_cmd, &header, sizeof(header));
+
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
+    assert(err = EOK);
+
+    for (uint8_t i = 0; i < 3; i++) {
+        printf("%02x\n", read_cmd[sizeof(header) + i]);
     }
 
-    i2c_sendrecv_t read_id_cmd_hdr = {
-        .slave = sensor->loc.addr, .send_len = sizeof(ubx_header), .recv_len = sizeof(UBXSecUniqId)};
-    uint8_t read_id_cmd[sizeof(read_id_cmd_hdr) + sizeof(UBXSecUniqId)];
-    memcpy(read_id_cmd, &read_id_cmd_hdr, sizeof(read_id_cmd_hdr));
-
-    memcpy(&read_id_cmd[sizeof(read_id_cmd_hdr)], &ubx_header, sizeof(ubx_header));
-
-    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_id_cmd, sizeof(read_id_cmd), NULL);
-    assert(err == EOK);
-
-    UBXSecUniqId *ret = (UBXSecUniqId *)(&read_id_cmd[sizeof(read_id_cmd_hdr)]);
-
-    printf("C_A: %u\n", ret->checksum_a);
-    printf("C_B: %u\n", ret->checksum_b);
-    printf("h1: %u\n", ret->header_1);
-    printf("h2: %u\n", ret->header_2);
-    printf("id: %u\n", ret->id);
-    printf("class: %u\n", ret->class);
-    printf("length: %u\n", ret->length);
-
-    for (int i = 0; i < 6; i++) {
-        printf("Payload ID: %u\n", ret->payload.unique_id[i]);
-    }
-
-    return ret->payload;
+    return EOK;
 }
+
+/**
+ * Prepares the M10SPG for reading.
+ * @param sensor A reference to an M10SPG sensor.
+ * @return The error status of the call. EOK if successful.
+ */
+static errno_t m10spg_open(Sensor *sensor) { return EOK; }
 
 void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x42), .fmt = I2C_ADDRFMT_7BIT}};
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
     sensor->context.size = 0;
-    m10spg_recv(sensor);
+    sensor->read = &m10spg_read;
+    sensor->open = &m10spg_open;
+    m10spg_read(sensor, TAG_TIME, NULL, 0);
 }
