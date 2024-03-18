@@ -16,8 +16,15 @@
 
 /** The first preamble synchronization header. */
 #define H1 0xB5
+
 /** The second preamble synchronization header. */
 #define H2 0x62
+
+/** The read address for the GPS module. */
+#define gps_read(addr) (addr | 0x01)
+
+/** The write address for the GPS module. */
+#define gps_write(addr) (addr & 0xFE)
 
 static const SensorTag TAGS[] = {TAG_TIME};
 
@@ -81,16 +88,22 @@ typedef struct {
  */
 static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
 
-    i2c_sendrecv_t header = {.stop = 1, .slave = sensor->loc.addr, .recv_len = 3, .send_len = 0};
+    // Make sure in read mode
+    i2c_addr_t read_addr = sensor->loc.addr;
+    read_addr.addr = gps_read(read_addr.addr);
 
-    uint8_t read_cmd[sizeof(header) + 3];
-    memcpy(read_cmd, &header, sizeof(header));
+    for (int j = 0; j < 1000; j++) {
+        i2c_sendrecv_t header = {.stop = 1, .slave = sensor->loc.addr, .recv_len = 3, .send_len = 0};
 
-    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
-    assert(err = EOK);
+        uint8_t read_cmd[sizeof(header) + 3];
+        memcpy(read_cmd, &header, sizeof(header));
 
-    for (uint8_t i = 0; i < 3; i++) {
-        printf("%02x\n", read_cmd[sizeof(header) + i]);
+        errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
+        assert(err = EOK);
+
+        for (uint8_t i = 0; i < 3; i++) {
+            putchar(read_cmd[sizeof(header) + i]);
+        }
     }
 
     return EOK;
