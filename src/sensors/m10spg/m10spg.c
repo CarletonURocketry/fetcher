@@ -79,6 +79,29 @@ typedef struct {
 } UBXSecUniqId;
 
 /**
+ * Writes data to the M10SPG.
+ * @param sensor A reference to an M10SPG sensor.
+ * @param buf A pointer to the memory location containing the data.
+ * @param nbytes The number of bytes to be written to the M10SPG.
+ * @return Error status of reading from the sensor. EOK if successful.
+ */
+static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
+
+    // Make sure we are in write mode
+    i2c_addr_t write_addr = sensor->loc.addr;
+    write_addr.addr = gps_write(write_addr.addr);
+
+    i2c_send_t header = {.stop = 1, .slave = sensor->loc.addr, .len = nbytes};
+    uint8_t data[sizeof(header) + nbytes];
+    memcpy(data, &header, sizeof(header));
+    memcpy(&data[sizeof(header)], buf, nbytes);
+
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SEND, data, sizeof(header) + nbytes, NULL);
+
+    return err;
+}
+
+/**
  * Reads the specified data from the M10SPG.
  * @param sensor A reference to an M10SPG sensor.
  * @param tag The tag of the data type that should be read.
@@ -99,7 +122,7 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
         memcpy(read_cmd, &header, sizeof(header));
 
         errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
-        assert(err = EOK);
+        if (err != EOK) return err;
 
         for (uint8_t i = 0; i < 3; i++) {
             putchar(read_cmd[sizeof(header) + i]);
@@ -123,5 +146,21 @@ void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     sensor->context.size = 0;
     sensor->read = &m10spg_read;
     sensor->open = &m10spg_open;
+
+    UBXHeader header = {
+        .header_1 = H1,
+        .header_2 = H2,
+        .length = 0,
+        .class = 0x0,
+        .id = 0x04,
+    };
+
+    for (uint8_t i = 0; i < sizeof(UBXHeader); i++) {
+        header.checksum_a += ((uint8_t *)(&header))[i];
+        header.checksum_b += header.checksum_a;
+    }
+
+    m10spg_write(sensor, &header, sizeof(header));
+    sleep(2);
     m10spg_read(sensor, TAG_TIME, NULL, 0);
 }
