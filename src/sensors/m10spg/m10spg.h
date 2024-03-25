@@ -1,5 +1,5 @@
 /**
- * @file MAX-M10S.h
+ * @file m10spg.h
  * @brief Header file containing the necessary types and function prototypes for controlling the MAX-M10S gps sensor.
  *
  * Header file containing the necessary types and function prototypes for controlling the MAX-M10S gps sensor.

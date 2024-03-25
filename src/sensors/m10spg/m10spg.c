@@ -7,7 +7,6 @@
 
 #include "m10spg.h"
 #include "../sensor_api.h"
-#include <assert.h>
 #include <errno.h>
 #include <hw/i2c.h>
 #include <stdio.h>
@@ -139,6 +138,13 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
  */
 static errno_t m10spg_open(Sensor *sensor) { return EOK; }
 
+/**
+ * Initializes a sensor struct with the interface to interact with the M10SPG.
+ * @param sensor The sensor interface to be initialized.
+ * @param bus The file descriptor of the I2C bus.
+ * @param addr The address of the sensor on the I2C bus.
+ * @param precision The precision to read measurements with.
+ */
 void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x42), .fmt = I2C_ADDRFMT_7BIT}};
