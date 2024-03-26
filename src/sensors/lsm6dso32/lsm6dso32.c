@@ -35,11 +35,9 @@ static const SensorTag TAGS[] = {};
 static errno_t lsm6dso32_write(Sensor const *sensor, void *buf, size_t nbytes) {
 
     // Construct header
-    i2c_send_t header = {
-        .slave = sensor->loc.addr,
-        .stop = 1,
-        .len = nbytes,
-    };
+    static i2c_send_t header = {.slave = {0}, .stop = 1, .len = 0};
+    header.len = nbytes;
+    header.slave = sensor->loc.addr;
 
     // Create command
     uint8_t cmd[nbytes + sizeof(header)];
@@ -58,11 +56,8 @@ static errno_t lsm6dso32_write(Sensor const *sensor, void *buf, size_t nbytes) {
 static errno_t lsm6dso32_read_bytes(Sensor *sensor, uint8_t reg, void *buf, size_t nbytes) {
 
     // Construct command for sending register
-    i2c_send_t register_hdr = {
-        .stop = 0,
-        .slave = sensor->loc.addr,
-        .len = 1,
-    };
+    static i2c_send_t register_hdr = {.stop = 0, .slave = {0}, .len = 1};
+    register_hdr.slave = sensor->loc.addr;
 
     // Send command to set register
     memcpy(buf, &register_hdr, sizeof(register_hdr));
@@ -75,11 +70,9 @@ static errno_t lsm6dso32_read_bytes(Sensor *sensor, uint8_t reg, void *buf, size
     return_err(err);
 
     // Construct command to read
-    i2c_recv_t read_hdr = {
-        .slave = sensor->loc.addr,
-        .stop = 1,
-        .len = nbytes,
-    };
+    static i2c_recv_t read_hdr = {.slave = {0}, .stop = 1, .len = 0};
+    read_hdr.slave = sensor->loc.addr;
+    read_hdr.len = nbytes;
     memcpy(buf, &read_hdr, sizeof(read_hdr));
 
     // Send command to read
