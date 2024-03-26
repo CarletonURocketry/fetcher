@@ -23,12 +23,6 @@
 /** The second preamble synchronization header. */
 #define H2 0x62
 
-/** The read address for the GPS module. */
-#define gps_read(addr) (addr | 0x01)
-
-/** The write address for the GPS module. */
-#define gps_write(addr) (addr & 0xFE)
-
 static const SensorTag TAGS[] = {TAG_TIME};
 
 /** Commands to configure the I2C interface */
@@ -90,10 +84,6 @@ typedef struct {
  */
 static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
 
-    // Make sure we are in write mode
-    i2c_addr_t write_addr = sensor->loc.addr;
-    write_addr.addr = gps_write(write_addr.addr);
-
     i2c_send_t header = {.stop = 1, .slave = sensor->loc.addr, .len = nbytes};
     uint8_t data[sizeof(header) + nbytes];
     memcpy(data, &header, sizeof(header));
@@ -116,7 +106,6 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
 
     // Make sure in read mode
     i2c_addr_t read_addr = sensor->loc.addr;
-    read_addr.addr = gps_read(read_addr.addr);
 
     for (int j = 0; j < 1000; j++) {
         i2c_sendrecv_t header = {.stop = 1, .slave = sensor->loc.addr, .recv_len = 3, .send_len = 0};
@@ -129,7 +118,6 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
 
         for (uint8_t i = 0; i < 3; i++) {
             printf("%x", read_cmd[sizeof(header) + i]);
-            // putchar(read_cmd[sizeof(header) + i]);
         }
     }
     printf("\n");
