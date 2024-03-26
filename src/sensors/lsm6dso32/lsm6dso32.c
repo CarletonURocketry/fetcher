@@ -9,23 +9,21 @@
  * for the LSM6DSO32 data sheet.
  */
 #include "lsm6dso32.h"
-#include <stdio.h>
 #include <errno.h>
 #include <hw/i2c.h>
 #include <stdbool.h>
+// TODO: remove
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
 /** The different registers that are present in the IMU (and used by this program). */
 typedef enum {
-    WHO_AM_I = 0x0F,
+    WHO_AM_I = 0x0F,   /**< Returns the hard-coded address of the IMU on the I2C bus. */
+    OUTX_L_A = 0x29,   /**< X-axis linear acceleration (16 bits) */
+    TIMESTAMP0 = 0x40, /**< First timestamp register (32 bits total) */
+    STATUS_REG = 0x1E, /**< The status register of whether data is available. */
 } IMUReg;
-
-/** Macro to create the read address of the IMU. */
-#define read_addr(addr) (addr | 0x01)
-
-/** Macro to create the write address of the IMU. */
-#define write_addr(addr) (addr & 0xFE)
 
 /** Macro to early return an error. */
 #define return_err(err)                                                                                                \
@@ -42,7 +40,6 @@ static errno_t lsm6dso32_write(Sensor const *sensor, void *buf, size_t nbytes) {
         .stop = 1,
         .len = nbytes,
     };
-    header.slave.addr = write_addr(header.slave.addr);
 
     // Create command
     uint8_t cmd[nbytes + sizeof(header)];
@@ -66,7 +63,6 @@ static errno_t lsm6dso32_read_bytes(Sensor *sensor, uint8_t reg, void *buf, size
         .slave = sensor->loc.addr,
         .len = 1,
     };
-    register_hdr.slave.addr = read_addr(register_hdr.slave.addr);
 
     // Send command to set register
     memcpy(buf, &register_hdr, sizeof(register_hdr));
@@ -84,7 +80,6 @@ static errno_t lsm6dso32_read_bytes(Sensor *sensor, uint8_t reg, void *buf, size
         .stop = 1,
         .len = nbytes,
     };
-    read_hdr.slave.addr = read_addr(read_hdr.slave.addr);
     memcpy(buf, &read_hdr, sizeof(read_hdr));
 
     // Send command to read
@@ -108,10 +103,14 @@ static errno_t lsm6ds032_read(Sensor *sensor, const SensorTag tag, void *buf, si
  */
 static errno_t lsm6ds032_open(Sensor *sensor) {
 
-    uint8_t result[sizeof(i2c_send_t) + 1];
-    errno_t err = lsm6dso32_read_bytes(sensor, WHO_AM_I, result, 1);
+    uint8_t config[] = {0x10, 0x8};
+    errno_t err = lsm6dso32_write(sensor, &config, sizeof(config));
+    return_err(err);
 
-    printf("%02x\n", result[sizeof(i2c_send_t)]);
+    uint8_t result[sizeof(i2c_send_t) + 1];
+    err = lsm6dso32_read_bytes(sensor, STATUS_REG, result, 1);
+
+    printf("%08x\n", (uint32_t)result[sizeof(i2c_send_t)]);
     return err;
 }
 
