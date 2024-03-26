@@ -13,6 +13,10 @@
 #include <string.h>
 #include <unistd.h>
 
+/** Macro to early return an error. */
+#define return_err(err)                                                                                                \
+    if (err != EOK) return err
+
 /** The first preamble synchronization header. */
 #define H1 0xB5
 
@@ -106,7 +110,7 @@ static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
  * @param tag The tag of the data type that should be read.
  * @param buf A pointer to the memory location to store the data.
  * @param nbytes The number of bytes that were written into the byte array buffer.
- * @return Error status of reading from the sensor. EOK if successful.
+ * @return errno_t The error status of the call. EOK if successful.
  */
 static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
 
@@ -124,17 +128,40 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
         if (err != EOK) return err;
 
         for (uint8_t i = 0; i < 3; i++) {
-            putchar(read_cmd[sizeof(header) + i]);
+            printf("%x", read_cmd[sizeof(header) + i]);
+            // putchar(read_cmd[sizeof(header) + i]);
         }
     }
+    printf("\n");
 
+    return EOK;
+}
+
+/**
+ * Returns the number of bytes ready to be read from the sensor
+ *
+ * @param sensor The sensor to check the number of bytes waiting from
+ * @param result The total number of bytes ready to be read
+ * @return errno_t The error status of the call. EOK if successful.
+ */
+static errno_t m10spg_available_bytes(Sensor *sensor, uint16_t *result) {
+    // Send the address of the first register, then the second byte read will be the next register (0xFE)
+    i2c_sendrecv_t header = {.stop = 1, .slave = sensor->loc.addr, .recv_len = 2, .send_len = 1};
+    uint8_t read_cmd[sizeof(header) + 2];
+    memcpy(read_cmd, &header, sizeof(header));
+    // Address of first bytes waiting register
+    read_cmd[sizeof(header)] = 0xFD;
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
+    return_err(err);
+
+    *result = ((uint16_t)read_cmd[sizeof(header)]) * 256 + (uint16_t)(read_cmd[sizeof(header) + 1]);
     return EOK;
 }
 
 /**
  * Prepares the M10SPG for reading.
  * @param sensor A reference to an M10SPG sensor.
- * @return The error status of the call. EOK if successful.
+ * @return errno_t The error status of the call. EOK if successful.
  */
 static errno_t m10spg_open(Sensor *sensor) { return EOK; }
 
