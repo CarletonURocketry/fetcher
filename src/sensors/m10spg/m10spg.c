@@ -54,8 +54,6 @@ typedef struct {
     uint8_t class;
     uint8_t id;
     uint16_t length;
-    uint8_t checksum_a;
-    uint8_t checksum_b;
 } UBXHeader;
 
 typedef struct {
@@ -107,7 +105,7 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
     // Make sure in read mode
     i2c_addr_t read_addr = sensor->loc.addr;
 
-    for (int j = 0; j < 1000; j++) {
+    for (int j = 0; j < 500; j++) {
         i2c_sendrecv_t header = {.stop = 1, .slave = sensor->loc.addr, .recv_len = 3, .send_len = 0};
 
         uint8_t read_cmd[sizeof(header) + 3];
@@ -117,7 +115,8 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
         if (err != EOK) return err;
 
         for (uint8_t i = 0; i < 3; i++) {
-            printf("%x", read_cmd[sizeof(header) + i]);
+            // printf("%x", read_cmd[sizeof(header) + i]);
+            putchar(read_cmd[sizeof(header) + i]);
         }
     }
     printf("\n");
@@ -133,13 +132,21 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
  * @return errno_t The error status of the call. EOK if successful.
  */
 static errno_t m10spg_available_bytes(Sensor *sensor, uint16_t *result) {
+
     // Send the address of the first register, then the second byte read will be the next register (0xFE)
-    i2c_sendrecv_t header = {.stop = 1, .slave = sensor->loc.addr, .recv_len = 2, .send_len = 1};
-    uint8_t read_cmd[sizeof(header) + 2];
-    memcpy(read_cmd, &header, sizeof(header));
-    // Address of first bytes waiting register
-    read_cmd[sizeof(header)] = 0xFD;
-    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
+    i2c_send_t header = {.stop = 0, .slave = sensor->loc.addr, .len = 1};
+    uint8_t address_cmd[sizeof(header) + 1];
+    memcpy(address_cmd, &header, sizeof(header));
+    address_cmd[sizeof(header)] = 0xFD;
+
+    i2c_recv_t read_header = {.stop = 1, .slave = sensor->loc.addr, .len = 2};
+    uint8_t read_cmd[sizeof(read_header) + 2];
+    memcpy(read_cmd, &read_header, sizeof(read_header));
+
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SEND, address_cmd, sizeof(address_cmd), NULL);
+    return_err(err);
+
+    err = devctl(sensor->loc.bus, DCMD_I2C_RECV, read_cmd, sizeof(read_cmd), NULL);
     return_err(err);
 
     *result = ((uint16_t)read_cmd[sizeof(header)]) * 256 + (uint16_t)(read_cmd[sizeof(header) + 1]);
@@ -168,20 +175,9 @@ void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     sensor->read = &m10spg_read;
     sensor->open = &m10spg_open;
 
-    UBXHeader header = {
-        .header_1 = H1,
-        .header_2 = H2,
-        .length = 0,
-        .class = 0x0,
-        .id = 0x04,
-    };
+    // Taken from someone else's code example
+    uint8_t ubx_mon_ver[] = {0xB5, 0x62, 0x0A, 0x04, 0x00, 0x00, 0x0E, 0x34};
 
-    for (uint8_t i = 0; i < sizeof(UBXHeader); i++) {
-        header.checksum_a += ((uint8_t *)(&header))[i];
-        header.checksum_b += header.checksum_a;
-    }
-
-    m10spg_write(sensor, &header, sizeof(header));
-    sleep(2);
+    m10spg_write(sensor, ubx_mon_ver, sizeof(ubx_mon_ver));
     m10spg_read(sensor, TAG_TIME, NULL, 0);
 }
