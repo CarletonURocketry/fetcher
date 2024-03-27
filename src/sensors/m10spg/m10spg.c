@@ -176,7 +176,8 @@ void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     sensor->open = &m10spg_open;
 
     // Taken from someone else's code example
-    uint8_t ubx_mon_ver[] = {0xB5, 0x62, 0x0A, 0x04, 0x00, 0x00, 0x0E, 0x34};
+    uint8_t ubx_mon_ver[] = {H1, H2, 0x0A, 0x04, 0x00, 0x00, 0x0E, 0x34};
+    uint8_t ubx_mon_hw3[] = {H1, H2, 0x0A, 0x37, 0x00, 0x00, 0x41, 0xcd};
 
     m10spg_write(sensor, ubx_mon_ver, sizeof(ubx_mon_ver));
     m10spg_read(sensor, TAG_TIME, NULL, 0);
