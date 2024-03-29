@@ -134,43 +134,35 @@ static errno_t m10spg_read_bytes(Sensor *sensor, void *buf, size_t nbytes) {
     return EOK;
 }
 
-#define BUF_SIZE 500
-static errno_t get_next_ublox(Sensor *sensor, uint8_t timeout) {
-    static uint8_t read_buffer[BUF_SIZE];
-    // Clear the last time we did this
-    memset(read_buffer, 0, sizeof(read_buffer));
+static errno_t get_next_ublox(Sensor *sensor, UBXProtocolMsg *msg, uint16_t max_payload, uint8_t timeout) {
     struct timespec start, stop;
     clock_gettime(CLOCK_REALTIME, &start);
     clock_gettime(CLOCK_REALTIME, &stop);
     while ((stop.tv_sec - start.tv_sec) < timeout) {
-        errno_t err = m10spg_read(sensor, read_buffer, 1);
+        errno_t err = m10spg_read_bytes(sensor, &msg->header.sync_1, sizeof(msg->header.sync_1));
         if (err != EOK) return err;
 
-        if (read_buffer[0] == H1) {
-            err = m10spg_read(sensor, read_buffer + 1, 1);
+        // Make sure we're at the start of a new message
+        if (msg->header.sync_1 == H1) {
+            err = m10spg_read_bytes(sensor, &msg->header.sync_2, sizeof(msg->header.sync_2));
             if (err != EOK) return err;
-            if (read_buffer[1] == H2) {
+            if (msg->header.sync_2 == H2) {
                 // Found something. Get message length
-                err = m10spg_read(sensor, read_buffer + 2, 4);
+                err = m10spg_read_bytes(sensor, &msg->header.length, sizeof(msg->header.length));
                 if (err != EOK) return err;
 
-                uint16_t length = (read_buffer[4] + read_buffer[5] * 256);
-                printf("Found a message length : %d", length);
-                err = m10spg_read(sensor, read_buffer + 6, length + 2);
+                printf("Found a message length : %d", msg->header.length);
+                // Make sure the space we allocated for the payload is big enough
+                if (msg->header.length > max_payload) {
+                    return EINVAL;
+                }
+                // Read payload
+                err = m10spg_read_bytes(sensor, msg->payload, msg->header.length);
                 if (err != EOK) return err;
 
-                printf("Message found \n(hex): ");
-                for (uint16_t j = 0; j < length + 6; j++) {
-                    printf("%x ", read_buffer[j]);
-                }
-                putchar('\n');
-
-                printf("(ascii): ");
-                for (uint16_t j = 0; j < length + 6; j++) {
-                    putchar(read_buffer[j]);
-                }
-                putchar('\n');
-                return EOK;
+                // Read in the checksums (assume contiguous)
+                err = m10spg_read_bytes(sensor, &msg->checksum_a, 2);
+                return err;
             } else {
                 return EBADMSG;
             }
@@ -181,10 +173,18 @@ static errno_t get_next_ublox(Sensor *sensor, uint8_t timeout) {
     return ETIMEDOUT;
 }
 
+static void print_ubx_message(UBXProtocolMsg *msg) {
+    printf("Class: %x, ID: %x, Length: %x, Payload: ", msg->header.class, msg->header.id, msg->header.length);
+    for (uint8_t *byte = msg->payload; byte < (uint8_t *)msg->payload + msg->header.length; byte++) {
+        printf("%x ", *byte);
+    }
+    putchar('\n');
+}
+
 static errno_t dump_buffer(Sensor *sensor, size_t bytes) {
     for (size_t i = 0; i < bytes; i++) {
         uint8_t byte;
-        m10spg_read(sensor, &byte, 1);
+        m10spg_read_bytes(sensor, &byte, 1);
         printf("%x ", byte);
     }
     putchar('\n');
@@ -274,9 +274,6 @@ void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     uint8_t ubx_i2c_enabled[] = {H1,   H2,   0x06, 0x8B, 0x08, 0x00, 0x00, 0x00,
                                  0x00, 0x00, 0x03, 0x00, 0x51, 0x10, 0xfd, 0x4f};
 
-    m10spg_write(sensor, ubx_i2c_enabled, sizeof(ubx_i2c_enabled));
-    sleep(1);
-    printf("\n Return: %d\n", get_next_ublox(sensor, 10));
     // dump_buffer(sensor, 1000);
     //  printf("\nFinal code: %d\n", get_next_ublox(sensor, 10));
     /*
