@@ -87,6 +87,12 @@ typedef struct {
 } UBXSecUniqidPayload;
 
 /**
+ * Gets the total length of a message, including checksums and the header
+ * @return uint16_t
+ */
+static inline uint16_t ubx_message_length(UBXProtocolMsg *msg) { return sizeof(msg->header) + msg->header.length + 2; }
+
+/**
  * Writes data to the M10SPG.
  * @param sensor A reference to an M10SPG sensor.
  * @param buf A pointer to the memory location containing the data.
@@ -98,7 +104,7 @@ static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
     i2c_send_t header = {.stop = 1, .slave = sensor->loc.addr, .len = nbytes};
     uint8_t data[sizeof(header) + nbytes];
     memcpy(data, &header, sizeof(header));
-    memcpy(&data[sizeof(header)], buf, nbytes);
+    memcpy(data + sizeof(header), buf, nbytes);
 
     errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SEND, data, sizeof(header) + nbytes, NULL);
 
@@ -134,7 +140,16 @@ static errno_t m10spg_read_bytes(Sensor *sensor, void *buf, size_t nbytes) {
     return EOK;
 }
 
-static errno_t get_next_ublox(Sensor *sensor, UBXProtocolMsg *msg, uint16_t max_payload, uint8_t timeout) {
+/**
+ * Gets the next ublox protcol message from the reciever, reading through any non-ublox data
+ * @param sensor The sensor to get the message from
+ * @param msg An empty message structure, with a payload pointing at a data buffer to read the payload into
+ * @param max_payload The maximum size that the payload can be (the size of the buffer pointed to by it)
+ * @param timeout THe maximum time to try and get a message
+ * @return errno_t EINVAL if the buffer is too small for the message found. ETIMEOUT if the timeout expires before a
+ * message is found. EBADMSG if the second sync char is not valid. EOK otherwise.
+ */
+static errno_t recv_ubx_message(Sensor *sensor, UBXProtocolMsg *msg, uint16_t max_payload, uint8_t timeout) {
     struct timespec start, stop;
     clock_gettime(CLOCK_REALTIME, &start);
     clock_gettime(CLOCK_REALTIME, &stop);
@@ -147,11 +162,13 @@ static errno_t get_next_ublox(Sensor *sensor, UBXProtocolMsg *msg, uint16_t max_
             err = m10spg_read_bytes(sensor, &msg->header.sync_2, sizeof(msg->header.sync_2));
             if (err != EOK) return err;
             if (msg->header.sync_2 == H2) {
-                // Found something. Get message length
-                err = m10spg_read_bytes(sensor, &msg->header.length, sizeof(msg->header.length));
+                // Found something. Get message class, id, and length
+                err =
+                    m10spg_read_bytes(sensor, &msg->header.class,
+                                      sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(msg->header.length));
                 if (err != EOK) return err;
 
-                printf("Found a message length : %d", msg->header.length);
+                printf("Found a message length : %d\n", msg->header.length);
                 // Make sure the space we allocated for the payload is big enough
                 if (msg->header.length > max_payload) {
                     return EINVAL;
@@ -173,19 +190,43 @@ static errno_t get_next_ublox(Sensor *sensor, UBXProtocolMsg *msg, uint16_t max_
     return ETIMEDOUT;
 }
 
+/**
+ * Prints a populated message structure to standard output
+ * @param msg The message to print. Prints the fields as hexidecimal
+ */
 static void print_ubx_message(UBXProtocolMsg *msg) {
     printf("Class: %x, ID: %x, Length: %x, Payload: ", msg->header.class, msg->header.id, msg->header.length);
     for (uint8_t *byte = msg->payload; byte < (uint8_t *)msg->payload + msg->header.length; byte++) {
         printf("%x ", *byte);
     }
     putchar('\n');
+    for (uint8_t *byte = msg->payload; byte < (uint8_t *)msg->payload + msg->header.length; byte++) {
+        putchar(*byte);
+    }
+    putchar('\n');
+}
+
+static errno_t send_ubx_message(Sensor *sensor, UBXProtocolMsg *msg) {
+    i2c_send_t header = {.stop = 1, .slave = sensor->loc.addr, .len = ubx_message_length(msg)};
+    uint8_t data[sizeof(header) + ubx_message_length(msg)];
+    memcpy(data, &header, sizeof(header));
+    memcpy(data + sizeof(header), &msg->header, sizeof(msg->header));
+    memcpy(data + sizeof(header) + sizeof(msg->header), msg->payload, msg->header.length);
+    memcpy(data + sizeof(header) + sizeof(msg->header) + msg->header.length, &msg->checksum_a, 2);
+
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SEND, data, sizeof(data), NULL);
+    return err;
 }
 
 static errno_t dump_buffer(Sensor *sensor, size_t bytes) {
+    uint8_t buff[bytes];
+    m10spg_read_bytes(sensor, buff, bytes);
     for (size_t i = 0; i < bytes; i++) {
-        uint8_t byte;
-        m10spg_read_bytes(sensor, &byte, 1);
-        printf("%x ", byte);
+        printf("%x ", buff[i]);
+    }
+    putchar('\n');
+    for (size_t i = 0; i < bytes; i++) {
+        putchar(buff[i]);
     }
     putchar('\n');
 }
@@ -263,8 +304,7 @@ void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
     sensor->context.size = 0;
     sensor->open = &m10spg_open;
-
-    // Taken from someone else's code example
+    /*
     uint8_t ubx_mon_ver[] = {H1, H2, 0x0A, 0x04, 0x00, 0x00, 0x0E, 0x34};
     uint8_t ubx_mon_hw3[] = {H1, H2, 0x0A, 0x37, 0x00, 0x00, 0x41, 0xcd};
     uint8_t ubx_mon_gnss[] = {H1, H2, 0x0a, 0x28, 0x00, 0x00, 0x32, 0xa0};
@@ -273,18 +313,27 @@ void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const Sensor
     uint8_t *key_bytes = (uint8_t *)&key;
     uint8_t ubx_i2c_enabled[] = {H1,   H2,   0x06, 0x8B, 0x08, 0x00, 0x00, 0x00,
                                  0x00, 0x00, 0x03, 0x00, 0x51, 0x10, 0xfd, 0x4f};
+    */
+    uint8_t payload_buffer[300];
+    UBXProtocolMsg mon_ver_poll;
+    mon_ver_poll.header.sync_1 = H1;
+    mon_ver_poll.header.sync_2 = H2;
+    mon_ver_poll.header.class = 0x0A;
+    mon_ver_poll.header.id = 0x04;
+    mon_ver_poll.header.length = 0;
 
-    // dump_buffer(sensor, 1000);
-    //  printf("\nFinal code: %d\n", get_next_ublox(sensor, 10));
-    /*
-        m10spg_write(sensor, ubx_mon_hw3, sizeof(ubx_mon_hw3));
-        printf("\nFinal code: %d\n", get_next_ublox(sensor, 10));
+    mon_ver_poll.payload = payload_buffer;
+    set_ubx_checksum(&mon_ver_poll);
 
-        m10spg_write(sensor, ubx_mon_comms, sizeof(ubx_mon_comms));
-        printf("\nFinal code: %d\n", get_next_ublox(sensor, 10));
+    errno_t err = send_ubx_message(sensor, &mon_ver_poll);
+    if (err != EOK) printf("Error here: %d, Code %d\n", __LINE__, err);
+    sleep(1);
 
-        while (1) {
-            sleep(1);
-            printf("\nFinal code: %d\n", get_next_ublox(sensor, 10));
-        }*/
+    // Use this to see the ascii and hex of just the ublox message (it looks for the sync chars)
+    err = recv_ubx_message(sensor, &mon_ver_poll, 300, 2);
+    if (err != EOK) printf("Error here: %d, Code %d\n", __LINE__, err);
+    print_ubx_message(&mon_ver_poll);
+
+    // See buffer contents in hex and ascii - one big ol read
+    // dump_buffer(sensor, 600);
 }
