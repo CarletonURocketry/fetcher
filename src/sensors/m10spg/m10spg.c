@@ -28,6 +28,9 @@
 /** How long the recieve command for UBX messages should wait between trying to read a message*/
 #define RECV_SLEEP_TIME 10000
 
+/** How long m10spg_read should wait for a response in seconds */
+#define DEFAULT_TIMEOUT 10
+
 static const SensorTag TAGS[] = {TAG_TIME};
 
 /** UBX commands to be used on the GPS sensor */
@@ -76,6 +79,21 @@ typedef struct {
     uint8_t sec;
     uint8_t flags;
 } UBXUTCPayload;
+
+typedef enum {
+    RAM = 0x01,
+    BBR = 0x02,
+    FLASH = 0x04,
+} UBXConfigLayer;
+
+/** A struct representing the payload of the UBX-VALSET message */
+typedef struct {
+    uint8_t version;
+    uint8_t layer;
+    uint8_t reserved[2];
+    uint32_t key;
+    uint8_t value[4]; // A value with the maximum number of bytes that a configuration message can have
+} UBXValsetPayload;   // Will need to add a func for valset message lengths, and for setting up the value/key
 
 typedef struct {
     uint8_t version;
@@ -140,6 +158,35 @@ static errno_t set_ubx_checksum(UBXFrame *msg) {
     calculate_partial_checksum((uint8_t *)(&msg->header), 4, &msg->checksum_a, &msg->checksum_b);
     // Payload may not be contiguous, so calculate the checksum in two halves
     calculate_partial_checksum((uint8_t *)msg->payload, msg->header.length, &msg->checksum_a, &msg->checksum_b);
+}
+
+/**
+ * Configures a valset message and its payload
+ * @param msg The message, with enough space in it's payload buffer for a UBXValsetPayload. Will have length, class, id,
+ * and checksum configured
+ * @param key The configuration item that is to be configured
+ * @param layer The layer to make the configuration on
+ * @param value The configured value, with a size corresponding to the size defined in the interface manual
+ * @param size The size of the configured value, with 1 byte given for any single bit configurations
+ * @returns errno_t If there was an error configuring this message. EOK if configured properly, EINVAL if the value's
+ * storage size is larger than the maximum valset value size
+ */
+static errno_t setup_valset_message(UBXFrame *msg, UBXConfigLayer layer, uint32_t key, void *value, size_t size) {
+    UBXValsetPayload *payload = ((UBXValsetPayload *)msg->payload);
+    if (size > sizeof(payload->value)) {
+        return EINVAL;
+    }
+    memcpy(payload->value, value, size);
+    msg->header.length = sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(payload->layer) +
+                         sizeof(payload->key) + sizeof(payload->version) + size;
+    payload->version = 0x00;
+    payload->layer = layer & 0xFF; // Layer is only one byte
+    payload->key = key;
+    msg->header.class = 0x06;
+    msg->header.id = 0x8a;
+    set_ubx_checksum(msg);
+
+    return EOK;
 }
 
 /**
@@ -241,7 +288,7 @@ static errno_t send_ubx_message(Sensor *sensor, const UBXFrame *msg) {
  * Prints a populated message structure to standard output
  * @param msg The message to print. Prints the fields as hexidecimal
  */
-static void print_ubx_message(const UBXFrame *msg) {
+static void debug_print_ubx_message(const UBXFrame *msg) {
     printf("Class: %x, ID: %x, Length: %x, Payload: ", msg->header.class, msg->header.id, msg->header.length);
     for (uint8_t *byte = msg->payload; byte < (uint8_t *)msg->payload + msg->header.length; byte++) {
         printf("%x ", *byte);
@@ -253,7 +300,7 @@ static void print_ubx_message(const UBXFrame *msg) {
     putchar('\n');
 }
 
-static errno_t dump_buffer(Sensor *sensor, size_t bytes) {
+static errno_t debug_dump_buffer(Sensor *sensor, size_t bytes) {
     uint8_t buff[bytes];
     m10spg_read_bytes(sensor, buff, bytes);
     for (size_t i = 0; i < bytes; i++) {
@@ -267,6 +314,23 @@ static errno_t dump_buffer(Sensor *sensor, size_t bytes) {
 }
 
 /**
+ *
+ * @param sensor
+ * @param max_bytes
+ * @param timeout
+ * @return errno_t
+ */
+static errno_t debug_print_next_ubx(Sensor *sensor, size_t max_bytes, size_t timeout) {
+    uint8_t buffer[max_bytes];
+    UBXFrame msg;
+    msg.payload = buffer;
+    errno_t err = recv_ubx_message(sensor, &msg, max_bytes, timeout);
+    return_err(err);
+    debug_print_ubx_message(&msg);
+    return EOK;
+}
+
+/**
  * Writes data to the M10SPG. Currently useless - UBX messages should be written using the send_ubx_message function
  * @param sensor A reference to an M10SPG sensor.
  * @param buf A pointer to the memory location containing the data.
@@ -274,7 +338,6 @@ static errno_t dump_buffer(Sensor *sensor, size_t bytes) {
  * @return Error status of reading from the sensor. EOK if successful.
  */
 static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
-
     i2c_send_t header = {.stop = 1, .slave = sensor->loc.addr, .len = nbytes};
     uint8_t data[sizeof(header) + nbytes];
     memcpy(data, &header, sizeof(header));
@@ -290,14 +353,49 @@ static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
  * @param nbytes The number of bytes to read into the buffer
  * @return errno_t The error status of the call. EOK if successful.
  */
-static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) { return EOK; }
+static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
+    errno_t err = EOK;
+    // switch (tag) { case TAG_TIME: }
+    send_ubx_message(sensor, &POLL_NAV_UTC);
+    UBXUTCPayload payload;
+    UBXFrame recieved;
+    recieved.payload = &payload;
+    err = recv_ubx_message(sensor, &recieved, sizeof(payload), DEFAULT_TIMEOUT);
+    return_err(err);
+
+    // May be invalid
+    if (payload.flags & 0x04) {
+        printf("Invalid payload\n");
+        return EINVAL;
+    }
+    printf("GPS UTC: %d, %d, %d, %d, %d\n", payload.year, payload.day, payload.hour, payload.min, payload.sec);
+    struct tm recv_time = {.tm_year = 1900 - payload.year,
+                           .tm_mon = payload.month - 1,
+                           .tm_mday = payload.day,
+                           .tm_hour = payload.hour,
+                           .tm_min = payload.min,
+                           .tm_sec = payload.sec};
+    time_t utc_time = mktime(&recv_time);
+
+    return EOK;
+}
 
 /**
  * Prepares the M10SPG for reading.
  * @param sensor A reference to an M10SPG sensor.
  * @return errno_t The error status of the call. EOK if successful.
  */
-static errno_t m10spg_open(Sensor *sensor) { return EOK; }
+static errno_t m10spg_open(Sensor *sensor) {
+    uint32_t nmea_i2c_outprot_key = 0x10720002;
+    uint8_t nmea_i2c_outprot_val = 0x00;
+    UBXFrame disable_nmea_i2c;
+    UBXValsetPayload payload;
+    disable_nmea_i2c.payload = &payload;
+    setup_valset_message(&disable_nmea_i2c, RAM, nmea_i2c_outprot_key, &nmea_i2c_outprot_val, 1);
+    errno_t err = send_ubx_message(sensor, &disable_nmea_i2c);
+    return_err(err);
+    return debug_print_next_ubx(sensor, 300, 10);
+}
 
 /**
  * Initializes a sensor struct with the interface to interact with the M10SPG.
