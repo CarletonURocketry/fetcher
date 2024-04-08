@@ -80,20 +80,38 @@ typedef struct {
     uint8_t flags;
 } UBXUTCPayload;
 
+/** A struct representing the configuration layer selected in a configuration message (valset or valget) */
 typedef enum {
-    RAM = 0x01,
-    BBR = 0x02,
-    FLASH = 0x04,
+    RAM = 0x01,   /** The current configuration - cleared if the reciever enters power saving mode */
+    BBR = 0x02,   /** The battery backed memory configuration - not cleared unless the backup battery removed */
+    FLASH = 0x04, /** The flash configuration - does not exist on the M10 MAX */
 } UBXConfigLayer;
 
+/** An enum representing the different sizes of values that a configuration message can contain */
+typedef enum {
+    L = 0x01,                /** One bit */
+    U1 = 0xFF,               /** One byte */
+    U2 = 0xFFFF,             /** Two bytes, little endian */
+    U4 = 0xFFFFFFFF,         /** Four bytes, little endian */
+    U8 = 0xFFFFFFFFFFFFFFFF, /** Eight bytes, little endian */
+} UBXValueType;
+
+typedef uint8_t UBXConfigValue[8];
+
+/** A UBX configuration item, meant for being included in UBX configuration message payloads */
+typedef struct {
+    uint32_t key;         /** A key representing the configuration item of interest (find in the interface manual) */
+    UBXConfigValue value; /** A value, of the type UBXValueType - up to you to know which */
+} UBXConfigItem;
+
+#define MAX_CONFIG_ITEMS 5
 /** A struct representing the payload of the UBX-VALSET message */
 typedef struct {
-    uint8_t version;
-    uint8_t layer;
-    uint8_t reserved[2];
-    uint32_t key;
-    uint8_t value[4]; // A value with the maximum number of bytes that a configuration message can have
-} UBXValsetPayload;   // Will need to add a func for valset message lengths, and for setting up the value/key
+    uint8_t version;     /** The version of the message (always 0) */
+    uint8_t layer;       /** The layer of this config, one of the UBXConfigLayer (typed to ensure one byte) */
+    uint8_t reserved[2]; /** Reserved bytes */
+    UBXConfigItem items[MAX_CONFIG_ITEMS]; /** A number of configuration items less than the maximum number of items*/
+} UBXValsetPayload;
 
 typedef struct {
     uint8_t version;
