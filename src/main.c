@@ -19,8 +19,8 @@
 #include <string.h>
 
 /* Implemented sensors. */
-#include "sensors/ms5611/ms5611.h"
 #include "sensors/lsm6dso32/lsm6dso32.h"
+#include "sensors/ms5611/ms5611.h"
 #define SHT41_USE_CRC_LOOKUP
 #include "sensors/sht41/sht41.h"
 #include "sensors/sysclock/sysclock.h"
@@ -146,7 +146,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
     }
-    
+
     // Create LSM6D032 instance
     lsm6dso32_init(&sensors[3], bus, 0x6B, PRECISION_HIGH);
 
@@ -157,8 +157,6 @@ int main(int argc, char **argv) {
         fprintf(stderr, "%s\n", strerror(setup_res));
         exit(EXIT_FAILURE);
     }
-
-    return EXIT_SUCCESS;
 
     // Read all sensor data
     while (!endless) {

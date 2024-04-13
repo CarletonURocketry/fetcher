@@ -120,13 +120,15 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
         return_err(err);
         err = lsm6dso32_read_byte(sensor, OUT_TEMP_H, (uint8_t *)(&temp) + 1); // Read high byte
         return_err(err);
-        *(float *)buf = (float)(temp) / 256.0f + 25.0f; // In degrees celsius
+        *(float *)buf = (float)(temp) / 256.0f + 25.0f; // In degrees Celsius
         *nbytes = sizeof(float);
         break;
     }
     case TAG_LINEAR_ACCEL:
+        return EINVAL;
         break;
     case TAG_ANGULAR_ACCEL:
+        return EINVAL;
         break;
     default:
         return EINVAL;
@@ -153,13 +155,6 @@ static errno_t lsm6dso32_open(Sensor *sensor) {
     // TODO: set based on configured sensor performance
     // TODO: what full-scale selection?
     err = lsm6dso32_write_byte(sensor, CTRL2_G, 0xA0);
-    return_err(err);
-
-    size_t nbytes;
-    float temp;
-    lsm6dso32_read(sensor, TAG_TEMPERATURE, &temp, &nbytes);
-    printf("%f\n", temp);
-
     return err;
 }
 

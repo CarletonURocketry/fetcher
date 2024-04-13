@@ -14,6 +14,16 @@
 #include <stdint.h>
 #include <stdio.h>
 
+/** Type for a 3 dimensional vector with x, y, z components. */
+typedef struct {
+    /** X component. */
+    float x;
+    /** Y component. */
+    float y;
+    /** Z component. */
+    float z;
+} vec3d_t;
+
 /** Describes what data type the sensor is able to read. */
 typedef enum {
     TAG_TEMPERATURE,   /**< Temperature in degrees Celsius */
@@ -34,6 +44,7 @@ typedef enum {
     TYPE_I32,   /**< int32_t */
     TYPE_I16,   /**< int16_t */
     TYPE_I8,    /**< int8_t */
+    TYPE_VEC3D, /**< vec3d_t */
 } SensorTagDType;
 
 /** Stores information about each tag. */
