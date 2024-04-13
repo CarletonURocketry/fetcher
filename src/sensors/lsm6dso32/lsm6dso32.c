@@ -9,6 +9,7 @@
  * for the LSM6DSO32 data sheet.
  */
 #include "lsm6dso32.h"
+#include "sensor_api.h"
 #include <errno.h>
 #include <hw/i2c.h>
 #include <stdbool.h>
@@ -18,9 +19,8 @@
 #include <unistd.h>
 
 /** The different registers that are present in the IMU (and used by this program). */
-typedef enum {
+enum imu_reg {
     WHO_AM_I = 0x0F,   /**< Returns the hard-coded address of the IMU on the I2C bus. */
-    OUTX_L_A = 0x29,   /**< X-axis linear acceleration (16 bits) */
     TIMESTAMP0 = 0x40, /**< First timestamp register (32 bits total) */
     STATUS_REG = 0x1E, /**< The status register of whether data is available. */
     CTRL1_XL = 0x10,   /**< Accelerometer control register 1 */
@@ -34,18 +34,32 @@ typedef enum {
     CTRL9_XL = 0x18,   /**< Control register 9 */
     CTRL10_C = 0x19,   /**< Control register 10 */
     FIFO_CTRL4 = 0x0A, /**< The fourth FIFO control register (for setting continuous mode) */
-} IMUReg;
+    OUT_TEMP_L = 0x20, /**< The temperature data output low byte. (Two's complement) */
+    OUT_TEMP_H = 0x21, /**< The temperature data output high byte. (Two's complement) */
+    OUTX_L_G = 0x22,   /**< The angular rate sensor pitch axis (X) low byte. (Two's complement) */
+    OUTX_H_G = 0x23,   /**< The angular rate sensor pitch axis (X) high byte. (Two's complement) */
+    OUTY_L_G = 0x24,   /**< The angular rate sensor roll axis (Y) low byte. (Two's complement) */
+    OUTY_H_G = 0x25,   /**< The angular rate sensor roll axis (Y) high byte. (Two's complement) */
+    OUTZ_L_G = 0x26,   /**< The angular rate sensor yaw axis (Z) low byte. (Two's complement) */
+    OUTZ_H_G = 0x27,   /**< The angular rate sensor yaw axis (Z) high byte. (Two's complement) */
+    OUTX_L_A = 0x28,   /**< The linear acceleration (X) low byte. (Two's complement) */
+    OUTX_H_A = 0x29,   /**< The linear acceleration (X) high byte. (Two's complement) */
+    OUTY_L_A = 0x2A,   /**< The linear acceleration (Y) low byte. (Two's complement) */
+    OUTY_H_A = 0x2B,   /**< The linear acceleration (Y) high byte. (Two's complement) */
+    OUTZ_L_A = 0x2C,   /**< The linear acceleration (Z) low byte. (Two's complement) */
+    OUTZ_H_A = 0x2D,   /**< The linear acceleration (Z) high byte. (Two's complement) */
+};
 
 /** Macro to early return an error. */
 #define return_err(err)                                                                                                \
     if (err != EOK) return err
 
 /** A list of data types that can be read by the LSM6DSO32. */
-static const SensorTag TAGS[] = {};
+static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_LINEAR_ACCEL, TAG_ANGULAR_ACCEL};
 
 /**
- * Write data to a register of the LSM6DS032.
- * @param sensor A pointer to a LSM6DS032 sensor instance.
+ * Write data to a register of the LSM6DSO32.
+ * @param sensor A pointer to a LSM6DSO32 sensor instance.
  * @param reg The address of the register to write to.
  * @param data The byte of data to write to the register.
  */
@@ -66,38 +80,26 @@ static errno_t lsm6dso32_write_byte(Sensor const *sensor, const uint8_t reg, con
 }
 
 /**
- * Read `nbytes` from starting at register address `reg`.
- * WARNING: `buf` must contain enough space for `nbytes` bytes AND `sizeof(i2c_recv_t)`. Do not include the extra byte
- * count in nbytes.
- * @param sensor A reference to an LSM6DS032 sensor instance.
+ * Read data from register address `reg`.
+ * @param sensor A reference to an LSM6DSO32 sensor instance.
  * @param reg The register address to read from.
  * @param buf The buffer to read data into.
- * @param nbytes The number of bytes to read.
+ * @return EOK if the read was okay, otherwise the error status of the read command.
  */
-static errno_t lsm6dso32_read_bytes(Sensor *sensor, uint8_t reg, void *buf, size_t nbytes) {
+static errno_t lsm6dso32_read_byte(Sensor *sensor, uint8_t reg, uint8_t *buf) {
 
-    // Construct command for sending register
-    static i2c_send_t register_hdr = {.stop = 0, .slave = {0}, .len = 1};
-    register_hdr.slave = sensor->loc.addr;
+    static i2c_sendrecv_t read_hdr = {.stop = 1, .send_len = 1, .recv_len = 1, .slave = {0}};
+    read_hdr.slave = sensor->loc.addr;
 
-    // Send command to set register
-    memcpy(buf, &register_hdr, sizeof(register_hdr));
+    static uint8_t read_cmd[sizeof(read_hdr) + 1];
+    memcpy(read_cmd, &read_hdr, sizeof(read_hdr));
+    read_cmd[sizeof(read_hdr)] = reg; // Data to be send is the register address
 
-    // Here I am using the buffer for receiving bytes as the storage for the send command, as it is gauranteed to at
-    // least contain `sizeof(i2c_send_t) + 1` bytes, since `sizeof(i2c_send_t) == sizeof(i2c_recv_t)`, and there would
-    // be no point in calling this function with `nbytes = 0`.
-    ((uint8_t *)(buf))[sizeof(register_hdr)] = reg;
-    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SEND, buf, sizeof(register_hdr) + 1, NULL);
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
     return_err(err);
 
-    // Construct command to read
-    static i2c_recv_t read_hdr = {.slave = {0}, .stop = 1, .len = 0};
-    read_hdr.slave = sensor->loc.addr;
-    read_hdr.len = nbytes;
-    memcpy(buf, &read_hdr, sizeof(read_hdr));
-
-    // Send command to read
-    return devctl(sensor->loc.bus, DCMD_I2C_RECV, buf, sizeof(read_hdr) + nbytes, NULL);
+    *buf = read_cmd[sizeof(read_hdr)]; // Received byte will be the last one
+    return EOK;
 }
 
 /**
@@ -106,16 +108,38 @@ static errno_t lsm6dso32_read_bytes(Sensor *sensor, uint8_t reg, void *buf, size
  * @param tag The tag of the data type that should be read.
  * @param buf A pointer to the memory location to store the data.
  * @param nbytes The number of bytes that were written into the byte array buffer.
- * @return Error status of reading from the sensor. EOK if successful.
+ * @return Error status of reading from the sensor. EOK if successful. EINVAL if unrecognized tag.
  */
-static errno_t lsm6ds032_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) { return EOK; }
+static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
+    static errno_t err;
+
+    switch (tag) {
+    case TAG_TEMPERATURE: {
+        int16_t temp = 0;
+        err = lsm6dso32_read_byte(sensor, OUT_TEMP_L, (uint8_t *)(&temp)); // Read low byte
+        return_err(err);
+        err = lsm6dso32_read_byte(sensor, OUT_TEMP_H, (uint8_t *)(&temp) + 1); // Read high byte
+        return_err(err);
+        *(float *)buf = (float)(temp) / 256.0f + 25.0f; // In degrees celsius
+        *nbytes = sizeof(float);
+        break;
+    }
+    case TAG_LINEAR_ACCEL:
+        break;
+    case TAG_ANGULAR_ACCEL:
+        break;
+    default:
+        return EINVAL;
+    }
+    return EOK;
+}
 
 /**
- * Prepares the LSM6DS032 for reading.
- * @param sensor A reference to an LSM6DS032 sensor.
+ * Prepares the LSM6DSO32 for reading.
+ * @param sensor A reference to an LSM6DSO32 sensor.
  * @return The error status of the call. EOK if successful.
  */
-static errno_t lsm6ds032_open(Sensor *sensor) {
+static errno_t lsm6dso32_open(Sensor *sensor) {
 
     // TODO: We will want to operate in continuous mode for our use case (polling)
 
@@ -131,10 +155,11 @@ static errno_t lsm6ds032_open(Sensor *sensor) {
     err = lsm6dso32_write_byte(sensor, CTRL2_G, 0xA0);
     return_err(err);
 
-    uint8_t result[sizeof(i2c_send_t) + 1];
-    err = lsm6dso32_read_bytes(sensor, STATUS_REG, result, 1);
+    size_t nbytes;
+    float temp;
+    lsm6dso32_read(sensor, TAG_TEMPERATURE, &temp, &nbytes);
+    printf("%f\n", temp);
 
-    printf("%08x\n", (uint32_t)result[sizeof(i2c_send_t)]);
     return err;
 }
 
@@ -150,6 +175,6 @@ void lsm6dso32_init(Sensor *sensor, const int bus, const uint8_t addr, const Sen
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
     sensor->context.size = 0;
-    sensor->open = &lsm6ds032_open;
-    sensor->read = &lsm6ds032_read;
+    sensor->open = &lsm6dso32_open;
+    sensor->read = &lsm6dso32_read;
 }

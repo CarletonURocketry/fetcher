@@ -16,14 +16,16 @@
 
 /** Describes what data type the sensor is able to read. */
 typedef enum {
-    TAG_TEMPERATURE, /**< Temperature in degrees Celsius */
-    TAG_PRESSURE,    /**< Pressure in kilo Pascals */
-    TAG_HUMIDITY,    /**< Humidity in % relative humidity */
-    TAG_TIME,        /**< Time in milliseconds */
-    TAG_ALTITUDE,    /**< Altitude in meters */
+    TAG_TEMPERATURE,   /**< Temperature in degrees Celsius */
+    TAG_PRESSURE,      /**< Pressure in kilo Pascals */
+    TAG_HUMIDITY,      /**< Humidity in % relative humidity */
+    TAG_TIME,          /**< Time in milliseconds */
+    TAG_ALTITUDE,      /**< Altitude in meters */
+    TAG_ANGULAR_ACCEL, /**< Angular acceleration in TODO units */
+    TAG_LINEAR_ACCEL,  /**< Linear acceleration in TODO units */
 } SensorTag;
 
-/** Describes the C data type of the data associated with a tag. */
+/** Describes the data type of the data associated with a tag. */
 typedef enum {
     TYPE_FLOAT, /**< float */
     TYPE_U32,   /**< uint32_t */
