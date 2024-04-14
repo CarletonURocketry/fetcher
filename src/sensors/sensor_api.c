@@ -27,10 +27,10 @@ const SensorTagData SENSOR_TAG_DATA[] = {
                           .dsize = sizeof(vec3d_t),
                           .dtype = TYPE_VEC3D},
     [TAG_ANGULAR_ACCEL] = {.name = "Angular acceleration",
-                          .unit = "m/s^2",
-                          .fmt_str = "%.2fX, %.2fY, %.2fZ",
-                          .dsize = sizeof(vec3d_t),
-                          .dtype = TYPE_VEC3D},
+                           .unit = "dps",
+                           .fmt_str = "%.2fX, %.2fY, %.2fZ",
+                           .dsize = sizeof(vec3d_t),
+                           .dtype = TYPE_VEC3D},
 };
 
 /**

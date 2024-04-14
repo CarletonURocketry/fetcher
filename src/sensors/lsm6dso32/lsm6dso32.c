@@ -13,10 +13,32 @@
 #include <errno.h>
 #include <hw/i2c.h>
 #include <stdbool.h>
-// TODO: remove
-#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
+/** Acceleration due to gravity in m/s^2. */
+#define GRAVIT_ACC 9.81f
+
+/**
+ * All units being converted are being stored in milli-units.
+ *
+ * Ex:
+ * Milli-Gs per least significant bit to Gs conversion rate using 32g full scale range.
+ * 32g FSR * 2 = 64g range * 1000 = 64000mg range
+ * Result is given in 16b integer, so 65535 possible different values for 64000mg
+ * Conversion factor = 64000/65535 (mg per bit)
+ * See https://ozzmaker.com/accelerometer-to-g/
+ * We will return units in regular units instead of milli-units, so the multiplication of 1000 is removed.
+ */
+#define MILLI_UNIT_PER_LSB_TO_UNIT 2.0f / 65535.0f
+
+/** Type to store the context of the IMU. */
+typedef struct {
+    /** Acceleration full scale range. */
+    uint8_t acc_fsr;
+    /** Gyroscope full scale range. */
+    uint16_t gyro_fsr;
+} LSM6DSO32Context;
 
 /** The different registers that are present in the IMU (and used by this program). */
 enum imu_reg {
@@ -115,7 +137,7 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
 
     switch (tag) {
     case TAG_TEMPERATURE: {
-        int16_t temp = 0;
+        int16_t temp;
         err = lsm6dso32_read_byte(sensor, OUT_TEMP_L, (uint8_t *)(&temp)); // Read low byte
         return_err(err);
         err = lsm6dso32_read_byte(sensor, OUT_TEMP_H, (uint8_t *)(&temp) + 1); // Read high byte
@@ -124,12 +146,66 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
         *nbytes = sizeof(float);
         break;
     }
-    case TAG_LINEAR_ACCEL:
-        return EINVAL;
+    case TAG_LINEAR_ACCEL: {
+
+        int16_t x;
+        err = lsm6dso32_read_byte(sensor, OUTX_L_A, (uint8_t *)(&x)); // Read low byte
+        return_err(err);
+        err = lsm6dso32_read_byte(sensor, OUTX_H_A, (uint8_t *)(&x) + 1); // Read high byte
+        return_err(err);
+
+        int16_t y;
+        err = lsm6dso32_read_byte(sensor, OUTY_L_A, (uint8_t *)(&y));
+        return_err(err);
+        err = lsm6dso32_read_byte(sensor, OUTY_H_A, (uint8_t *)(&y) + 1);
+        return_err(err);
+
+        int16_t z;
+        err = lsm6dso32_read_byte(sensor, OUTZ_L_A, (uint8_t *)(&z));
+        return_err(err);
+        err = lsm6dso32_read_byte(sensor, OUTZ_H_A, (uint8_t *)(&z) + 1);
+        return_err(err);
+
+        // Converts milli-Gs per LSB to m/s^2
+        float conversion_factor =
+            (float)((LSM6DSO32Context *)(sensor->context.data))->acc_fsr * MILLI_UNIT_PER_LSB_TO_UNIT * GRAVIT_ACC;
+
+        ((vec3d_t *)(buf))->x = (float)(x)*conversion_factor;
+        ((vec3d_t *)(buf))->y = (float)(y)*conversion_factor;
+        ((vec3d_t *)(buf))->z = (float)(z)*conversion_factor;
+        *nbytes = sizeof(vec3d_t);
         break;
-    case TAG_ANGULAR_ACCEL:
-        return EINVAL;
+    }
+    case TAG_ANGULAR_ACCEL: {
+
+        int16_t x;
+        err = lsm6dso32_read_byte(sensor, OUTX_L_G, (uint8_t *)(&x)); // Read low byte
+        return_err(err);
+        err = lsm6dso32_read_byte(sensor, OUTX_H_G, (uint8_t *)(&x) + 1); // Read high byte
+        return_err(err);
+
+        int16_t y;
+        err = lsm6dso32_read_byte(sensor, OUTY_L_G, (uint8_t *)(&y));
+        return_err(err);
+        err = lsm6dso32_read_byte(sensor, OUTY_H_G, (uint8_t *)(&y) + 1);
+        return_err(err);
+
+        int16_t z;
+        err = lsm6dso32_read_byte(sensor, OUTZ_L_G, (uint8_t *)(&z));
+        return_err(err);
+        err = lsm6dso32_read_byte(sensor, OUTZ_H_G, (uint8_t *)(&z) + 1);
+        return_err(err);
+
+        // Converts millidegrees per second per LSB to degrees per second
+        float conversion_factor =
+            (float)((LSM6DSO32Context *)(sensor->context.data))->gyro_fsr * MILLI_UNIT_PER_LSB_TO_UNIT;
+
+        ((vec3d_t *)(buf))->x = (float)(x)*conversion_factor;
+        ((vec3d_t *)(buf))->y = (float)(y)*conversion_factor;
+        ((vec3d_t *)(buf))->z = (float)(z)*conversion_factor;
+        *nbytes = sizeof(vec3d_t);
         break;
+    }
     default:
         return EINVAL;
     }
@@ -147,14 +223,16 @@ static errno_t lsm6dso32_open(Sensor *sensor) {
 
     // Set the operating mode of the accelerometer to ODR of 6.66kHz (high perf)
     // TODO: set based on configured sensor performance
-    // Full scale rang of +-32g (necessary for rocket)
+    // Full scale range of +-32g (necessary for rocket)
+    ((LSM6DSO32Context *)(sensor->context.data))->acc_fsr = 32;
     errno_t err = lsm6dso32_write_byte(sensor, CTRL1_XL, 0xA4);
     return_err(err);
 
     // Set the operating mode of the gyroscope to ODR of 6.66kHz (high perf)
     // TODO: set based on configured sensor performance
-    // TODO: what full-scale selection?
-    err = lsm6dso32_write_byte(sensor, CTRL2_G, 0xA0);
+    // TODO: what full-scale selection? Keep 500 for now
+    ((LSM6DSO32Context *)(sensor->context.data))->gyro_fsr = 500;
+    err = lsm6dso32_write_byte(sensor, CTRL2_G, 0xA1);
     return err;
 }
 
@@ -169,7 +247,7 @@ void lsm6dso32_init(Sensor *sensor, const int bus, const uint8_t addr, const Sen
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
-    sensor->context.size = 0;
+    sensor->context.size = sizeof(LSM6DSO32Context);
     sensor->open = &lsm6dso32_open;
     sensor->read = &lsm6dso32_read;
 }
