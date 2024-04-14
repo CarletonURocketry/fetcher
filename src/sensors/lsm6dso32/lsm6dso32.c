@@ -13,6 +13,8 @@
 #include <errno.h>
 #include <hw/i2c.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -70,6 +72,9 @@ enum imu_reg {
     OUTY_H_A = 0x2B,   /**< The linear acceleration (Y) high byte. (Two's complement) */
     OUTZ_L_A = 0x2C,   /**< The linear acceleration (Z) low byte. (Two's complement) */
     OUTZ_H_A = 0x2D,   /**< The linear acceleration (Z) high byte. (Two's complement) */
+    X_OFS_USR = 0x73,  /** The x-axis user offset correction for linear acceleration. */
+    Y_OFS_USR = 0x74,  /** The y-axis user offset correction for linear acceleration. */
+    Z_OFS_USR = 0x75,  /** The z-axis user offset correction for linear acceleration. */
 };
 
 /** Macro to early return an error. */
@@ -219,13 +224,17 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
  */
 static errno_t lsm6dso32_open(Sensor *sensor) {
 
+    // Perform software reset
+    errno_t err = lsm6dso32_write_byte(sensor, CTRL3_C, 0x01);
+    return_err(err);
+
     // TODO: We will want to operate in continuous mode for our use case (polling)
 
     // Set the operating mode of the accelerometer to ODR of 6.66kHz (high perf)
     // TODO: set based on configured sensor performance
     // Full scale range of +-32g (necessary for rocket)
     ((LSM6DSO32Context *)(sensor->context.data))->acc_fsr = 32;
-    errno_t err = lsm6dso32_write_byte(sensor, CTRL1_XL, 0xA4);
+    err = lsm6dso32_write_byte(sensor, CTRL1_XL, 0xA4);
     return_err(err);
 
     // Set the operating mode of the gyroscope to ODR of 6.66kHz (high perf)
@@ -233,6 +242,8 @@ static errno_t lsm6dso32_open(Sensor *sensor) {
     // TODO: what full-scale selection? Keep 500 for now
     ((LSM6DSO32Context *)(sensor->context.data))->gyro_fsr = 500;
     err = lsm6dso32_write_byte(sensor, CTRL2_G, 0xA1);
+
+    // TODO: what filter configuration will give the best measurements?
     return err;
 }
 
