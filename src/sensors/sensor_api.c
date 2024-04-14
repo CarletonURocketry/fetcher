@@ -26,7 +26,7 @@ const SensorTagData SENSOR_TAG_DATA[] = {
                           .fmt_str = "%.2fX, %.2fY, %.2fZ",
                           .dsize = sizeof(vec3d_t),
                           .dtype = TYPE_VEC3D},
-    [TAG_ANGULAR_ACCEL] = {.name = "Angular acceleration",
+    [TAG_ANGULAR_VEL] = {.name = "Angular velocity",
                            .unit = "dps",
                            .fmt_str = "%.2fX, %.2fY, %.2fZ",
                            .dsize = sizeof(vec3d_t),

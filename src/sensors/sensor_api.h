@@ -26,13 +26,13 @@ typedef struct {
 
 /** Describes what data type the sensor is able to read. */
 typedef enum {
-    TAG_TEMPERATURE,   /**< Temperature in degrees Celsius */
-    TAG_PRESSURE,      /**< Pressure in kilo Pascals */
-    TAG_HUMIDITY,      /**< Humidity in % relative humidity */
-    TAG_TIME,          /**< Time in milliseconds */
-    TAG_ALTITUDE,      /**< Altitude in meters */
-    TAG_ANGULAR_ACCEL, /**< Angular acceleration in degrees per second */
-    TAG_LINEAR_ACCEL,  /**< Linear acceleration in meters per second squared */
+    TAG_TEMPERATURE,  /**< Temperature in degrees Celsius */
+    TAG_PRESSURE,     /**< Pressure in kilo Pascals */
+    TAG_HUMIDITY,     /**< Humidity in % relative humidity */
+    TAG_TIME,         /**< Time in milliseconds */
+    TAG_ALTITUDE,     /**< Altitude in meters */
+    TAG_ANGULAR_VEL,  /**< Angular velocity in degrees per second */
+    TAG_LINEAR_ACCEL, /**< Linear acceleration in meters per second squared */
 } SensorTag;
 
 /** Describes the data type of the data associated with a tag. */
