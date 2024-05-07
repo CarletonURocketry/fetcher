@@ -29,7 +29,7 @@
 #define BUFFER_SIZE 100
 
 /* The speed of the I2C bus in kilobits per second. */
-#define BUS_SPEED 400000
+#define BUS_SPEED 320000
 
 /** The size of the static memory buffer (in bytes) for allocating sensor contexts on. */
 #define ARENA_SIZE 256
