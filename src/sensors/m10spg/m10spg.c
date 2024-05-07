@@ -82,35 +82,27 @@ typedef struct {
 
 /** A struct representing the configuration layer selected in a configuration message (valset or valget) */
 typedef enum {
-    RAM = 0x01,   /** The current configuration - cleared if the reciever enters power saving mode */
-    BBR = 0x02,   /** The battery backed memory configuration - not cleared unless the backup battery removed */
-    FLASH = 0x04, /** The flash configuration - does not exist on the M10 MAX */
+    RAM_LAYER = 0x01,   /** The current configuration - cleared if the reciever enters power saving mode */
+    BBR_LAYER = 0x02,   /** The battery backed memory configuration - not cleared unless the backup battery removed */
+    FLASH_LAYER = 0x04, /** The flash configuration - does not exist on the M10 MAX */
 } UBXConfigLayer;
 
 /** An enum representing the different sizes of values that a configuration message can contain */
 typedef enum {
-    L = 0x01,                /** One bit */
-    U1 = 0xFF,               /** One byte */
-    U2 = 0xFFFF,             /** Two bytes, little endian */
-    U4 = 0xFFFFFFFF,         /** Four bytes, little endian */
-    U8 = 0xFFFFFFFFFFFFFFFF, /** Eight bytes, little endian */
+    UBX_TYPE_L = 1,  /** One bit, occupies one byte */
+    UBX_TYPE_U1 = 1, /** One byte */
+    UBX_TYPE_U2 = 2, /** Two bytes, little endian */
+    UBX_TYPE_U4 = 4, /** Four bytes, little endian (excluding U8 because it's not used) */
 } UBXValueType;
 
-typedef uint8_t UBXConfigValue[8];
-
-/** A UBX configuration item, meant for being included in UBX configuration message payloads */
-typedef struct {
-    uint32_t key;         /** A key representing the configuration item of interest (find in the interface manual) */
-    UBXConfigValue value; /** A value, of the type UBXValueType - up to you to know which */
-} UBXConfigItem;
-
-#define MAX_CONFIG_ITEMS 5
+/* Defines the maximum number of bytes to be used for a valset payload's configuration items (64 items max)*/
+#define MAX_VALSET_ITEM_BYTES 20
 /** A struct representing the payload of the UBX-VALSET message */
 typedef struct {
     uint8_t version;     /** The version of the message (always 0) */
     uint8_t layer;       /** The layer of this config, one of the UBXConfigLayer (typed to ensure one byte) */
     uint8_t reserved[2]; /** Reserved bytes */
-    UBXConfigItem items[MAX_CONFIG_ITEMS]; /** A number of configuration items less than the maximum number of items*/
+    uint8_t config_items[MAX_VALSET_ITEM_BYTES]; /** An array of keys and value pairs */
 } UBXValsetPayload;
 
 typedef struct {
@@ -179,31 +171,43 @@ static errno_t set_ubx_checksum(UBXFrame *msg) {
 }
 
 /**
- * Configures a valset message and its payload
- * @param msg The message, with enough space in it's payload buffer for a UBXValsetPayload. Will have length, class, id,
- * and checksum configured
- * @param key The configuration item that is to be configured
- * @param layer The layer to make the configuration on
- * @param value The configured value, with a size corresponding to the size defined in the interface manual
- * @param size The size of the configured value, with 1 byte given for any single bit configurations
- * @returns errno_t If there was an error configuring this message. EOK if configured properly, EINVAL if the value's
- * storage size is larger than the maximum valset value size
+ * Initializes a valset message, but does not add any configuration items to set
+ * @param msg A message with a UBXValsetPayload as its payload
+ * @param layer The layer this valset message will configure its items at
  */
-static errno_t setup_valset_message(UBXFrame *msg, UBXConfigLayer layer, uint32_t key, void *value, size_t size) {
-    UBXValsetPayload *payload = ((UBXValsetPayload *)msg->payload);
-    if (size > sizeof(payload->value)) {
-        return EINVAL;
-    }
-    memcpy(payload->value, value, size);
-    msg->header.length = sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(payload->layer) +
-                         sizeof(payload->key) + sizeof(payload->version) + size;
-    payload->version = 0x00;
-    payload->layer = layer & 0xFF; // Layer is only one byte
-    payload->key = key;
+static void init_valset_message(UBXFrame *msg, UBXConfigLayer layer) {
     msg->header.class = 0x06;
     msg->header.id = 0x8a;
-    set_ubx_checksum(msg);
 
+    UBXValsetPayload *payload = ((UBXValsetPayload *)msg->payload);
+    payload->version = 0x00;
+    payload->layer = (uint8_t)layer;
+
+    // Set up the message with no items, configure those later and change the length then
+    msg->header.length =
+        sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(payload->layer) + sizeof(payload->version);
+}
+
+/**
+ * Add a configuration item to a valset payload
+ * @param msg A UBXFrame with a UBXValsetPayload as its payload
+ * @param key A key (in little endian) of the item to set
+ * @param value The configuration value to set the key to
+ * @param type The type of value being set
+ * @return errno_t EINVAL if the message has no space for this configuration item, EOK otherwise
+ */
+static errno_t add_valset_item(UBXFrame *msg, uint32_t key, const void *value, UBXValueType type) {
+    UBXValsetPayload *payload = ((UBXValsetPayload *)msg->payload);
+    // Get the next empty byte in the payload's configuration item array
+    uint8_t next_byte = msg->header.length - (sizeof(msg->header.class) + sizeof(msg->header.id) +
+                                              sizeof(payload->layer) + sizeof(payload->version));
+    // Return error if no space left to place the key
+    if ((next_byte + sizeof(key) + type) > sizeof(payload->config_items)) {
+        return EINVAL;
+    }
+    memcpy(payload->config_items + next_byte, &key, sizeof(key));
+    memcpy(payload->config_items + next_byte + sizeof(key), value, type);
+    msg->header.length += sizeof(key) + type;
     return EOK;
 }
 
@@ -260,7 +264,8 @@ static errno_t recv_ubx_message(Sensor *sensor, UBXFrame *msg, uint16_t max_payl
 }
 
 /**
- * Returns the number of bytes ready to be read from the sensor
+ * Returns the number of bytes ready to be read from the sensor. Currently does not exhibit the expected behaviour and
+ * we don't know why, try this again later
  *
  * @param sensor The sensor to check the number of bytes waiting from
  * @param result The total number of bytes ready to be read
@@ -404,13 +409,16 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
  * @return errno_t The error status of the call. EOK if successful.
  */
 static errno_t m10spg_open(Sensor *sensor) {
-    uint32_t nmea_i2c_outprot_key = 0x10720002;
-    uint8_t nmea_i2c_outprot_val = 0x00;
-    UBXFrame disable_nmea_i2c;
+    UBXFrame config_msg;
     UBXValsetPayload payload;
-    disable_nmea_i2c.payload = &payload;
-    setup_valset_message(&disable_nmea_i2c, RAM, nmea_i2c_outprot_key, &nmea_i2c_outprot_val, 1);
-    errno_t err = send_ubx_message(sensor, &disable_nmea_i2c);
+    config_msg.payload = &payload;
+
+    init_valset_message(&config_msg, RAM_LAYER);
+    uint8_t config_disabled = 0;
+    add_valset_item(&config_msg, (uint32_t)0x10720002, &config_disabled, UBX_TYPE_L);
+    debug_print_ubx_message(&config_msg);
+    set_ubx_checksum(&config_msg);
+    errno_t err = send_ubx_message(sensor, &config_msg);
     return_err(err);
     return debug_print_next_ubx(sensor, 300, 10);
 }
