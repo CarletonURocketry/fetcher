@@ -19,6 +19,7 @@
 #include <string.h>
 
 /* Implemented sensors. */
+#include "sensors/lsm6dso32/lsm6dso32.h"
 #include "sensors/ms5611/ms5611.h"
 #define SHT41_USE_CRC_LOOKUP
 #include "sensors/sht41/sht41.h"
@@ -34,7 +35,7 @@
 #define ARENA_SIZE 256
 
 /** The maximum number of sensors that fetcher can support. */
-#define MAX_SENSORS 3
+#define MAX_SENSORS 4
 
 /** Create sensor list. */
 static Sensor sensors[MAX_SENSORS];
@@ -146,11 +147,24 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
+    // Create LSM6D032 instance
+    lsm6dso32_init(&sensors[3], bus, 0x6B, PRECISION_HIGH);
+
+    uint8_t *lsm6dso32_context = aalloc(&arena, sensor_get_ctx_size(sensors[3]));
+    sensor_set_ctx(&sensors[3], lsm6dso32_context);
+    setup_res = sensor_open(sensors[3]);
+    if (setup_res != EOK) {
+        fprintf(stderr, "%s\n", strerror(setup_res));
+        exit(EXIT_FAILURE);
+    }
+
     // Read all sensor data
+    errno_t read_result; // The result of a sensor read
+    size_t nbytes;       // The number of bytes returned by a sensor read
+
     while (!endless) {
-        errno_t read_result; // The result of a sensor read
-        size_t nbytes;       // The number of bytes returned by a sensor read
-        for (uint8_t i = 0; i < sizeof(sensors) / sizeof(sensors[0]); i++) {
+
+        for (uint8_t i = 0; i < MAX_SENSORS; i++) {
             Sensor sensor = sensors[i];              // Grab the current sensor
             uint8_t data[sensor_max_dsize(&sensor)]; // Allocate sufficient data to read the sensor
 

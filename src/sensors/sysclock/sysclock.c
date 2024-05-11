@@ -4,7 +4,6 @@
  */
 #include "sysclock.h"
 #include "../sensor_api.h"
-#include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
@@ -101,7 +100,7 @@ void sysclock_init(Sensor *sensor, const int bus, const uint8_t addr, const Sens
     sensor->precision = precision;
     sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
     sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
-    sensor->context.size = sizeof(long);
+    sensor->context.size = sizeof(SysClockContext);
     sensor->open = &sysclock_open;
     sensor->read = &sysclock_read;
 }

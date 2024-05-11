@@ -21,6 +21,16 @@ const SensorTagData SENSOR_TAG_DATA[] = {
         {.name = "Humidity", .unit = "%RH", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
     [TAG_TIME] = {.name = "Time", .unit = "ms", .fmt_str = "%u", .dsize = sizeof(uint32_t), .dtype = TYPE_U32},
     [TAG_ALTITUDE] = {.name = "Altitude", .unit = "m", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
+    [TAG_LINEAR_ACCEL] = {.name = "Linear acceleration",
+                          .unit = "m/s^2",
+                          .fmt_str = "%.2fX, %.2fY, %.2fZ",
+                          .dsize = sizeof(vec3d_t),
+                          .dtype = TYPE_VEC3D},
+    [TAG_ANGULAR_VEL] = {.name = "Angular velocity",
+                         .unit = "dps",
+                         .fmt_str = "%.2fX, %.2fY, %.2fZ",
+                         .dsize = sizeof(vec3d_t),
+                         .dtype = TYPE_VEC3D},
 };
 
 /**
@@ -146,7 +156,9 @@ void sensor_write_data(FILE *stream, const SensorTag tag, const void *data) {
     case TYPE_I8:
         fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int8_t, data), SENSOR_TAG_DATA[tag].unit);
         break;
-    default:
-        return;
+    case TYPE_VEC3D:
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const vec3d_t, data).x,
+                drefcast(const vec3d_t, data).y, drefcast(const vec3d_t, data).z, SENSOR_TAG_DATA[tag].unit);
+        break;
     }
 }
