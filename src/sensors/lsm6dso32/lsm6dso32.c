@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 /** Acceleration due to gravity in m/s^2. */
@@ -79,13 +80,15 @@ enum imu_reg {
 
 /** Macro to early return an error. */
 #define return_err(err)                                                                                                \
-    if (err != EOK) return err
+    if (err != EOK) goto return_defer;
 
 /** A list of data types that can be read by the LSM6DSO32. */
 static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_LINEAR_ACCEL, TAG_ANGULAR_VEL};
 
 /**
  * Write data to a register of the LSM6DSO32.
+ * WARNING: This function does not lock the I2C bus. It is meant to be called multiple times and therefore the bus must
+ * be locked by the caller.
  * @param sensor A pointer to a LSM6DSO32 sensor instance.
  * @param reg The address of the register to write to.
  * @param data The byte of data to write to the register.
@@ -108,6 +111,7 @@ static errno_t lsm6dso32_write_byte(Sensor const *sensor, const uint8_t reg, con
 
 /**
  * Read data from register address `reg`.
+ * WARNING: This function does not lock the I2C bus, as it is meant to be used in a continuous stream of calls.
  * @param sensor A reference to an LSM6DSO32 sensor instance.
  * @param reg The register address to read from.
  * @param buf The buffer to read data into.
@@ -123,10 +127,10 @@ static errno_t lsm6dso32_read_byte(Sensor *sensor, uint8_t reg, uint8_t *buf) {
     read_cmd[sizeof(read_hdr)] = reg; // Data to be send is the register address
 
     errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
-    return_err(err);
+    if (err != EOK) return err;
 
     *buf = read_cmd[sizeof(read_hdr)]; // Received byte will be the last one
-    return EOK;
+    return err;
 }
 
 /**
@@ -140,6 +144,9 @@ static errno_t lsm6dso32_read_byte(Sensor *sensor, uint8_t reg, uint8_t *buf) {
 static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
     static errno_t err;
 
+    err = devctl(sensor->loc.bus, DCMD_I2C_LOCK, NULL, 0, NULL); // Lock I2C bus
+    if (err != EOK) return err;
+
     switch (tag) {
     case TAG_TEMPERATURE: {
         int16_t temp;
@@ -147,7 +154,9 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
         return_err(err);
         err = lsm6dso32_read_byte(sensor, OUT_TEMP_H, (uint8_t *)(&temp) + 1); // Read high byte
         return_err(err);
-        *(float *)buf = (float)(temp) / 256.0f + 25.0f; // In degrees Celsius
+        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock bus
+
+        *(float *)buf = (float)(temp) / 256.0f + 25.0f;          // In degrees Celsius
         *nbytes = sizeof(float);
         break;
     }
@@ -171,6 +180,7 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
         err = lsm6dso32_read_byte(sensor, OUTZ_H_A, (uint8_t *)(&z) + 1);
         return_err(err);
 
+        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock bus
         // Converts milli-Gs per LSB to m/s^2
         float conversion_factor =
             (float)((LSM6DSO32Context *)(sensor->context.data))->acc_fsr * MILLI_UNIT_PER_LSB_TO_UNIT * GRAVIT_ACC;
@@ -201,6 +211,7 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
         err = lsm6dso32_read_byte(sensor, OUTZ_H_G, (uint8_t *)(&z) + 1);
         return_err(err);
 
+        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock bus
         // Converts millidegrees per second per LSB to degrees per second
         float conversion_factor =
             (float)((LSM6DSO32Context *)(sensor->context.data))->gyro_fsr * MILLI_UNIT_PER_LSB_TO_UNIT;
@@ -214,7 +225,14 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
     default:
         return EINVAL;
     }
-    return EOK;
+
+    return err;
+
+// Returning an error that requires cleanup
+return_defer:
+    devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock bus
+    *nbytes = 0;
+    return err;
 }
 
 /**
@@ -225,7 +243,10 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
 static errno_t lsm6dso32_open(Sensor *sensor) {
 
     // Perform software reset
-    errno_t err = lsm6dso32_write_byte(sensor, CTRL3_C, 0x01);
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_LOCK, NULL, 0, NULL);
+    if (err != EOK) return err;
+
+    err = lsm6dso32_write_byte(sensor, CTRL3_C, 0x01);
     return_err(err);
 
     // TODO: We will want to operate in continuous mode for our use case (polling)
@@ -242,8 +263,11 @@ static errno_t lsm6dso32_open(Sensor *sensor) {
     // TODO: what full-scale selection? Keep 500 for now
     ((LSM6DSO32Context *)(sensor->context.data))->gyro_fsr = 500;
     err = lsm6dso32_write_byte(sensor, CTRL2_G, 0xA1);
+    return_err(err);
 
     // TODO: what filter configuration will give the best measurements?
+return_defer:
+    devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
     return err;
 }
 
