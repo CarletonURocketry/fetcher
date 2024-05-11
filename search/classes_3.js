@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ms5611context_0',['MS5611Context',['../structMS5611Context.html',1,'']]]
+  ['lsm6dso32context_0',['LSM6DSO32Context',['../structLSM6DSO32Context.html',1,'']]]
 ];

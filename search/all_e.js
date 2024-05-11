@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['r_0',['R',['../ms5611_8c.html#a5c71a5e59a53413cd6c270266d63b031',1,'ms5611.c']]],
-  ['read_1',['read',['../structSensor.html#a4da68ca9d4124f2ca84c9cf35de589ad',1,'Sensor']]],
-  ['readme_2emd_2',['README.md',['../README_8md.html',1,'']]],
-  ['return_5ferr_3',['return_err',['../ms5611_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c',1,'return_err():&#160;ms5611.c'],['../sht41_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c',1,'return_err():&#160;sht41.c']]]
+  ['precision_0',['precision',['../structSensor.html#aab8250f2beb3f7bd73af566c03a16ce5',1,'Sensor']]],
+  ['precision_5fhigh_1',['PRECISION_HIGH',['../sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587a5adc94c7ce5ca19c92c9ed49aea9c816',1,'sensor_api.h']]],
+  ['precision_5flow_2',['PRECISION_LOW',['../sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587aed867ad9181c2d73d7fae9cb0152fd9c',1,'sensor_api.h']]],
+  ['precision_5fmed_3',['PRECISION_MED',['../sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587ac850bb66bf394dba965c8fe6379ab9a2',1,'sensor_api.h']]]
 ];

@@ -7,5 +7,15 @@ var searchData=
   ['cmd_5fread_5flow_5fprec_4',['CMD_READ_LOW_PREC',['../sht41_8c.html#abdab13decf05c54294437091200a09a6a0bfe7012ebf4e83bd65cd5aaf4f93199',1,'sht41.c']]],
   ['cmd_5fread_5fmed_5fprec_5',['CMD_READ_MED_PREC',['../sht41_8c.html#abdab13decf05c54294437091200a09a6aee7cc0ab8b25ff84285681ca3e069d1e',1,'sht41.c']]],
   ['cmd_5freset_6',['CMD_RESET',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455ae71f12b62f9fca54c98ef9630f8fcad1',1,'CMD_RESET():&#160;ms5611.c'],['../sht41_8c.html#abdab13decf05c54294437091200a09a6ae71f12b62f9fca54c98ef9630f8fcad1',1,'CMD_RESET():&#160;sht41.c']]],
-  ['cmd_5fserial_5fnum_7',['CMD_SERIAL_NUM',['../sht41_8c.html#abdab13decf05c54294437091200a09a6a8a0aec273b15e91ab4ab52b5b5018c41',1,'sht41.c']]]
+  ['cmd_5fserial_5fnum_7',['CMD_SERIAL_NUM',['../sht41_8c.html#abdab13decf05c54294437091200a09a6a8a0aec273b15e91ab4ab52b5b5018c41',1,'sht41.c']]],
+  ['ctrl10_5fc_8',['CTRL10_C',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677aa1b27e44540a07ffb3869820d1812747',1,'lsm6dso32.c']]],
+  ['ctrl1_5fxl_9',['CTRL1_XL',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677ab4c8f6db648194d0c01fea104467e24d',1,'lsm6dso32.c']]],
+  ['ctrl2_5fg_10',['CTRL2_G',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677a3ab5c902b7a14eb72408fcba85ef0da4',1,'lsm6dso32.c']]],
+  ['ctrl3_5fc_11',['CTRL3_C',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677a8d100221738878082eac32d0aa14100b',1,'lsm6dso32.c']]],
+  ['ctrl4_5fc_12',['CTRL4_C',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677ad9ceb6304a4cb729eb0fe43224752cd6',1,'lsm6dso32.c']]],
+  ['ctrl5_5fc_13',['CTRL5_C',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677a8f33fa884edabaacfacab063abed1345',1,'lsm6dso32.c']]],
+  ['ctrl6_5fc_14',['CTRL6_C',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677ae30cdf5afe551916f6c8a6dce4848067',1,'lsm6dso32.c']]],
+  ['ctrl7_5fg_15',['CTRL7_G',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677aaf851640cd43018de12895b1eb9e1d6c',1,'lsm6dso32.c']]],
+  ['ctrl8_5fxl_16',['CTRL8_XL',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677a38114f87d92df565547c9c6b3aa30bb0',1,'lsm6dso32.c']]],
+  ['ctrl9_5fxl_17',['CTRL9_XL',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677af6a732d54e74cceb4402da2894a7c499',1,'lsm6dso32.c']]]
 ];

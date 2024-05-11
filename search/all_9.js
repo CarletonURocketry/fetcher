@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['len_0',['len',['../structSensorTagList.html#acdb5183db15d3d24ba1fd74b6124d91d',1,'SensorTagList']]],
-  ['loc_1',['loc',['../structSensor.html#aee84ea1743e4d2981a44f5975d7f5c1f',1,'Sensor']]]
+  ['imu_5freg_0',['imu_reg',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677',1,'lsm6dso32.c']]]
 ];
