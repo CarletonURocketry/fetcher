@@ -1,6 +1,5 @@
 var sht41_8c =
 [
-    [ "return_err", "sht41_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c", null ],
     [ "SHT41_CRC_INIT", "sht41_8c.html#a4b2a39d0e1deef9a85f5829058e7aafc", null ],
     [ "SHT41_CRC_LEN", "sht41_8c.html#a091e440a8bf7bebb6c65dec4f6444e8e", null ],
     [ "SHT41_CRC_POLY", "sht41_8c.html#a5c149c742da98ec76c7596d9d6bfcd50", null ],

@@ -106,6 +106,7 @@ $(document).ready(function(){initNavTree('ms5611_8c.html',''); initResizable(); 
 <code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -117,7 +118,7 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a27812e95e0faa61ceede87c35827d5ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a27812e95e0faa61ceede87c35827d5ce">NUM_COEFFICIENTS</a>&#160;&#160;&#160;8</td></tr>
 <tr class="separator:a27812e95e0faa61ceede87c35827d5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c">return_err</a>(err)&#160;&#160;&#160;    if (err != EOK) return err</td></tr>
+<tr class="memitem:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c">return_err</a>(err)&#160;&#160;&#160;    if (err != EOK) goto return_defer</td></tr>
 <tr class="separator:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c71a5e59a53413cd6c270266d63b031"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a5c71a5e59a53413cd6c270266d63b031">R</a>&#160;&#160;&#160;8.31432</td></tr>
 <tr class="separator:a5c71a5e59a53413cd6c270266d63b031"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -238,7 +239,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">err</td><td>)</td>
-          <td>&#160;&#160;&#160;    if (err != EOK) return err</td>
+          <td>&#160;&#160;&#160;    if (err != EOK) goto return_defer</td>
         </tr>
       </table>
 </div><div class="memdoc">
