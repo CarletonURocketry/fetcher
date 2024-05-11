@@ -8,11 +8,8 @@
 #include "hw/i2c.h"
 #include <math.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
-
-/** Macro to early return an error. */
-#define return_err(err)                                                                                                \
-    if (err != EOK) return err
 
 /** Defines positions of most and least significant bytes in the sensor's response for temperatue */
 #define SHT41_T_MSB 0
@@ -116,21 +113,33 @@ static errno_t sht41_read(Sensor *sensor, const SensorTag tag, void *buf, size_t
     uint8_t send_cmd[sizeof(send) + 1];
     memcpy(send_cmd, &send, sizeof(send));
     send_cmd[sizeof(send)] = PRECISIONS[sensor->precision];
-    errno_t result = devctl(sensor->loc.bus, DCMD_I2C_SEND, &send_cmd, sizeof(send_cmd), NULL);
-    return_err(result);
+
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_LOCK, NULL, 0, NULL);
+    if (err != EOK) return err;
+
+    err = devctl(sensor->loc.bus, DCMD_I2C_SEND, &send_cmd, sizeof(send_cmd), NULL);
+    if (err != EOK) {
+        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
+        return err;
+    };
 
     // Wait for the measurement to take place, depends on precision
     usleep(MEASUREMENT_TIMES[sensor->precision]);
     i2c_recv_t read = {.slave = sensor->loc.addr, .stop = 1, .len = 6};
     uint8_t read_cmd[sizeof(send) + 6];
     memcpy(read_cmd, &read, sizeof(read));
-    result = devctl(sensor->loc.bus, DCMD_I2C_RECV, &read_cmd, sizeof(read_cmd), NULL);
-    return_err(result);
+    err = devctl(sensor->loc.bus, DCMD_I2C_RECV, &read_cmd, sizeof(read_cmd), NULL);
+    if (err != EOK) {
+        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
+        return err;
+    };
 
     // For now, just discard one half of the measurement due to timestamping and the sensor interface
     switch (tag) {
     case TAG_TEMPERATURE: {
-        return_err(check_crc(read_cmd + sizeof(read) + SHT41_T_CRC, SHT41_CRC_LEN));
+        err = check_crc(read_cmd + sizeof(read) + SHT41_T_CRC, SHT41_CRC_LEN);
+        if (err != EOK) return err;
+
         int t_ticks = (read_cmd[sizeof(read) + SHT41_T_MSB] * 256 + read_cmd[sizeof(read) + SHT41_T_LSB]);
         float temp = -45 + 175 * ((float)t_ticks / 65535); // Degrees C
         memcpy(buf, &temp, sizeof(temp));
@@ -138,7 +147,9 @@ static errno_t sht41_read(Sensor *sensor, const SensorTag tag, void *buf, size_t
         break;
     }
     case TAG_HUMIDITY: {
-        return_err(check_crc(read_cmd + sizeof(read) + SHT41_RH_CRC, SHT41_CRC_LEN));
+        err = check_crc(read_cmd + sizeof(read) + SHT41_RH_CRC, SHT41_CRC_LEN);
+        if (err != EOK) return err;
+
         int rh_ticks = (read_cmd[sizeof(read) + SHT41_RH_MSB] * 256 + read_cmd[sizeof(read) + SHT41_RH_LSB]);
         float hum = -6 + 125 * ((float)rh_ticks / 65535); // Degrees C
         // Limit values of humidity, since values outside of 0-100
@@ -154,9 +165,10 @@ static errno_t sht41_read(Sensor *sensor, const SensorTag tag, void *buf, size_t
         break;
     }
     default:
+        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
         return EINVAL;
     }
-    return EOK;
+    return devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
 }
 
 /**
@@ -170,7 +182,14 @@ static errno_t sht41_reset(SensorLocation *loc) {
     uint8_t reset_cmd[sizeof(i2c_send_t) + 1];
     memcpy(reset_cmd, &reset, sizeof(reset));
     reset_cmd[sizeof(reset)] = CMD_RESET;
-    return devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
+
+    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL);
+    err = devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
+    if (err != EOK) goto return_defer;
+
+return_defer:
+    devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
+    return err;
 }
 
 /**
