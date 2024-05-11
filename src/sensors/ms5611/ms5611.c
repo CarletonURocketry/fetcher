@@ -160,7 +160,7 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint32_t *val
     }
 
     // Unlock I2C bus
-    err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL);
+    err = devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
 
     *value = 0;
     *value += read_cmd[sizeof(read)] * 65536;

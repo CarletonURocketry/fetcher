@@ -156,7 +156,7 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
         return_err(err);
         devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock bus
 
-        *(float *)buf = (float)(temp) / 256.0f + 25.0f;          // In degrees Celsius
+        *(float *)buf = (float)(temp) / 256.0f + 25.0f; // In degrees Celsius
         *nbytes = sizeof(float);
         break;
     }
