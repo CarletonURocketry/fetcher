@@ -159,10 +159,12 @@ int main(int argc, char **argv) {
     }
 
     // Read all sensor data
+    errno_t read_result; // The result of a sensor read
+    size_t nbytes;       // The number of bytes returned by a sensor read
+
     while (!endless) {
-        errno_t read_result; // The result of a sensor read
-        size_t nbytes;       // The number of bytes returned by a sensor read
-        for (uint8_t i = 0; i < sizeof(sensors) / sizeof(sensors[0]); i++) {
+
+        for (uint8_t i = 0; i < MAX_SENSORS; i++) {
             Sensor sensor = sensors[i];              // Grab the current sensor
             uint8_t data[sensor_max_dsize(&sensor)]; // Allocate sufficient data to read the sensor
 
