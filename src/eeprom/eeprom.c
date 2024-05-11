@@ -1,15 +1,11 @@
 #include "eeprom.h"
+#include "sensor_api.h"
 #include <hw/i2c.h>
 #include <string.h>
+#include <time.h>
 
 /** The address of the EEPROM on the I2C bus. */
 #define EEPROM_ADDR 0x50
-
-/** Address for reading the EEPROM. */
-#define EEPROM_READ (EEPROM_ADDR | 0x1)
-
-/** Address for writing to the EEPROM. */
-#define EEPROM_WRITE (EEPROM_ADDR & 0xFE)
 
 /** Defines a small buffer for the dummy write request. */
 struct dummy_write_t {
@@ -32,25 +28,32 @@ errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
             {
                 .stop = 0,
                 .len = 1,
-                .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_WRITE},
+                .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_ADDR},
             },
     };
     dummy_write.byte_address = addr;
 
-    errno_t err = devctl(bus, DCMD_I2C_SEND, &dummy_write, sizeof(dummy_write), NULL);
+    // Lock the bus
+    errno_t err = devctl(bus, DCMD_I2C_LOCK, NULL, 0, NULL);
     if (err != EOK) return err;
+
+    err = devctl(bus, DCMD_I2C_SEND, &dummy_write, sizeof(dummy_write), NULL);
+    if (err != EOK) goto return_defer;
 
     // Start sequential read into buffer
     i2c_sendrecv_t read_header = {
         .stop = 1,
         .send_len = 0,
         .recv_len = n,
-        .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_WRITE},
+        .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_ADDR},
     };
     memcpy(buf, &read_header, sizeof(read_header));
     err = devctl(bus, DCMD_I2C_SENDRECV, buf, n + sizeof(read_header), NULL);
-    if (err != EOK) return err;
-    return EOK;
+    if (err != EOK) goto return_defer;
+
+return_defer:
+    devctl(bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock I2C bus
+    return err;
 }
 
 /**
