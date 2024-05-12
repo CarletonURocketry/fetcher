@@ -4,6 +4,7 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
+#include "collectors/collectors.h"
 #include "eeprom/eeprom.h"
 #include <devctl.h>
 #include <errno.h>
@@ -16,7 +17,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "collectors/collectors.h"
 
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100

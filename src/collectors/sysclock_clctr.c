@@ -25,7 +25,7 @@ void *sysclock_collector(void *args) {
 
         // Infinitely send the time
         sensor_write_data(stdout, TAG_TIME, &time);
-        usleep(100); // Little sleep to not flood output
+        usleep(10000); // Little sleep to not flood output
     }
 
     return (void *)EOK;
