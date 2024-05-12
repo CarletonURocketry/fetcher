@@ -4,9 +4,8 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
-#include "arena_alloc.h"
+#include "collectors/collectors.h"
 #include "eeprom/eeprom.h"
-#include "sensors/sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -17,13 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-/* Implemented sensors. */
-#include "sensors/lsm6dso32/lsm6dso32.h"
-#include "sensors/ms5611/ms5611.h"
-#define SHT41_USE_CRC_LOOKUP
-#include "sensors/sht41/sht41.h"
-#include "sensors/sysclock/sysclock.h"
+#include <time.h>
 
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
@@ -33,22 +26,6 @@
 
 /** The size of the static memory buffer (in bytes) for allocating sensor contexts on. */
 #define ARENA_SIZE 256
-
-/** The maximum number of sensors that fetcher can support. */
-#define MAX_SENSORS 4
-
-/** Create sensor list. */
-static Sensor sensors[MAX_SENSORS];
-
-/** Create static memory for allocating sensor contexts. */
-static uint8_t arena_memory[ARENA_SIZE];
-
-/** Create the arena for allocating sensor contexts. */
-static arena_t arena = {
-    .start = arena_memory,
-    .cur = arena_memory, // The current location is also the start initially
-    .size = ARENA_SIZE,
-};
 
 /** Flag to indicate reading from file in endless mode for debugging. */
 static bool endless = false;
@@ -114,74 +91,49 @@ int main(int argc, char **argv) {
     /* Print out the board ID EEPROM contents. */
     uint8_t const *board_id = eeprom_contents(bus);
 
-    // Create MS5611 instance
-    ms5611_init(&sensors[0], bus, 0x77, PRECISION_HIGH);
+    /* Create sensor data collection threads. */
 
-    uint8_t *ms5611_context = aalloc(&arena, sensor_get_ctx_size(sensors[0]));
-    sensor_set_ctx(&sensors[0], ms5611_context);
-    errno_t setup_res = sensor_open(sensors[0]);
-    if (setup_res != EOK) {
-        fprintf(stderr, "%s\n", strerror(setup_res));
+    /* Sysclock. */
+    pthread_t sysclock;
+    collector_args_t sysclock_args = {.bus = bus, .addr = 0x00};
+    errno_t err = pthread_create(&sysclock, NULL, &sysclock_collector, &sysclock_args);
+    if (err != EOK) {
+        fprintf(stderr, "Could not create sysclock thread: %s\n", strerror(err));
         exit(EXIT_FAILURE);
     }
 
-    // Create system clock instance
-    sysclock_init(&sensors[1], bus, 0x00, PRECISION_HIGH);
-
-    uint8_t *sysclock_context = aalloc(&arena, sensor_get_ctx_size(sensors[1]));
-    sensor_set_ctx(&sensors[1], sysclock_context);
-    setup_res = sensor_open(sensors[1]);
-    if (setup_res != EOK) {
-        fprintf(stderr, "%s\n", strerror(setup_res));
+    /* MS5611 */
+    pthread_t ms5611;
+    collector_args_t ms5611_args = {.bus = bus, .addr = 0x77};
+    err = pthread_create(&ms5611, NULL, &ms5611_collector, &ms5611_args);
+    if (err != EOK) {
+        fprintf(stderr, "Could not create MS5611 thread: %s\n", strerror(err));
         exit(EXIT_FAILURE);
     }
 
-    // Create SHT41 instance
-    sht41_init(&sensors[2], bus, 0x44, PRECISION_HIGH);
-
-    uint8_t *sht41_context = aalloc(&arena, sensor_get_ctx_size(sensors[2]));
-    sensor_set_ctx(&sensors[2], sht41_context);
-    setup_res = sensor_open(sensors[2]);
-    if (setup_res != EOK) {
-        fprintf(stderr, "%s\n", strerror(setup_res));
+    /* SHT41 */
+    pthread_t sht41;
+    collector_args_t sht41_args = {.bus = bus, .addr = 0x44};
+    err = pthread_create(&sht41, NULL, &sht41_collector, &sht41_args);
+    if (err != EOK) {
+        fprintf(stderr, "Could not create SHT41 thread: %s\n", strerror(err));
         exit(EXIT_FAILURE);
     }
 
-    // Create LSM6D032 instance
-    lsm6dso32_init(&sensors[3], bus, 0x6B, PRECISION_HIGH);
-
-    uint8_t *lsm6dso32_context = aalloc(&arena, sensor_get_ctx_size(sensors[3]));
-    sensor_set_ctx(&sensors[3], lsm6dso32_context);
-    setup_res = sensor_open(sensors[3]);
-    if (setup_res != EOK) {
-        fprintf(stderr, "%s\n", strerror(setup_res));
+    /* LSM6DSO32 */
+    pthread_t lsm6dso32;
+    collector_args_t lsm6dso32_args = {.bus = bus, .addr = 0x6B};
+    err = pthread_create(&lsm6dso32, NULL, &lsm6dso32_collector, &lsm6dso32_args);
+    if (err != EOK) {
+        fprintf(stderr, "Could not create LSM6DSO32 thread: %s\n", strerror(err));
         exit(EXIT_FAILURE);
     }
 
-    // Read all sensor data
-    errno_t read_result; // The result of a sensor read
-    size_t nbytes;       // The number of bytes returned by a sensor read
-
-    while (!endless) {
-
-        for (uint8_t i = 0; i < MAX_SENSORS; i++) {
-            Sensor sensor = sensors[i];              // Grab the current sensor
-            uint8_t data[sensor_max_dsize(&sensor)]; // Allocate sufficient data to read the sensor
-
-            /* Read all of the possible data the sensor can provide, and print it to stdout. */
-            for (uint8_t j = 0; j < sensor.tag_list.len; j++) {
-                SensorTag tag = sensor.tag_list.tags[j];
-                read_result = sensor_read(sensor, tag, data, &nbytes);
-
-                // Sensor read didn't work, skip this iteration
-                if (read_result != EOK) {
-                    fprintf(stderr, "Could not read sensor data: %s\n", sensor_strtag(tag));
-                    continue;
-                }
-                sensor_write_data(stream, tag, data); // Sensor read worked, print out the result
-            }
-        }
-    }
+    // Wait for threads
+    pthread_join(sysclock, NULL);
+    pthread_join(ms5611, NULL);
+    pthread_join(sht41, NULL);
+    pthread_join(lsm6dso32, NULL);
 
     // Only read from a file if in endless mode
     if (endless) {
