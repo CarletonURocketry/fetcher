@@ -21,11 +21,23 @@
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
 
-/* The speed of the I2C bus in kilobits per second. */
+/** The speed of the I2C bus in kilobits per second. */
 #define BUS_SPEED 400000
 
-/** The size of the static memory buffer (in bytes) for allocating sensor contexts on. */
-#define ARENA_SIZE 256
+/** The maximum number of addresses per sensor type. */
+#define MAX_ADDR_PER_SENSOR 5
+
+/** The maximum number of characters in a sensor identifier. */
+#define MAX_SENSOR_NAME 20
+
+/** The maximum number of sensors that fetcher can support. */
+#define MAX_SENSORS 8
+
+/** Stores the thread IDs of all the collector threads. */
+static pthread_t collector_threads[MAX_SENSORS];
+
+/** Stores the collector arguments of all the collector threads. */
+static collector_args_t collector_args[MAX_SENSORS];
 
 /** Flag to indicate reading from file in endless mode for debugging. */
 static bool endless = false;
@@ -45,13 +57,15 @@ static char *outfile = NULL;
  */
 const char *read_sensor_name(const char *board_id, char *sensor_name, uint8_t nbytes) {
     uint8_t pos;
-    for (pos = 0; *board_id != ' ' && pos < nbytes; pos++, board_id++) {
+    for (pos = 0; *board_id != ' ' && *board_id != '\0' && pos < nbytes; pos++, board_id++) {
         sensor_name[pos] = *board_id;
     }
 
     if (pos == nbytes) return NULL; // Could not successfully read the contents
 
-    board_id++;
+    // We didn't hit end of content, skip newline character
+    if (*board_id != '\0') board_id++;
+
     sensor_name[pos] = '\0';
     return board_id;
 }
@@ -67,7 +81,7 @@ const char *read_sensor_name(const char *board_id, char *sensor_name, uint8_t nb
 const char *read_sensor_addresses(const char *board_id, uint8_t *addresses, uint8_t *naddrs) {
 
     uint8_t num_addrs;
-    for (num_addrs = 0; *board_id != '\n' && num_addrs < *naddrs; board_id++) {
+    for (num_addrs = 0; *board_id != '\n' && *board_id != '\0' && num_addrs < *naddrs; board_id++) {
         if (*board_id == ' ') {
             // Address is hex with two digits, so two digits back from space will be address start
             // Convert this hex into an actual numerical byte
@@ -78,10 +92,17 @@ const char *read_sensor_addresses(const char *board_id, uint8_t *addresses, uint
 
     if (num_addrs == *naddrs) return NULL; // Need to be able to read more addresses
 
+    // We hit end of content
+    if (*board_id == '\0') {
+        *naddrs = num_addrs;
+        return board_id;
+    }
+
     // Hit a newline, get last address (three positions back because board_id was incremented an extra time exiting the
     // for loop)
     addresses[num_addrs] = strtoul(board_id - 3, NULL, 16);
     num_addrs++;
+    board_id++; // Skip over final newline character
 
     *naddrs = num_addrs;
     return board_id;
@@ -151,63 +172,40 @@ int main(int argc, char **argv) {
     }
 
     // Parse each sensor line
-    char sensor_name[20];
-    cur = read_sensor_name(cur, sensor_name, 20);
+    uint8_t num_sensors = 0;
+    errno_t err;
+    while (*cur != '\0') {
 
-    printf("Sensor name: %s\n", sensor_name);
+        char sensor_name[MAX_SENSOR_NAME];
+        cur = read_sensor_name(cur, sensor_name, 20);
 
-    // Get sensor addresses
-    uint8_t addresses[5];
-    uint8_t naddrs = 5;
-    read_sensor_addresses(cur, addresses, &naddrs);
-    printf("%02x\n", addresses[0]);
-    printf("%02x\n", addresses[1]);
+        // Get sensor addresses
+        uint8_t addresses[MAX_ADDR_PER_SENSOR];
+        uint8_t naddrs = MAX_ADDR_PER_SENSOR;
+        cur = read_sensor_addresses(cur, addresses, &naddrs);
 
-    return 0;
+        for (uint8_t i = 0; i < naddrs; i++) {
 
-    /* Create sensor data collection threads. */
-
-    /* Sysclock. */
-    pthread_t sysclock;
-    collector_args_t sysclock_args = {.bus = bus, .addr = 0x00};
-    errno_t err = pthread_create(&sysclock, NULL, sysclock_collector, &sysclock_args);
-    if (err != EOK) {
-        fprintf(stderr, "Could not create sysclock thread: %s\n", strerror(err));
-        exit(EXIT_FAILURE);
+            /* Create sensor data collection threads. */
+            collector_t collector = collector_search(sensor_name);
+            if (collector == NULL) {
+                fprintf(stderr, "Collector not implemented for sensor %s\n", sensor_name);
+                continue; // Just don't create thread
+            }
+            collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = addresses[i]};
+            err = pthread_create(&collector_threads[num_sensors], NULL, collector, &collector_args[num_sensors]);
+            if (err != EOK) {
+                fprintf(stderr, "Could not create %s collector: %s\n", sensor_name, strerror(err));
+                exit(EXIT_FAILURE);
+            }
+            num_sensors++; // Record that a new sensor was created
+        }
     }
 
-    /* MS5611 */
-    pthread_t ms5611;
-    collector_args_t ms5611_args = {.bus = bus, .addr = 0x77};
-    err = pthread_create(&ms5611, NULL, ms5611_collector, &ms5611_args);
-    if (err != EOK) {
-        fprintf(stderr, "Could not create MS5611 thread: %s\n", strerror(err));
-        exit(EXIT_FAILURE);
+    // Wait for collectors to terminate before terminating
+    for (uint8_t i = 0; i < num_sensors; i++) {
+        pthread_join(collector_threads[i], NULL);
     }
-
-    /* SHT41 */
-    pthread_t sht41;
-    collector_args_t sht41_args = {.bus = bus, .addr = 0x44};
-    err = pthread_create(&sht41, NULL, sht41_collector, &sht41_args);
-    if (err != EOK) {
-        fprintf(stderr, "Could not create SHT41 thread: %s\n", strerror(err));
-        exit(EXIT_FAILURE);
-    }
-
-    /* LSM6DSO32 */
-    pthread_t lsm6dso32;
-    collector_args_t lsm6dso32_args = {.bus = bus, .addr = 0x6B};
-    err = pthread_create(&lsm6dso32, NULL, lsm6dso32_collector, &lsm6dso32_args);
-    if (err != EOK) {
-        fprintf(stderr, "Could not create LSM6DSO32 thread: %s\n", strerror(err));
-        exit(EXIT_FAILURE);
-    }
-
-    // Wait for threads
-    pthread_join(sysclock, NULL);
-    pthread_join(ms5611, NULL);
-    pthread_join(sht41, NULL);
-    pthread_join(lsm6dso32, NULL);
 
     // Only read from a file if in endless mode
     if (endless) {

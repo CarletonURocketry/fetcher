@@ -62,7 +62,8 @@ return_defer:
  * @return A pointer to the array of bytes containing the EEPROM contents.
  */
 const uint8_t *eeprom_contents(int bus) {
-    static uint8_t contents[EEPROM_CAP + 20];
+    static uint8_t contents[EEPROM_CAP + 20]; // +20 for I2C header
     eeprom_read(0, bus, contents, EEPROM_CAP);
+    contents[EEPROM_CAP + 19] = '\0';
     return contents + 20;
 }
