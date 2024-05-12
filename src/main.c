@@ -202,6 +202,11 @@ int main(int argc, char **argv) {
         }
     }
 
+    /* Add sysclock sensor because it won't be specified in board ID. */
+    collector_t sysclock = collector_search("SYSCLOCK");
+    collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = 0x00};
+    err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, &collector_args[num_sensors]);
+
     // Wait for collectors to terminate before terminating
     for (uint8_t i = 0; i < num_sensors; i++) {
         pthread_join(collector_threads[i], NULL);
