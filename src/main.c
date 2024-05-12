@@ -48,6 +48,9 @@ static char *filename = NULL;
 /** Name of file to write to, if one is provided. */
 static char *outfile = NULL;
 
+/** Buffer for reading data. */
+static char buffer[BUFFER_SIZE];
+
 /**
  * Reads the sensor name from the board ID into a new buffer.
  * @param board_id The contents of the board ID.
@@ -145,6 +148,24 @@ int main(int argc, char **argv) {
         }
     }
 
+    /*
+     * Open/create the message queue.
+     * Main thread can only read incoming messages from sensors.
+     * Other threads (collectors) can only write.
+     */
+    mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, NULL);
+    if (sensor_q == -1) {
+        fprintf(stderr, "Could not create internal queue '%s' with error: '%s'\n", SENSOR_QUEUE, strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    // Get message queue attributes since it's necessary to know max message size for receiving
+    struct mq_attr sensor_q_attr;
+    if (mq_getattr(sensor_q, &sensor_q_attr) == -1) {
+        fprintf(stderr, "Failed to get attributes of message queue '%s': '%s'\n", SENSOR_QUEUE, strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
     /* Open I2C. */
     int bus = open("/dev/i2c1", O_RDWR);
     if (bus < 0) {
@@ -154,9 +175,9 @@ int main(int argc, char **argv) {
 
     /* Set I2C bus speed. */
     uint32_t speed = BUS_SPEED;
-    errno_t bus_speed = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
-    if (bus_speed != EOK) {
-        fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(bus_speed));
+    errno_t err = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
+    if (err != EOK) {
+        fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(err));
         exit(EXIT_FAILURE);
     }
 
@@ -173,7 +194,6 @@ int main(int argc, char **argv) {
 
     // Parse each sensor line
     uint8_t num_sensors = 0;
-    errno_t err;
     while (*cur != '\0') {
 
         char sensor_name[MAX_SENSOR_NAME];
@@ -207,9 +227,10 @@ int main(int argc, char **argv) {
     collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = 0x00};
     err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, &collector_args[num_sensors]);
 
-    // Wait for collectors to terminate before terminating
-    for (uint8_t i = 0; i < num_sensors; i++) {
-        pthread_join(collector_threads[i], NULL);
+    /* Constantly receive from sensors on message queue and print data. */
+    while (!endless) {
+        mq_receive(sensor_q, buffer, sensor_q_attr.mq_msgsize, NULL);
+        printf("%s", buffer);
     }
 
     // Only read from a file if in endless mode
@@ -223,7 +244,6 @@ int main(int argc, char **argv) {
         }
 
         /* Loop over file to get data. */
-        uint8_t buffer[BUFFER_SIZE] = {0};
         for (;;) {
             size_t items_read = fread(&buffer, sizeof(uint8_t), BUFFER_SIZE, f);
             fwrite(&buffer, sizeof(uint8_t), items_read, stdout);
@@ -237,6 +257,11 @@ int main(int argc, char **argv) {
                 }
             }
         }
+    }
+
+    /* Wait for collectors to terminate before terminating. */
+    for (uint8_t i = 0; i < num_sensors; i++) {
+        pthread_join(collector_threads[i], NULL);
     }
 
     return 0;
