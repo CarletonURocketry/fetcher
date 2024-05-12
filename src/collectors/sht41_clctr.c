@@ -35,11 +35,15 @@ void *sht41_collector(void *args) {
         // Read temperature
         sensor_read(sht41, TAG_TEMPERATURE, &data[1], &nbytes);
         data[0] = TAG_TEMPERATURE;
-        mq_send(sensor_q, (char *)data, sizeof(data), 0);
+        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+            fprintf(stderr, "SHT41 couldn't send message: %s\n", strerror(errno));
+        }
 
         // Read humidity
         sensor_read(sht41, TAG_HUMIDITY, &data[1], &nbytes);
         data[0] = TAG_HUMIDITY;
-        mq_send(sensor_q, (char *)data, sizeof(data), 0);
+        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+            fprintf(stderr, "SHT41 couldn't send message: %s\n", strerror(errno));
+        }
     }
 }

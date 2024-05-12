@@ -30,11 +30,15 @@ void *ms5611_collector(void *args) {
         // Read pressure
         sensor_read(ms5611, TAG_PRESSURE, &data[1], &nbytes);
         data[0] = TAG_PRESSURE;
-        mq_send(sensor_q, (char *)data, sizeof(data), 0);
+        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+            fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
+        }
 
         // Read temperature
         sensor_read(ms5611, TAG_TEMPERATURE, &data[1], &nbytes);
         data[0] = TAG_TEMPERATURE;
-        mq_send(sensor_q, (char *)data, sizeof(data), 0);
+        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+            fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
+        }
     }
 }
