@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 
+/** The name of the message queue to be used for sensors to write their data. */
+#define SENSOR_QUEUE "fetcher/sensors"
+
 /** Macro for dereferencing the collector argument. */
 #define clctr_args(args) ((collector_args_t *)((args)))
 
