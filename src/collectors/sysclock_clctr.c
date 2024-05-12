@@ -8,6 +8,10 @@ void *sysclock_collector(void *args) {
 
     /* Open message queue to send data. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
+    if (sensor_q == -1) {
+        fprintf(stderr, "Sysclock collector could not open message queue '%s': '%s' \n", SENSOR_QUEUE, strerror(errno));
+        return (void *)((uint64_t)errno);
+    }
 
     /* Create system clock instance. */
     Sensor clock;

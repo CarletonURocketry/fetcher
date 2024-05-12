@@ -1,3 +1,5 @@
+#include <stdint.h>
+#include <stdio.h>
 #define SHT41_USE_CRC_LOOKUP
 #include "../drivers/sht41/sht41.h"
 #include "collectors.h"
@@ -5,7 +7,14 @@
 
 void *sht41_collector(void *args) {
 
-    // Create SHT41 instance
+    /* Open message queue. */
+    mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
+    if (sensor_q == -1) {
+        fprintf(stderr, "SHT41 collector could not open message queue '%s': '%s' \n", SENSOR_QUEUE, strerror(errno));
+        return (void *)((uint64_t)errno);
+    }
+
+    /* Create SHT41 instance. */
     Sensor sht41;
     sht41_init(&sht41, clctr_args(args)->bus, clctr_args(args)->addr, PRECISION_HIGH);
 
@@ -15,18 +24,22 @@ void *sht41_collector(void *args) {
     errno_t err = sensor_open(sht41);
     if (err != EOK) {
         fprintf(stderr, "%s\n", strerror(err));
-        return (void *)err;
+        return (void *)((uint64_t)err); // Extra uint64_t cast to silence compiler warning
     }
 
     size_t nbytes;
-    float data;
+    uint8_t data[sensor_max_dsize(&sht41) + 1];
+
     for (;;) {
+
         // Read temperature
-        sensor_read(sht41, TAG_TEMPERATURE, &data, &nbytes);
-        sensor_write_data(stdout, TAG_TEMPERATURE, &data);
+        sensor_read(sht41, TAG_TEMPERATURE, &data[1], &nbytes);
+        data[0] = TAG_TEMPERATURE;
+        mq_send(sensor_q, (char *)data, sizeof(data), 0);
 
         // Read humidity
-        sensor_read(sht41, TAG_HUMIDITY, &data, &nbytes);
-        sensor_write_data(stdout, TAG_HUMIDITY, &data);
+        sensor_read(sht41, TAG_HUMIDITY, &data[1], &nbytes);
+        data[0] = TAG_HUMIDITY;
+        mq_send(sensor_q, (char *)data, sizeof(data), 0);
     }
 }
