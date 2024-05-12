@@ -28,7 +28,6 @@ void *sysclock_collector(void *args) {
 
     // Data storage
     uint8_t data[sensor_max_dsize(&clock) + 1];
-    printf("Size: %lu\n", sizeof(data));
     size_t nbytes;
 
     // Infinitely check the time
@@ -39,7 +38,7 @@ void *sysclock_collector(void *args) {
 
         // Infinitely send the time
         if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
-            fprintf(stderr, "Sysclock failed to write message to sensor queue.\n");
+            fprintf(stderr, "Sysclock couldn't send message: %s.\n", strerror(errno));
         }
         usleep(10000); // Little sleep to not flood output
     }
