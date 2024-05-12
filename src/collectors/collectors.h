@@ -8,7 +8,7 @@
 #include <string.h>
 
 /** Macro for dereferencing the collector argument. */
-#define clctr_args(args) ((collector_args_t*)((args)))
+#define clctr_args(args) ((collector_args_t *)((args)))
 
 /** Arguments for sensor threads. */
 typedef struct {
@@ -19,5 +19,7 @@ typedef struct {
 /* Collector threads */
 void *sysclock_collector(void *args);
 void *ms5611_collector(void *args);
+void *sht41_collector(void *args);
+void *lsm6dso32_collector(void *args);
 
 #endif // _COLLECTORS_H_

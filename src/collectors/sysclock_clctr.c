@@ -1,6 +1,5 @@
 #include "../drivers/sysclock/sysclock.h"
 #include "collectors.h"
-#include "sensor_api.h"
 
 void *sysclock_collector(void *args) {
 
