@@ -6,6 +6,7 @@
  */
 #include "collectors/collectors.h"
 #include "eeprom/eeprom.h"
+#include "sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -229,8 +230,14 @@ int main(int argc, char **argv) {
 
     /* Constantly receive from sensors on message queue and print data. */
     while (!endless) {
-        mq_receive(sensor_q, buffer, sensor_q_attr.mq_msgsize, NULL);
-        printf("%s", buffer);
+        if (mq_receive(sensor_q, buffer, sensor_q_attr.mq_msgsize, NULL) == -1) {
+            // Handle error without exiting
+            fprintf(stderr, "Failed to receive message on queue '%s': %s\n", SENSOR_QUEUE, strerror(errno));
+            continue;
+        }
+
+        // Successfully received data, print it to output stream
+        sensor_write_data(stream, buffer[0], &buffer[1]);
     }
 
     // Only read from a file if in endless mode

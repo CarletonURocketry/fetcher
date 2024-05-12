@@ -1,5 +1,6 @@
 #include "../drivers/sysclock/sysclock.h"
 #include "collectors.h"
+#include "sensor_api.h"
 #include <stdio.h>
 #include <time.h>
 
@@ -18,22 +19,24 @@ void *sysclock_collector(void *args) {
 
     if (err != EOK) {
         fprintf(stderr, "%s\n", strerror(err));
-        return (void *)err;
+        return (void *)((uint64_t)err); // Extra uint64_t cast to silence compiler warning
     }
 
-    uint32_t time;
+    // Data storage
+    uint8_t data[sensor_max_dsize(&clock) + 1];
+    printf("Size: %lu\n", sizeof(data));
     size_t nbytes;
+
+    // Infinitely check the time
     for (;;) {
 
-        // Infinitely check the time
-        clock.read(&clock, TAG_TIME, &time, &nbytes);
+        clock.read(&clock, TAG_TIME, &data[1], &nbytes);
+        data[0] = TAG_TIME; // Encode the contained data type
 
         // Infinitely send the time
-        char time_str[30];
-        sprintf(time_str, "Time: %u\n", time);
-        mq_send(sensor_q, time_str, sizeof(time_str), 0);
+        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+            fprintf(stderr, "Sysclock failed to write message to sensor queue.\n");
+        }
         usleep(10000); // Little sleep to not flood output
     }
-
-    return (void *)EOK;
 }
