@@ -36,6 +36,57 @@ static char *filename = NULL;
 /** Name of file to write to, if one is provided. */
 static char *outfile = NULL;
 
+/**
+ * Reads the sensor name from the board ID into a new buffer.
+ * @param board_id The contents of the board ID.
+ * @param sensor_name The buffer to store the sensor name.
+ * @param nbytes The maximum number of bytes to read.
+ * @return The current position inside the board ID after reading, or NULL if nbytes needs to be larger.
+ */
+const char *read_sensor_name(const char *board_id, char *sensor_name, uint8_t nbytes) {
+    uint8_t pos;
+    for (pos = 0; *board_id != ' ' && pos < nbytes; pos++, board_id++) {
+        sensor_name[pos] = *board_id;
+    }
+
+    if (pos == nbytes) return NULL; // Could not successfully read the contents
+
+    board_id++;
+    sensor_name[pos] = '\0';
+    return board_id;
+}
+
+/**
+ * Reads up to `naddrs` addresses from the board ID into an array of `addresses`.
+ * @param board_id The current position in the board ID where an address starts.
+ * @param addresses An array of bytes with enough space to store `naddrs` bytes.
+ * @param naddrs A pointer to the maximum number of addresses to read. After the function call, this pointer will
+ * contain the actual number of addresses read.
+ * @return The current position in the board ID after the read, or NULL if `naddrs` needs to be larger.
+ */
+const char *read_sensor_addresses(const char *board_id, uint8_t *addresses, uint8_t *naddrs) {
+
+    uint8_t num_addrs;
+    for (num_addrs = 0; *board_id != '\n' && num_addrs < *naddrs; board_id++) {
+        if (*board_id == ' ') {
+            // Address is hex with two digits, so two digits back from space will be address start
+            // Convert this hex into an actual numerical byte
+            addresses[num_addrs] = strtoul(board_id - 2, NULL, 16);
+            num_addrs++;
+        }
+    }
+
+    if (num_addrs == *naddrs) return NULL; // Need to be able to read more addresses
+
+    // Hit a newline, get last address (three positions back because board_id was incremented an extra time exiting the
+    // for loop)
+    addresses[num_addrs] = strtoul(board_id - 3, NULL, 16);
+    num_addrs++;
+
+    *naddrs = num_addrs;
+    return board_id;
+}
+
 int main(int argc, char **argv) {
 
     int c; // Holder for choice
@@ -88,15 +139,38 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    /* Print out the board ID EEPROM contents. */
-    uint8_t const *board_id = eeprom_contents(bus);
+    /* Parse the board ID EEPROM contents and configure drivers. */
+    char const *board_id = (const char *)eeprom_contents(bus);
+    const char *cur = board_id;
+
+    // Skip the first two lines (board ID and CU InSpace credit)
+    uint8_t lines = 0;
+    while (lines < 2) {
+        if (*cur == '\n') lines++;
+        cur++;
+    }
+
+    // Parse each sensor line
+    char sensor_name[20];
+    cur = read_sensor_name(cur, sensor_name, 20);
+
+    printf("Sensor name: %s\n", sensor_name);
+
+    // Get sensor addresses
+    uint8_t addresses[5];
+    uint8_t naddrs = 5;
+    read_sensor_addresses(cur, addresses, &naddrs);
+    printf("%02x\n", addresses[0]);
+    printf("%02x\n", addresses[1]);
+
+    return 0;
 
     /* Create sensor data collection threads. */
 
     /* Sysclock. */
     pthread_t sysclock;
     collector_args_t sysclock_args = {.bus = bus, .addr = 0x00};
-    errno_t err = pthread_create(&sysclock, NULL, &sysclock_collector, &sysclock_args);
+    errno_t err = pthread_create(&sysclock, NULL, sysclock_collector, &sysclock_args);
     if (err != EOK) {
         fprintf(stderr, "Could not create sysclock thread: %s\n", strerror(err));
         exit(EXIT_FAILURE);
@@ -105,7 +179,7 @@ int main(int argc, char **argv) {
     /* MS5611 */
     pthread_t ms5611;
     collector_args_t ms5611_args = {.bus = bus, .addr = 0x77};
-    err = pthread_create(&ms5611, NULL, &ms5611_collector, &ms5611_args);
+    err = pthread_create(&ms5611, NULL, ms5611_collector, &ms5611_args);
     if (err != EOK) {
         fprintf(stderr, "Could not create MS5611 thread: %s\n", strerror(err));
         exit(EXIT_FAILURE);
@@ -114,7 +188,7 @@ int main(int argc, char **argv) {
     /* SHT41 */
     pthread_t sht41;
     collector_args_t sht41_args = {.bus = bus, .addr = 0x44};
-    err = pthread_create(&sht41, NULL, &sht41_collector, &sht41_args);
+    err = pthread_create(&sht41, NULL, sht41_collector, &sht41_args);
     if (err != EOK) {
         fprintf(stderr, "Could not create SHT41 thread: %s\n", strerror(err));
         exit(EXIT_FAILURE);
@@ -123,7 +197,7 @@ int main(int argc, char **argv) {
     /* LSM6DSO32 */
     pthread_t lsm6dso32;
     collector_args_t lsm6dso32_args = {.bus = bus, .addr = 0x6B};
-    err = pthread_create(&lsm6dso32, NULL, &lsm6dso32_collector, &lsm6dso32_args);
+    err = pthread_create(&lsm6dso32, NULL, lsm6dso32_collector, &lsm6dso32_args);
     if (err != EOK) {
         fprintf(stderr, "Could not create LSM6DSO32 thread: %s\n", strerror(err));
         exit(EXIT_FAILURE);
