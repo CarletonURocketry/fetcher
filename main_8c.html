@@ -116,11 +116,19 @@ Macros</h2></td></tr>
 <tr class="separator:a6b20d41d6252e9871430c242cb1a56e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0703c48aced43db01cfd05859ec6b1d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a0703c48aced43db01cfd05859ec6b1d0">BUS_SPEED</a>&#160;&#160;&#160;400000</td></tr>
 <tr class="separator:a0703c48aced43db01cfd05859ec6b1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a716f9c94eab29ae62af2ce55bf23db20"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a716f9c94eab29ae62af2ce55bf23db20">ARENA_SIZE</a>&#160;&#160;&#160;256</td></tr>
-<tr class="separator:a716f9c94eab29ae62af2ce55bf23db20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae87bb274fc7bda9c66edab64ea9ddeaf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ae87bb274fc7bda9c66edab64ea9ddeaf">MAX_ADDR_PER_SENSOR</a>&#160;&#160;&#160;5</td></tr>
+<tr class="separator:ae87bb274fc7bda9c66edab64ea9ddeaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afadb863a7dece64ab5df54bcc753298d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#afadb863a7dece64ab5df54bcc753298d">MAX_SENSOR_NAME</a>&#160;&#160;&#160;20</td></tr>
+<tr class="separator:afadb863a7dece64ab5df54bcc753298d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3d1fc2927eec213e6b5f9e854c392d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#aa3d1fc2927eec213e6b5f9e854c392d2">MAX_SENSORS</a>&#160;&#160;&#160;8</td></tr>
+<tr class="separator:aa3d1fc2927eec213e6b5f9e854c392d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ab1a5d7af04dab3154414440255c7929d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ab1a5d7af04dab3154414440255c7929d">read_sensor_name</a> (const char *board_id, char *sensor_name, uint8_t nbytes)</td></tr>
+<tr class="separator:ab1a5d7af04dab3154414440255c7929d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0a7c62a4dea52bfde2183ef30bbb7e5"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ab0a7c62a4dea52bfde2183ef30bbb7e5">read_sensor_addresses</a> (const char *board_id, uint8_t *addresses, uint8_t *naddrs)</td></tr>
+<tr class="separator:ab0a7c62a4dea52bfde2183ef30bbb7e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
 <tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -128,21 +136,6 @@ Functions</h2></td></tr>
 <div class="textblock"><p >The main function for the fetcher module, where program logic is used to create a console application. </p>
 <p >The main function for the fetcher module, where program logic is used to create a console application. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a716f9c94eab29ae62af2ce55bf23db20" name="a716f9c94eab29ae62af2ce55bf23db20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a716f9c94eab29ae62af2ce55bf23db20">&#9670;&nbsp;</a></span>ARENA_SIZE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ARENA_SIZE&#160;&#160;&#160;256</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The size of the static memory buffer (in bytes) for allocating sensor contexts on. </p>
-
-</div>
-</div>
 <a id="a6b20d41d6252e9871430c242cb1a56e7" name="a6b20d41d6252e9871430c242cb1a56e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6b20d41d6252e9871430c242cb1a56e7">&#9670;&nbsp;</a></span>BUFFER_SIZE</h2>
 
@@ -169,6 +162,52 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >The speed of the I2C bus in kilobits per second. </p>
+
+</div>
+</div>
+<a id="ae87bb274fc7bda9c66edab64ea9ddeaf" name="ae87bb274fc7bda9c66edab64ea9ddeaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae87bb274fc7bda9c66edab64ea9ddeaf">&#9670;&nbsp;</a></span>MAX_ADDR_PER_SENSOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_ADDR_PER_SENSOR&#160;&#160;&#160;5</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The maximum number of addresses per sensor type. </p>
+
+</div>
+</div>
+<a id="afadb863a7dece64ab5df54bcc753298d" name="afadb863a7dece64ab5df54bcc753298d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afadb863a7dece64ab5df54bcc753298d">&#9670;&nbsp;</a></span>MAX_SENSOR_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_SENSOR_NAME&#160;&#160;&#160;20</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The maximum number of characters in a sensor identifier. </p>
+
+</div>
+</div>
+<a id="aa3d1fc2927eec213e6b5f9e854c392d2" name="aa3d1fc2927eec213e6b5f9e854c392d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3d1fc2927eec213e6b5f9e854c392d2">&#9670;&nbsp;</a></span>MAX_SENSORS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_SENSORS&#160;&#160;&#160;8</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The maximum number of sensors that fetcher can support. </p>
 
 </div>
 </div>
@@ -199,6 +238,92 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Decide on output stream.</p>
+
+</div>
+</div>
+<a id="ab0a7c62a4dea52bfde2183ef30bbb7e5" name="ab0a7c62a4dea52bfde2183ef30bbb7e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0a7c62a4dea52bfde2183ef30bbb7e5">&#9670;&nbsp;</a></span>read_sensor_addresses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * read_sensor_addresses </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>board_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>addresses</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>naddrs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads up to <code>naddrs</code> addresses from the board ID into an array of <code>addresses</code>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">board_id</td><td>The current position in the board ID where an address starts. </td></tr>
+    <tr><td class="paramname">addresses</td><td>An array of bytes with enough space to store <code>naddrs</code> bytes. </td></tr>
+    <tr><td class="paramname">naddrs</td><td>A pointer to the maximum number of addresses to read. After the function call, this pointer will contain the actual number of addresses read. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current position in the board ID after the read, or NULL if <code>naddrs</code> needs to be larger. </dd></dl>
+
+</div>
+</div>
+<a id="ab1a5d7af04dab3154414440255c7929d" name="ab1a5d7af04dab3154414440255c7929d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1a5d7af04dab3154414440255c7929d">&#9670;&nbsp;</a></span>read_sensor_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * read_sensor_name </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>board_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>sensor_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>nbytes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads the sensor name from the board ID into a new buffer. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">board_id</td><td>The contents of the board ID. </td></tr>
+    <tr><td class="paramname">sensor_name</td><td>The buffer to store the sensor name. </td></tr>
+    <tr><td class="paramname">nbytes</td><td>The maximum number of bytes to read. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current position inside the board ID after reading, or NULL if nbytes needs to be larger. </dd></dl>
 
 </div>
 </div>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['name_0',['name',['../structSensorTagData.html#ac1ed41a93d4ff518683d0d80b3e9bcbc',1,'SensorTagData']]],
+  ['name_0',['name',['../structclctr__entry__t.html#af706af87e3ddec1c5e97d14554459a86',1,'clctr_entry_t::name()'],['../structSensorTagData.html#ac1ed41a93d4ff518683d0d80b3e9bcbc',1,'SensorTagData::name()']]],
   ['num_5fcoefficients_1',['NUM_COEFFICIENTS',['../ms5611_8c.html#a27812e95e0faa61ceede87c35827d5ce',1,'ms5611.c']]]
 ];
