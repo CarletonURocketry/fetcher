@@ -1,6 +1,6 @@
 var annotated_dup =
 [
-    [ "arena_t", "structarena__t.html", "structarena__t" ],
+    [ "collector_args_t", "structcollector__args__t.html", "structcollector__args__t" ],
     [ "CRC8LookupTable", "structCRC8LookupTable.html", "structCRC8LookupTable" ],
     [ "dummy_write_t", "structdummy__write__t.html", "structdummy__write__t" ],
     [ "LSM6DSO32Context", "structLSM6DSO32Context.html", "structLSM6DSO32Context" ],

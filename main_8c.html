@@ -96,9 +96,8 @@ $(document).ready(function(){initNavTree('main_8c.html',''); initResizable(); })
 
 <p>The main function for the fetcher module, where program logic is used to create a console application.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="arena__alloc_8h_source.html">arena_alloc.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors/collectors.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="eeprom_8h_source.html">eeprom/eeprom.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensors/sensor_api.h</a>&quot;</code><br />
 <code>#include &lt;devctl.h&gt;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;fcntl.h&gt;</code><br />
@@ -109,23 +108,16 @@ $(document).ready(function(){initNavTree('main_8c.html',''); initResizable(); })
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="lsm6dso32_8h_source.html">sensors/lsm6dso32/lsm6dso32.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ms5611_8h_source.html">sensors/ms5611/ms5611.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="sht41_8h_source.html">sensors/sht41/sht41.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="sysclock_8h_source.html">sensors/sysclock/sysclock.h</a>&quot;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a8fbe87bdb71d397b6f726f4e1a38404e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a8fbe87bdb71d397b6f726f4e1a38404e">SHT41_USE_CRC_LOOKUP</a></td></tr>
-<tr class="separator:a8fbe87bdb71d397b6f726f4e1a38404e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b20d41d6252e9871430c242cb1a56e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>&#160;&#160;&#160;100</td></tr>
 <tr class="separator:a6b20d41d6252e9871430c242cb1a56e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0703c48aced43db01cfd05859ec6b1d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a0703c48aced43db01cfd05859ec6b1d0">BUS_SPEED</a>&#160;&#160;&#160;400000</td></tr>
 <tr class="separator:a0703c48aced43db01cfd05859ec6b1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a716f9c94eab29ae62af2ce55bf23db20"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a716f9c94eab29ae62af2ce55bf23db20">ARENA_SIZE</a>&#160;&#160;&#160;256</td></tr>
 <tr class="separator:a716f9c94eab29ae62af2ce55bf23db20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3d1fc2927eec213e6b5f9e854c392d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#aa3d1fc2927eec213e6b5f9e854c392d2">MAX_SENSORS</a>&#160;&#160;&#160;4</td></tr>
-<tr class="separator:aa3d1fc2927eec213e6b5f9e854c392d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -174,35 +166,6 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define BUS_SPEED&#160;&#160;&#160;400000</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa3d1fc2927eec213e6b5f9e854c392d2" name="aa3d1fc2927eec213e6b5f9e854c392d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3d1fc2927eec213e6b5f9e854c392d2">&#9670;&nbsp;</a></span>MAX_SENSORS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MAX_SENSORS&#160;&#160;&#160;4</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The maximum number of sensors that fetcher can support. </p>
-
-</div>
-</div>
-<a id="a8fbe87bdb71d397b6f726f4e1a38404e" name="a8fbe87bdb71d397b6f726f4e1a38404e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fbe87bdb71d397b6f726f4e1a38404e">&#9670;&nbsp;</a></span>SHT41_USE_CRC_LOOKUP</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SHT41_USE_CRC_LOOKUP</td>
         </tr>
       </table>
 </div><div class="memdoc">

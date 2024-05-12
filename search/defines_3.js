@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['eeprom_5faddr_0',['EEPROM_ADDR',['../eeprom_8c.html#a95a8626764b7fcbf81fddaa0a197def8',1,'eeprom.c']]],
-  ['eeprom_5fcap_1',['EEPROM_CAP',['../eeprom_8h.html#ab752d122e7a8e926ee9adb5db55a78fe',1,'eeprom.h']]]
+  ['derefctx_0',['derefctx',['../sysclock_8c.html#a09a213ec4a3c274e810ec653eb801798',1,'sysclock.c']]],
+  ['drefcast_1',['drefcast',['../sensor__api_8c.html#a027be96558c283856700fd3531351fa9',1,'sensor_api.c']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: src/arena_alloc.h File Reference</title>
+<title>fetcher: src/collectors/ms5611_clctr.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,7 +68,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('arena__alloc_8h.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('ms5611__clctr_8c.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -88,85 +88,35 @@ $(document).ready(function(){initNavTree('arena__alloc_8h.html',''); initResizab
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">arena_alloc.h File Reference</div></div>
+  <div class="headertitle"><div class="title">ms5611_clctr.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
-</div>
-<p><a href="arena__alloc_8h_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structarena__t.html">arena_t</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="ms5611_8h_source.html">../drivers/ms5611/ms5611.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a43984ba7ecac96c8adcc024100ac26d6"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="arena__alloc_8h.html#a43984ba7ecac96c8adcc024100ac26d6">aalloc</a> (<a class="el" href="structarena__t.html">arena_t</a> *arena, size_t nbytes)</td></tr>
-<tr class="separator:a43984ba7ecac96c8adcc024100ac26d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf642252c6fab266e7ba31632cedcb25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="arena__alloc_8h.html#acf642252c6fab266e7ba31632cedcb25">afree</a> (<a class="el" href="structarena__t.html">arena_t</a> *arena)</td></tr>
-<tr class="separator:acf642252c6fab266e7ba31632cedcb25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbdfcef6321a9913163afe155f733aa7"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611__clctr_8c.html#adbdfcef6321a9913163afe155f733aa7">ms5611_collector</a> (void *args)</td></tr>
+<tr class="separator:adbdfcef6321a9913163afe155f733aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a43984ba7ecac96c8adcc024100ac26d6" name="a43984ba7ecac96c8adcc024100ac26d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43984ba7ecac96c8adcc024100ac26d6">&#9670;&nbsp;</a></span>aalloc()</h2>
+<a id="adbdfcef6321a9913163afe155f733aa7" name="adbdfcef6321a9913163afe155f733aa7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbdfcef6321a9913163afe155f733aa7">&#9670;&nbsp;</a></span>ms5611_collector()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void * aalloc </td>
+          <td class="memname">void * ms5611_collector </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structarena__t.html">arena_t</a> *&#160;</td>
-          <td class="paramname"><em>arena</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>nbytes</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Allocates memory of size <code>nbytes</code> on the arena. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">arena</td><td>The arena to allocate on. </td></tr>
-    <tr><td class="paramname">nbytes</td><td>The number of bytes to allocate on the arena. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>NULL if there is not enough space in the arena to allocate <code>nbytes</code>, a pointer to <code>nbytes</code> of memory otherwise. </dd></dl>
-
-</div>
-</div>
-<a id="acf642252c6fab266e7ba31632cedcb25" name="acf642252c6fab266e7ba31632cedcb25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf642252c6fab266e7ba31632cedcb25">&#9670;&nbsp;</a></span>afree()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void afree </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structarena__t.html">arena_t</a> *&#160;</td>
-          <td class="paramname"><em>arena</em></td><td>)</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Frees all memory on the arena. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">arena</td><td>The arena to free memory on. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
