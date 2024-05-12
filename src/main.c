@@ -6,7 +6,6 @@
  */
 #include "arena_alloc.h"
 #include "eeprom/eeprom.h"
-#include "sensors/sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -17,13 +16,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
-/* Implemented sensors. */
-#include "sensors/lsm6dso32/lsm6dso32.h"
-#include "sensors/ms5611/ms5611.h"
+/* Implemented sensor drivers. */
+#include "drivers/lsm6dso32/lsm6dso32.h"
+#include "drivers/ms5611/ms5611.h"
 #define SHT41_USE_CRC_LOOKUP
-#include "sensors/sht41/sht41.h"
-#include "sensors/sysclock/sysclock.h"
+#include "drivers/sht41/sht41.h"
+#include "drivers/sysclock/sysclock.h"
+
+/* Implemented sensor collection threads. */
+#include "collectors/collectors.h"
 
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
@@ -110,6 +113,27 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(bus_speed));
         exit(EXIT_FAILURE);
     }
+
+    /* Create sensor data collection threads. */
+
+    /* Sysclock. */
+    pthread_t sysclock;
+    collector_args_t sysclock_args = {.bus = bus, .addr = 0x00};
+    errno_t err = pthread_create(&sysclock, NULL, &sysclock_collector, &sysclock_args);
+    if (err != EOK) {
+        fprintf(stderr, "Could not create sysclock thread: %s\n", strerror(err));
+        exit(EXIT_FAILURE);
+    }
+
+    /* MS5611 */
+    pthread_t ms5611;
+    collector_args_t ms5611_args = {.bus = bus, .addr = 0x77};
+    err = pthread_create(&ms5611, NULL, &ms5611_collector, &ms5611_args);
+
+    // Wait for threads
+    pthread_join(sysclock, NULL);
+    pthread_join(ms5611, NULL);
+    return 0;
 
     /* Print out the board ID EEPROM contents. */
     uint8_t const *board_id = eeprom_contents(bus);
