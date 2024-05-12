@@ -4,7 +4,6 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
-#include "arena_alloc.h"
 #include "eeprom/eeprom.h"
 #include <devctl.h>
 #include <errno.h>
@@ -27,22 +26,6 @@
 
 /** The size of the static memory buffer (in bytes) for allocating sensor contexts on. */
 #define ARENA_SIZE 256
-
-/** The maximum number of sensors that fetcher can support. */
-#define MAX_SENSORS 4
-
-/** Create sensor list. */
-static Sensor sensors[MAX_SENSORS];
-
-/** Create static memory for allocating sensor contexts. */
-static uint8_t arena_memory[ARENA_SIZE];
-
-/** Create the arena for allocating sensor contexts. */
-static arena_t arena = {
-    .start = arena_memory,
-    .cur = arena_memory, // The current location is also the start initially
-    .size = ARENA_SIZE,
-};
 
 /** Flag to indicate reading from file in endless mode for debugging. */
 static bool endless = false;
