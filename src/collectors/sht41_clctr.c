@@ -5,6 +5,11 @@
 #include "collectors.h"
 #include "sensor_api.h"
 
+/** 
+ * Collector thread for the SHT41 sensor.
+ * @param args Arguments in the form of `collector_args_t`
+ * @return The error `errno_t` which caused the thread to exit, encoded as a pointer.
+ */
 void *sht41_collector(void *args) {
 
     /* Open message queue. */

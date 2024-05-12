@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <time.h>
 
+/** 
+ * Collector thread for the system clock.
+ * @param args Arguments in the form of `collector_args_t`
+ * @return The error `errno_t` which caused the thread to exit, encoded as a pointer.
+ */
 void *sysclock_collector(void *args) {
 
     /* Open message queue to send data. */

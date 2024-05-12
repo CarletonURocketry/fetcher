@@ -3,6 +3,11 @@
 #include "sensor_api.h"
 #include <stdio.h>
 
+/**
+ * Collector thread for the LSM6DSO32 sensor.
+ * @param args Arguments in the form of `collector_args_t`
+ * @return The error `errno_t` which caused the thread to exit, encoded as a pointer.
+ */
 void *lsm6dso32_collector(void *args) {
 
     /* Open message queue. */
