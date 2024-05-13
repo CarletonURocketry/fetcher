@@ -1,8 +1,14 @@
-#include "../drivers/sysclock/sysclock.h"
 #include "collectors.h"
 #include "sensor_api.h"
 #include <stdio.h>
+#include <sys/time.h>
 #include <time.h>
+
+/** Type to simplify sending time data. */
+struct sysclock_msg_t {
+    uint8_t type;    /**< The type of message (always time). */
+    uint32_t millis; /**< The number of milliseconds since launch. */
+} __attribute__((packed));
 
 /**
  * Collector thread for the system clock.
@@ -18,33 +24,29 @@ void *sysclock_collector(void *args) {
         return (void *)((uint64_t)errno);
     }
 
-    /* Create system clock instance. */
-    Sensor clock;
-    sysclock_init(&clock, clctr_args(args)->bus, clctr_args(args)->addr, PRECISION_HIGH);
-    uint8_t sysclock_context[sensor_get_ctx_size(clock)];
-    sensor_set_ctx(&clock, sysclock_context);
-
-    errno_t err = sensor_open(clock);
-
-    if (err != EOK) {
-        fprintf(stderr, "%s\n", strerror(err));
-        return (void *)((uint64_t)err); // Extra uint64_t cast to silence compiler warning
-    }
-
-    // Data storage
-    uint8_t data[sensor_max_dsize(&clock) + 1];
-    size_t nbytes;
+    // Get the current UNIX time and time information
+    time_t start_unix_time;
+    time(&start_unix_time);
+    struct tm *time_info = localtime(&start_unix_time);
+    struct timezone tz = {.tz_dsttime = 0, .tz_minuteswest = time_info->tm_gmtoff};
+    struct timeval tval;
 
     // Infinitely check the time
+    struct sysclock_msg_t msg;
+    msg.type = TAG_TIME;
     for (;;) {
 
-        clock.read(&clock, TAG_TIME, &data[1], &nbytes);
-        data[0] = TAG_TIME; // Encode the contained data type
+        // Get time with nanosecond precision
+        gettimeofday(&tval, &tz);
+
+        // Calculate elapsed time from launch
+        time_t elapsed_s = tval.tv_sec - start_unix_time;
+        msg.millis = (elapsed_s * 1000) + (tval.tv_usec / 1000);
 
         // Infinitely send the time
-        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "Sysclock couldn't send message: %s.\n", strerror(errno));
         }
-        usleep(10000); // Little sleep to not flood output
+        usleep(10000); // Little sleep to not flood message queue
     }
 }
