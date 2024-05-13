@@ -23,22 +23,18 @@ struct dummy_write_t {
 errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
 
     // Dummy write to start from address
-    static struct dummy_write_t dummy_write = {
+    struct dummy_write_t dummy_write = {
         .header =
             {
                 .stop = 0,
                 .len = 1,
                 .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_ADDR},
             },
+        .byte_address = addr,
     };
-    dummy_write.byte_address = addr;
 
-    // Lock the bus
-    errno_t err = devctl(bus, DCMD_I2C_LOCK, NULL, 0, NULL);
+    errno_t err = devctl(bus, DCMD_I2C_SEND, &dummy_write, sizeof(dummy_write), NULL);
     if (err != EOK) return err;
-
-    err = devctl(bus, DCMD_I2C_SEND, &dummy_write, sizeof(dummy_write), NULL);
-    if (err != EOK) goto return_defer;
 
     // Start sequential read into buffer
     i2c_sendrecv_t read_header = {
@@ -48,12 +44,7 @@ errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
         .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_ADDR},
     };
     memcpy(buf, &read_header, sizeof(read_header));
-    err = devctl(bus, DCMD_I2C_SENDRECV, buf, n + sizeof(read_header), NULL);
-    if (err != EOK) goto return_defer;
-
-return_defer:
-    devctl(bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock I2C bus
-    return err;
+    return devctl(bus, DCMD_I2C_SENDRECV, buf, n + sizeof(read_header), NULL);
 }
 
 /**

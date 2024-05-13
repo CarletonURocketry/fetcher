@@ -120,12 +120,8 @@ errno_t sht41_read(SensorLocation const *loc, sht41_prec_e precision, float *tem
     memcpy(send_cmd, &send, sizeof(send));
     send_cmd[sizeof(send)] = PRECISION_READ[precision];
 
-    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL); // Lock bus
-    if (err != EOK) return err;
-
-    err = devctl(loc->bus, DCMD_I2C_SEND, &send_cmd, sizeof(send_cmd), NULL);
+    errno_t err = devctl(loc->bus, DCMD_I2C_SEND, &send_cmd, sizeof(send_cmd), NULL);
     if (err != EOK) {
-        devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
         return err;
     };
 
@@ -138,7 +134,6 @@ errno_t sht41_read(SensorLocation const *loc, sht41_prec_e precision, float *tem
 
     err = devctl(loc->bus, DCMD_I2C_RECV, &read_cmd, sizeof(read_cmd), NULL);
     if (err != EOK) {
-        devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
         return err;
     };
 
@@ -163,7 +158,7 @@ errno_t sht41_read(SensorLocation const *loc, sht41_prec_e precision, float *tem
         *humidity = 100;
     }
 
-    return devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Lock bus
+    return err;
 }
 
 /**
@@ -177,15 +172,7 @@ errno_t sht41_reset(SensorLocation const *loc) {
     memcpy(reset_cmd, &reset, sizeof(reset));
     reset_cmd[sizeof(reset)] = CMD_SOFT_RESET;
 
-    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL); // Lock bus
-    if (err != EOK) return err;
-
-    err = devctl(loc->bus, DCMD_I2C_SEND, reset_cmd, sizeof(reset_cmd), NULL);
-    if (err != EOK) goto return_defer;
-
-return_defer:
-    devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
-    return err;
+    return devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
 }
 
 /**
