@@ -12,6 +12,6 @@ var annotated_dup =
     [ "SensorLocation", "structSensorLocation.html", "structSensorLocation" ],
     [ "SensorTagData", "structSensorTagData.html", "structSensorTagData" ],
     [ "SensorTagList", "structSensorTagList.html", "structSensorTagList" ],
-    [ "SysClockContext", "structSysClockContext.html", "structSysClockContext" ],
+    [ "sysclock_msg_t", "structsysclock__msg__t.html", "structsysclock__msg__t" ],
     [ "vec3d_t", "structvec3d__t.html", "structvec3d__t" ]
 ];

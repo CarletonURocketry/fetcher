@@ -5,5 +5,5 @@ var searchData=
   ['sensorlocation_2',['SensorLocation',['../structSensorLocation.html',1,'']]],
   ['sensortagdata_3',['SensorTagData',['../structSensorTagData.html',1,'']]],
   ['sensortaglist_4',['SensorTagList',['../structSensorTagList.html',1,'']]],
-  ['sysclockcontext_5',['SysClockContext',['../structSysClockContext.html',1,'']]]
+  ['sysclock_5fmsg_5ft_5',['sysclock_msg_t',['../structsysclock__msg__t.html',1,'']]]
 ];

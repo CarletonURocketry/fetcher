@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['z_0',['z',['../structvec3d__t.html#af415dcd92e78d0019acab4b246316d9b',1,'vec3d_t']]]
+  ['y_0',['y',['../structvec3d__t.html#affb93ea8e5a916d24363dddcb912a772',1,'vec3d_t']]]
 ];

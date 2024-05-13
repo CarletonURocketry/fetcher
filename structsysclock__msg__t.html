@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: SysClockContext Struct Reference</title>
+<title>fetcher: sysclock_msg_t Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,7 +68,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structSysClockContext.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structsysclock__msg__t.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -89,52 +89,52 @@ $(document).ready(function(){initNavTree('structSysClockContext.html',''); initR
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
-  <div class="headertitle"><div class="title">SysClockContext Struct Reference</div></div>
+  <div class="headertitle"><div class="title">sysclock_msg_t Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:afb2cbd538e160d478f67b90631d73a8d"><td class="memItemLeft" align="right" valign="top">long int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSysClockContext.html#afb2cbd538e160d478f67b90631d73a8d">tm_gmtoff</a></td></tr>
-<tr class="separator:afb2cbd538e160d478f67b90631d73a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d6ba1cef96c3ec5f59b263f888a9d7a"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSysClockContext.html#a4d6ba1cef96c3ec5f59b263f888a9d7a">start_unix_time</a></td></tr>
-<tr class="separator:a4d6ba1cef96c3ec5f59b263f888a9d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3825cd44945e876530e25cb704ca4cc"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsysclock__msg__t.html#ab3825cd44945e876530e25cb704ca4cc">type</a></td></tr>
+<tr class="separator:ab3825cd44945e876530e25cb704ca4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89e3c6c865090554863c7cf00d62af9b"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsysclock__msg__t.html#a89e3c6c865090554863c7cf00d62af9b">millis</a></td></tr>
+<tr class="separator:a89e3c6c865090554863c7cf00d62af9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >The structure containing the context the system clock needs between reads. </p>
+<div class="textblock"><p >Type to simplify sending time data. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
-<a id="a4d6ba1cef96c3ec5f59b263f888a9d7a" name="a4d6ba1cef96c3ec5f59b263f888a9d7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d6ba1cef96c3ec5f59b263f888a9d7a">&#9670;&nbsp;</a></span>start_unix_time</h2>
+<a id="a89e3c6c865090554863c7cf00d62af9b" name="a89e3c6c865090554863c7cf00d62af9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89e3c6c865090554863c7cf00d62af9b">&#9670;&nbsp;</a></span>millis</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">time_t SysClockContext::start_unix_time</td>
+          <td class="memname">uint32_t sysclock_msg_t::millis</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The start time (when the sensor was opened) in Unix time. </p>
+<p >The number of milliseconds since launch. </p>
 
 </div>
 </div>
-<a id="afb2cbd538e160d478f67b90631d73a8d" name="afb2cbd538e160d478f67b90631d73a8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb2cbd538e160d478f67b90631d73a8d">&#9670;&nbsp;</a></span>tm_gmtoff</h2>
+<a id="ab3825cd44945e876530e25cb704ca4cc" name="ab3825cd44945e876530e25cb704ca4cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3825cd44945e876530e25cb704ca4cc">&#9670;&nbsp;</a></span>type</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long int SysClockContext::tm_gmtoff</td>
+          <td class="memname">uint8_t sysclock_msg_t::type</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The offset of the current timezone from the GMT timezone. </p>
+<p >The type of message (always time). </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/drivers/sysclock/<a class="el" href="sysclock_8c.html">sysclock.c</a></li>
+<li>src/collectors/<a class="el" href="sysclock__clctr_8c.html">sysclock_clctr.c</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
