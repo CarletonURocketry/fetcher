@@ -26,6 +26,9 @@
 /** Defines the number of bytes to be included in the CRC calculation. */
 #define SHT41_CRC_LEN 3
 
+/** The number of microseconds to wait before reading serial number after making a read request. */
+#define SERIAL_WAIT 10
+
 /** Some of the I2C commands that can be used on the SHT41 sensor. */
 typedef enum {
     CMD_SOFT_RESET = 0x94,     /**< Soft reset command. */
@@ -199,7 +202,7 @@ errno_t sht41_serial_no(SensorLocation *loc, uint32_t *serial_no) {
     // Prepare sensor for read
     err = devctl(loc->bus, DCMD_I2C_SEND, read_cmd, sizeof(read_cmd), NULL);
     if (err != EOK) goto return_defer;
-    usleep(1000);
+    usleep(SERIAL_WAIT);
 
     // Receive serial number
     i2c_recv_t rcv_hdr = {.slave = loc->addr, .len = 6, .stop = 1};
