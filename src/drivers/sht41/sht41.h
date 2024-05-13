@@ -20,5 +20,6 @@ typedef enum {
 
 errno_t sht41_reset(SensorLocation *loc);
 errno_t sht41_read(SensorLocation *loc, SHT41Precision precision, float *temperature, float *humidity);
+errno_t sht41_serial_no(SensorLocation *loc, uint32_t *serial_no);
 
 #endif // _SHT41_H_

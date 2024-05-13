@@ -23,13 +23,13 @@
 #define SHT41_T_CRC 0
 #define SHT41_RH_CRC 3
 
-/** Defines the number of bytes to be included in the CRC calculation*/
+/** Defines the number of bytes to be included in the CRC calculation. */
 #define SHT41_CRC_LEN 3
 
 /** Some of the I2C commands that can be used on the SHT41 sensor. */
 typedef enum {
     CMD_SOFT_RESET = 0x94,     /**< Soft reset command. */
-    CMD_SERIAL_NUM = 0x89,     /**< Read serial number command. */
+    CMD_READ_SERIAL = 0x89,    /**< Read serial number command. */
     CMD_READ_LOW_PREC = 0xE0,  /**< Low precision read temp & humidity command. */
     CMD_READ_MED_PREC = 0xF6,  /**< Med precision read temp & humidity command. */
     CMD_READ_HIGH_PREC = 0xFD, /**< High precision read temp & humidity command. */
@@ -164,15 +164,62 @@ errno_t sht41_read(SensorLocation *loc, SHT41Precision precision, float *tempera
  */
 errno_t sht41_reset(SensorLocation *loc) {
     i2c_send_t reset = {.stop = 1, .len = 1, .slave = loc->addr};
-    uint8_t reset_cmd[sizeof(i2c_send_t) + 1];
+    uint8_t reset_cmd[sizeof(reset) + 1];
     memcpy(reset_cmd, &reset, sizeof(reset));
     reset_cmd[sizeof(reset)] = CMD_SOFT_RESET;
 
-    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL);
-    err = devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
+    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL); // Lock bus
+    if (err != EOK) return err;
+
+    err = devctl(loc->bus, DCMD_I2C_SEND, reset_cmd, sizeof(reset_cmd), NULL);
     if (err != EOK) goto return_defer;
 
 return_defer:
     devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
+    return err;
+}
+
+/**
+ * Read the serial number of the SHT41 sensor.
+ * @param loc The location of the SHT41 on the I2C bus.
+ * @param serial_no A pointer to the location to store the serial number.
+ * @return EOK if successful, otherwise the error that occurred.
+ */
+errno_t sht41_serial_no(SensorLocation *loc, uint32_t *serial_no) {
+
+    // Prepare read command
+    i2c_send_t hdr = {.stop = 1, .len = 1, .slave = loc->addr};
+    uint8_t read_cmd[sizeof(hdr) + 6];
+    memcpy(read_cmd, &hdr, sizeof(hdr));
+    read_cmd[sizeof(hdr)] = CMD_READ_SERIAL;
+
+    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL); // Lock bus
+    if (err != EOK) return err;
+
+    // Prepare sensor for read
+    err = devctl(loc->bus, DCMD_I2C_SEND, read_cmd, sizeof(read_cmd), NULL);
+    if (err != EOK) goto return_defer;
+    usleep(1000);
+
+    // Receive serial number
+    i2c_recv_t rcv_hdr = {.slave = loc->addr, .len = 6, .stop = 1};
+    memcpy(read_cmd, &rcv_hdr, sizeof(rcv_hdr));
+    err = devctl(loc->bus, DCMD_I2C_RECV, read_cmd, sizeof(read_cmd), NULL);
+    if (err != EOK) goto return_defer;
+
+    // Perform CRC checks and store in result variable
+    *serial_no = 0;
+    *serial_no |= (*(read_cmd + sizeof(rcv_hdr))) << 24;
+    *serial_no |= (*(read_cmd + sizeof(rcv_hdr) + 1)) << 16;
+    err = check_crc(read_cmd + sizeof(rcv_hdr), SHT41_CRC_LEN);
+    if (err != EOK) goto return_defer;
+
+    *serial_no |= (*(read_cmd + sizeof(rcv_hdr) + 3)) << 8;
+    *serial_no |= (*(read_cmd + sizeof(rcv_hdr) + 4));
+    err = check_crc(read_cmd + sizeof(rcv_hdr) + 3, SHT41_CRC_LEN);
+    if (err != EOK) goto return_defer;
+
+return_defer:
+    devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock bus
     return err;
 }
