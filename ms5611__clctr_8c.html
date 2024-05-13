@@ -88,20 +88,80 @@ $(document).ready(function(){initNavTree('ms5611__clctr_8c.html',''); initResiza
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">ms5611_clctr.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="ms5611_8h_source.html">../drivers/ms5611/ms5611.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structms5611__message.html">ms5611_message</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a1c1904253da3b3e884ce810587708923"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611__clctr_8c.html#a1c1904253da3b3e884ce810587708923">return_errno</a>(err)&#160;&#160;&#160;return (void *)((uint64_t)err)</td></tr>
+<tr class="separator:a1c1904253da3b3e884ce810587708923"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a571c76fc6fdb644d55e76286e991d684"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structms5611__message.html">ms5611_message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611__clctr_8c.html#a571c76fc6fdb644d55e76286e991d684">__attribute__</a> ((packed))</td></tr>
+<tr class="separator:a571c76fc6fdb644d55e76286e991d684"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbdfcef6321a9913163afe155f733aa7"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611__clctr_8c.html#adbdfcef6321a9913163afe155f733aa7">ms5611_collector</a> (void *args)</td></tr>
 <tr class="separator:adbdfcef6321a9913163afe155f733aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a1d127017fb298b889f4ba24752d08b8e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611__clctr_8c.html#a1d127017fb298b889f4ba24752d08b8e">type</a></td></tr>
+<tr class="separator:a1d127017fb298b889f4ba24752d08b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a173b91873a3fc4f50a95416a6204d963"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611__clctr_8c.html#a173b91873a3fc4f50a95416a6204d963">data</a></td></tr>
+<tr class="separator:a173b91873a3fc4f50a95416a6204d963"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a1c1904253da3b3e884ce810587708923" name="a1c1904253da3b3e884ce810587708923"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c1904253da3b3e884ce810587708923">&#9670;&nbsp;</a></span>return_errno</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define return_errno</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">err</td><td>)</td>
+          <td>&#160;&#160;&#160;return (void *)((uint64_t)err)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a571c76fc6fdb644d55e76286e991d684" name="a571c76fc6fdb644d55e76286e991d684"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a571c76fc6fdb644d55e76286e991d684">&#9670;&nbsp;</a></span>__attribute__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structms5611__message.html">ms5611_message</a> __attribute__ </td>
+          <td>(</td>
+          <td class="paramtype">(packed)&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="adbdfcef6321a9913163afe155f733aa7" name="adbdfcef6321a9913163afe155f733aa7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adbdfcef6321a9913163afe155f733aa7">&#9670;&nbsp;</a></span>ms5611_collector()</h2>
 
@@ -117,6 +177,44 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Collector thread for the MS5611 sensor. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>Arguments in the form of <code><a class="el" href="structcollector__args__t.html">collector_args_t</a></code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The error <code>errno_t</code> which caused the thread to exit, encoded as a pointer. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a173b91873a3fc4f50a95416a6204d963" name="a173b91873a3fc4f50a95416a6204d963"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a173b91873a3fc4f50a95416a6204d963">&#9670;&nbsp;</a></span>data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Measurement data (temperature, pressure or altitude) </p>
+
+</div>
+</div>
+<a id="a1d127017fb298b889f4ba24752d08b8e" name="a1d127017fb298b889f4ba24752d08b8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d127017fb298b889f4ba24752d08b8e">&#9670;&nbsp;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Measurement type (temperature, pressure or altitude) </p>
 
 </div>
 </div>

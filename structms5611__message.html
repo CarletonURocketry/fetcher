@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: src/collectors/lsm6dso32_clctr.c File Reference</title>
+<title>fetcher: ms5611_message Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,7 +68,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('lsm6dso32__clctr_8c.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structms5611__message.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -88,46 +88,54 @@ $(document).ready(function(){initNavTree('lsm6dso32__clctr_8c.html',''); initRes
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">lsm6dso32_clctr.c File Reference</div></div>
+<a href="#pub-attribs">Data Fields</a>  </div>
+  <div class="headertitle"><div class="title">ms5611_message Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="lsm6dso32_8h_source.html">../drivers/lsm6dso32/lsm6dso32.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-</div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ab62890efc5396e30f0abf69a3b40b274"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32__clctr_8c.html#ab62890efc5396e30f0abf69a3b40b274">lsm6dso32_collector</a> (void *args)</td></tr>
-<tr class="separator:ab62890efc5396e30f0abf69a3b40b274"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a796988b19035e290630f642dc73cab50"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structms5611__message.html#a796988b19035e290630f642dc73cab50">type</a></td></tr>
+<tr class="separator:a796988b19035e290630f642dc73cab50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43845ce484002adf19dcbf30e45de3ba"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structms5611__message.html#a43845ce484002adf19dcbf30e45de3ba">data</a></td></tr>
+<tr class="separator:a43845ce484002adf19dcbf30e45de3ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ab62890efc5396e30f0abf69a3b40b274" name="ab62890efc5396e30f0abf69a3b40b274"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab62890efc5396e30f0abf69a3b40b274">&#9670;&nbsp;</a></span>lsm6dso32_collector()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Type for easily sending measurements over the message queue. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="a43845ce484002adf19dcbf30e45de3ba" name="a43845ce484002adf19dcbf30e45de3ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43845ce484002adf19dcbf30e45de3ba">&#9670;&nbsp;</a></span>data</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void * lsm6dso32_collector </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>args</em></td><td>)</td>
-          <td></td>
+          <td class="memname">float ms5611_message::data</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Collector thread for the LSM6DSO32 sensor. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">args</td><td>Arguments in the form of <code><a class="el" href="structcollector__args__t.html">collector_args_t</a></code> </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The error <code>errno_t</code> which caused the thread to exit, encoded as a pointer. </dd></dl>
+<p >Measurement data (temperature, pressure or altitude) </p>
 
 </div>
 </div>
+<a id="a796988b19035e290630f642dc73cab50" name="a796988b19035e290630f642dc73cab50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a796988b19035e290630f642dc73cab50">&#9670;&nbsp;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ms5611_message::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Measurement type (temperature, pressure or altitude) </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/collectors/<a class="el" href="ms5611__clctr_8c.html">ms5611_clctr.c</a></li>
+</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!--Not sure if this works, but we shall see-->

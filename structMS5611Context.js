@@ -1,5 +1,5 @@
 var structMS5611Context =
 [
-    [ "coefs", "structMS5611Context.html#a4912b191cb73cbe5b7e34287abde04f8", null ],
-    [ "ground_pressure", "structMS5611Context.html#a93631e043e0c5b7383cfb8db8556f732", null ]
+    [ "coefs", "structMS5611Context.html#a14705540adf4891c75c8abc4ad9e8070", null ],
+    [ "ground_pressure", "structMS5611Context.html#ab42664a67bac2ec087dacfe2cfec0510", null ]
 ];

@@ -11,10 +11,14 @@ var searchData=
   ['ms5611_2ec_8',['ms5611.c',['../ms5611_8c.html',1,'']]],
   ['ms5611_2eh_9',['ms5611.h',['../ms5611_8h.html',1,'']]],
   ['ms5611_5fclctr_2ec_10',['ms5611_clctr.c',['../ms5611__clctr_8c.html',1,'']]],
-  ['ms5611_5fcollector_11',['ms5611_collector',['../collectors_8h.html#adbdfcef6321a9913163afe155f733aa7',1,'ms5611_collector(void *args):&#160;ms5611_clctr.c'],['../ms5611__clctr_8c.html#adbdfcef6321a9913163afe155f733aa7',1,'ms5611_collector(void *args):&#160;ms5611_clctr.c']]],
-  ['ms5611_5finit_12',['ms5611_init',['../ms5611_8c.html#aba9274ab1665fc5f5404b96b49860605',1,'ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision):&#160;ms5611.c'],['../ms5611_8h.html#aba9274ab1665fc5f5404b96b49860605',1,'ms5611_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision):&#160;ms5611.c']]],
-  ['ms5611cmd_13',['MS5611Cmd',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455',1,'ms5611.c']]],
-  ['ms5611context_14',['MS5611Context',['../structMS5611Context.html',1,'']]],
-  ['ms5611dreg_15',['MS5611DReg',['../ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18',1,'ms5611.c']]],
-  ['ms5611resolution_16',['MS5611Resolution',['../ms5611_8c.html#aab94c0c8692d1629420105ba506d49eb',1,'ms5611.c']]]
+  ['ms5611_5fcoefficient_5fcount_11',['MS5611_COEFFICIENT_COUNT',['../ms5611_8h.html#aff590d73c3bf9725877c9e2ab03ec365',1,'ms5611.h']]],
+  ['ms5611_5fcollector_12',['ms5611_collector',['../ms5611__clctr_8c.html#adbdfcef6321a9913163afe155f733aa7',1,'ms5611_collector(void *args):&#160;ms5611_clctr.c'],['../collectors_8h.html#adbdfcef6321a9913163afe155f733aa7',1,'ms5611_collector(void *args):&#160;ms5611_clctr.c']]],
+  ['ms5611_5finit_5fcoefs_13',['ms5611_init_coefs',['../ms5611_8c.html#afd8528e84292aa1e3cd1e586bbaa0758',1,'ms5611_init_coefs(SensorLocation *loc, MS5611Context *ctx):&#160;ms5611.c'],['../ms5611_8h.html#afd8528e84292aa1e3cd1e586bbaa0758',1,'ms5611_init_coefs(SensorLocation *loc, MS5611Context *ctx):&#160;ms5611.c']]],
+  ['ms5611_5fmessage_14',['ms5611_message',['../structms5611__message.html',1,'']]],
+  ['ms5611_5fread_5fall_15',['ms5611_read_all',['../ms5611_8c.html#a7bb4c13f7f51a6203ca823057e861b44',1,'ms5611_read_all(SensorLocation *loc, MS5611Resolution res, MS5611Context *ctx, bool precise, double *temperature, double *pressure, double *altitude):&#160;ms5611.c'],['../ms5611_8h.html#a9f6345229b090643d1c44fb11ab66991',1,'ms5611_read_all(SensorLocation *loc, MS5611Resolution res, MS5611Context *ctx, bool precise, double *temp, double *pressure, double *altitude):&#160;ms5611.c']]],
+  ['ms5611_5freset_16',['ms5611_reset',['../ms5611_8c.html#a2a28a1a121dfa675cd6b9723b7ba51e7',1,'ms5611_reset(SensorLocation *loc):&#160;ms5611.c'],['../ms5611_8h.html#a2a28a1a121dfa675cd6b9723b7ba51e7',1,'ms5611_reset(SensorLocation *loc):&#160;ms5611.c']]],
+  ['ms5611cmd_17',['MS5611Cmd',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455',1,'ms5611.c']]],
+  ['ms5611context_18',['MS5611Context',['../structMS5611Context.html',1,'']]],
+  ['ms5611dreg_19',['MS5611DReg',['../ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18',1,'ms5611.c']]],
+  ['ms5611resolution_20',['MS5611Resolution',['../ms5611_8h.html#aab94c0c8692d1629420105ba506d49eb',1,'ms5611.h']]]
 ];

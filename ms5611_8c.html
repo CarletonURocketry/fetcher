@@ -88,11 +88,9 @@ $(document).ready(function(){initNavTree('ms5611_8c.html',''); initResizable(); 
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">ms5611.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -104,20 +102,12 @@ $(document).ready(function(){initNavTree('ms5611_8c.html',''); initResizable(); 
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;hw/i2c.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMS5611Context.html">MS5611Context</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a27812e95e0faa61ceede87c35827d5ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a27812e95e0faa61ceede87c35827d5ce">NUM_COEFFICIENTS</a>&#160;&#160;&#160;8</td></tr>
-<tr class="separator:a27812e95e0faa61ceede87c35827d5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c">return_err</a>(err)&#160;&#160;&#160;    if (err != EOK) goto return_defer</td></tr>
 <tr class="separator:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c71a5e59a53413cd6c270266d63b031"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a5c71a5e59a53413cd6c270266d63b031">R</a>&#160;&#160;&#160;8.31432</td></tr>
@@ -141,31 +131,20 @@ Enumerations</h2></td></tr>
 , <a class="el" href="ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18a86c69dc8849d17673b52b9a8d94d8b9f">D2</a> = 0x10
  }</td></tr>
 <tr class="separator:a4eb37e79a3b2014efe270c4cd985cf18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab94c0c8692d1629420105ba506d49eb"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#aab94c0c8692d1629420105ba506d49eb">MS5611Resolution</a> { <br />
-&#160;&#160;<a class="el" href="ms5611_8c.html#aab94c0c8692d1629420105ba506d49eba2f3c9f9af1ebd65944bf69fec900b807">ADC_RES_256</a> = 0x00
-, <a class="el" href="ms5611_8c.html#aab94c0c8692d1629420105ba506d49eba0db0d71d003bda0a0037f6de98919fa3">ADC_RES_512</a> = 0x02
-, <a class="el" href="ms5611_8c.html#aab94c0c8692d1629420105ba506d49eba9f0fac7b81f920a794883db3dbc14516">ADC_RES_1024</a> = 0x04
-, <a class="el" href="ms5611_8c.html#aab94c0c8692d1629420105ba506d49eba865b1192e1c0f50c53aca1ba857eec08">ADC_RES_2048</a> = 0x06
-, <br />
-&#160;&#160;<a class="el" href="ms5611_8c.html#aab94c0c8692d1629420105ba506d49eba5140e7bb7b4580efad78625e4bee62d8">ADC_RES_4096</a> = 0x08
-<br />
- }</td></tr>
-<tr class="separator:aab94c0c8692d1629420105ba506d49eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aba9274ab1665fc5f5404b96b49860605"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#aba9274ab1665fc5f5404b96b49860605">ms5611_init</a> (<a class="el" href="structSensor.html">Sensor</a> *sensor, const int bus, const uint8_t addr, const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision)</td></tr>
-<tr class="separator:aba9274ab1665fc5f5404b96b49860605"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a67fcb881ec33516e2a6b60c5439bdd6f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structSensorTagData.html">SensorTagData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a67fcb881ec33516e2a6b60c5439bdd6f">SENSOR_TAG_DATA</a> []</td></tr>
-<tr class="separator:a67fcb881ec33516e2a6b60c5439bdd6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a28a1a121dfa675cd6b9723b7ba51e7"><td class="memItemLeft" align="right" valign="top">errno_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a2a28a1a121dfa675cd6b9723b7ba51e7">ms5611_reset</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> *loc)</td></tr>
+<tr class="separator:a2a28a1a121dfa675cd6b9723b7ba51e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bb4c13f7f51a6203ca823057e861b44"><td class="memItemLeft" align="right" valign="top">errno_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#a7bb4c13f7f51a6203ca823057e861b44">ms5611_read_all</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> *loc, <a class="el" href="ms5611_8h.html#aab94c0c8692d1629420105ba506d49eb">MS5611Resolution</a> res, <a class="el" href="structMS5611Context.html">MS5611Context</a> *ctx, bool precise, double *temperature, double *pressure, double *altitude)</td></tr>
+<tr class="separator:a7bb4c13f7f51a6203ca823057e861b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd8528e84292aa1e3cd1e586bbaa0758"><td class="memItemLeft" align="right" valign="top">errno_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ms5611_8c.html#afd8528e84292aa1e3cd1e586bbaa0758">ms5611_init_coefs</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> *loc, <a class="el" href="structMS5611Context.html">MS5611Context</a> *ctx)</td></tr>
+<tr class="separator:afd8528e84292aa1e3cd1e586bbaa0758"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="structSensor.html">Sensor</a> API interface implementation for the MS5611 pressure and temperature sensor. </p>
 <p ><a class="el" href="structSensor.html">Sensor</a> API interface implementation for the MS5611 pressure and temperature sensor which uses I2C communication.</p>
-<p >See <a href="https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf%7FCAT-BLPS0036">https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&amp;DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf%7FCAT-BLPS0036</a> for the MS5611 data sheet.</p>
+<p >See <a href="https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf%7FCAT-BLPS0036">https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&amp;DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf%7FCAT-BLPS0036</a>. for the MS5611 data sheet:</p>
 <p >See <a href="https://www.amsys-sensor.com/downloads/notes/ms5611-precise-altitude-measurement-with-a-pressure-sensor-module-amsys-509e.pdf">https://www.amsys-sensor.com/downloads/notes/ms5611-precise-altitude-measurement-with-a-pressure-sensor-module-amsys-509e.pdf</a> for information about the MS5611 altitude measurement calculations. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a167d2c0ec9b943d55f2124f7442b2f6d" name="a167d2c0ec9b943d55f2124f7442b2f6d"></a>
@@ -195,21 +174,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Defines constant for the mean molar mass of atmospheric gases. </p>
-
-</div>
-</div>
-<a id="a27812e95e0faa61ceede87c35827d5ce" name="a27812e95e0faa61ceede87c35827d5ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27812e95e0faa61ceede87c35827d5ce">&#9670;&nbsp;</a></span>NUM_COEFFICIENTS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define NUM_COEFFICIENTS&#160;&#160;&#160;8</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Number of calibration coefficients </p>
 
 </div>
 </div>
@@ -309,63 +273,24 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aab94c0c8692d1629420105ba506d49eb" name="aab94c0c8692d1629420105ba506d49eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab94c0c8692d1629420105ba506d49eb">&#9670;&nbsp;</a></span>MS5611Resolution</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="ms5611_8c.html#aab94c0c8692d1629420105ba506d49eb">MS5611Resolution</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The resolution that is used to read the data of the MS5611 </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aab94c0c8692d1629420105ba506d49eba2f3c9f9af1ebd65944bf69fec900b807" name="aab94c0c8692d1629420105ba506d49eba2f3c9f9af1ebd65944bf69fec900b807"></a>ADC_RES_256&#160;</td><td class="fielddoc"><p >ADC OSR=256 </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aab94c0c8692d1629420105ba506d49eba0db0d71d003bda0a0037f6de98919fa3" name="aab94c0c8692d1629420105ba506d49eba0db0d71d003bda0a0037f6de98919fa3"></a>ADC_RES_512&#160;</td><td class="fielddoc"><p >ADC OSR=512 </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aab94c0c8692d1629420105ba506d49eba9f0fac7b81f920a794883db3dbc14516" name="aab94c0c8692d1629420105ba506d49eba9f0fac7b81f920a794883db3dbc14516"></a>ADC_RES_1024&#160;</td><td class="fielddoc"><p >ADC OSR=1024 </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aab94c0c8692d1629420105ba506d49eba865b1192e1c0f50c53aca1ba857eec08" name="aab94c0c8692d1629420105ba506d49eba865b1192e1c0f50c53aca1ba857eec08"></a>ADC_RES_2048&#160;</td><td class="fielddoc"><p >ADC OSR=2048 </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aab94c0c8692d1629420105ba506d49eba5140e7bb7b4580efad78625e4bee62d8" name="aab94c0c8692d1629420105ba506d49eba5140e7bb7b4580efad78625e4bee62d8"></a>ADC_RES_4096&#160;</td><td class="fielddoc"><p >ADC OSR=4096 </p>
-</td></tr>
-</table>
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="aba9274ab1665fc5f5404b96b49860605" name="aba9274ab1665fc5f5404b96b49860605"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba9274ab1665fc5f5404b96b49860605">&#9670;&nbsp;</a></span>ms5611_init()</h2>
+<a id="afd8528e84292aa1e3cd1e586bbaa0758" name="afd8528e84292aa1e3cd1e586bbaa0758"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd8528e84292aa1e3cd1e586bbaa0758">&#9670;&nbsp;</a></span>ms5611_init_coefs()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void ms5611_init </td>
+          <td class="memname">errno_t ms5611_init_coefs </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a> *&#160;</td>
-          <td class="paramname"><em>sensor</em>, </td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>bus</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const uint8_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a>&#160;</td>
-          <td class="paramname"><em>precision</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structMS5611Context.html">MS5611Context</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -374,40 +299,110 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Initializes a sensor struct with the interface to interact with the MS5611. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Initialize the coefficients of the MS5611. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sensor</td><td>The sensor interface to be initialized. </td></tr>
-    <tr><td class="paramname">bus</td><td>The file descriptor of the I2C bus. </td></tr>
-    <tr><td class="paramname">addr</td><td>The address of the sensor on the I2C bus. </td></tr>
-    <tr><td class="paramname">precision</td><td>The precision to read measurements with. </td></tr>
+    <tr><td class="paramname">loc</td><td>The location of the MS5611 sensor. </td></tr>
+    <tr><td class="paramname">ctx</td><td>The context struct to store the coefficients in. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>EOK if no error, otherwise the type of error that occurred. </dd></dl>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a67fcb881ec33516e2a6b60c5439bdd6f" name="a67fcb881ec33516e2a6b60c5439bdd6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67fcb881ec33516e2a6b60c5439bdd6f">&#9670;&nbsp;</a></span>SENSOR_TAG_DATA</h2>
+<a id="a7bb4c13f7f51a6203ca823057e861b44" name="a7bb4c13f7f51a6203ca823057e861b44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bb4c13f7f51a6203ca823057e861b44">&#9670;&nbsp;</a></span>ms5611_read_all()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structSensorTagData.html">SensorTagData</a> SENSOR_TAG_DATA[]</td>
+          <td class="memname">errno_t ms5611_read_all </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ms5611_8h.html#aab94c0c8692d1629420105ba506d49eb">MS5611Resolution</a>&#160;</td>
+          <td class="paramname"><em>res</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structMS5611Context.html">MS5611Context</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>precise</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>temperature</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>pressure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>altitude</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-<p >Access sensor tag data from sensor API.</p>
-<p >A list of the possible sensor tags and their metadata. </p>
+<p >Reads the specified data from the MS5611. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the MS5611 sensor on the I2C bus. </td></tr>
+    <tr><td class="paramname">res</td><td>The resolution to read the MS5611 at. </td></tr>
+    <tr><td class="paramname">ctx</td><td>The context containing calibration coefficients and ground pressure. </td></tr>
+    <tr><td class="paramname">precise</td><td>True to use second order calculation for higher precision, false for quicker calculation. </td></tr>
+    <tr><td class="paramname">temperature</td><td>Storage location of the temperature value in degrees Celsius. NULL to skip calculation. </td></tr>
+    <tr><td class="paramname">pressure</td><td>Storage location of the pressure value in kPa. NULL to skip calculation. </td></tr>
+    <tr><td class="paramname">altitude</td><td>Storage location of the altitude value in m. NULL to skip calculation. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>EOK if no error, otherwise the type of error that occurred. </dd></dl>
+
+</div>
+</div>
+<a id="a2a28a1a121dfa675cd6b9723b7ba51e7" name="a2a28a1a121dfa675cd6b9723b7ba51e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a28a1a121dfa675cd6b9723b7ba51e7">&#9670;&nbsp;</a></span>ms5611_reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">errno_t ms5611_reset </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Resets the MS5611 sensor, ensuring that calibration data is loaded into the PROM. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The sensor's location on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error from the attempted reset. EOK if successful. </dd></dl>
 
 </div>
 </div>

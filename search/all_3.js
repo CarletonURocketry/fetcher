@@ -12,7 +12,7 @@ var searchData=
   ['cmd_5fread_5fmed_5fprec_9',['CMD_READ_MED_PREC',['../sht41_8c.html#abdab13decf05c54294437091200a09a6aee7cc0ab8b25ff84285681ca3e069d1e',1,'sht41.c']]],
   ['cmd_5freset_10',['CMD_RESET',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455ae71f12b62f9fca54c98ef9630f8fcad1',1,'CMD_RESET():&#160;ms5611.c'],['../sht41_8c.html#abdab13decf05c54294437091200a09a6ae71f12b62f9fca54c98ef9630f8fcad1',1,'CMD_RESET():&#160;sht41.c']]],
   ['cmd_5fserial_5fnum_11',['CMD_SERIAL_NUM',['../sht41_8c.html#abdab13decf05c54294437091200a09a6a8a0aec273b15e91ab4ab52b5b5018c41',1,'sht41.c']]],
-  ['coefs_12',['coefs',['../structMS5611Context.html#a4912b191cb73cbe5b7e34287abde04f8',1,'MS5611Context']]],
+  ['coefs_12',['coefs',['../structMS5611Context.html#a14705540adf4891c75c8abc4ad9e8070',1,'MS5611Context']]],
   ['collector_13',['collector',['../structclctr__entry__t.html#a886fce774b9bbb183d4d6927a8e0f8d9',1,'clctr_entry_t']]],
   ['collector_5fargs_5ft_14',['collector_args_t',['../structcollector__args__t.html',1,'']]],
   ['collector_5fsearch_15',['collector_search',['../collectors_8c.html#a0b028788968140b6be2957e737f7e53d',1,'collector_search(const char *sensor_name):&#160;collectors.c'],['../collectors_8h.html#a0b028788968140b6be2957e737f7e53d',1,'collector_search(const char *sensor_name):&#160;collectors.c']]],

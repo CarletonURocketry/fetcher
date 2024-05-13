@@ -5,6 +5,7 @@ var annotated_dup =
     [ "CRC8LookupTable", "structCRC8LookupTable.html", "structCRC8LookupTable" ],
     [ "dummy_write_t", "structdummy__write__t.html", "structdummy__write__t" ],
     [ "LSM6DSO32Context", "structLSM6DSO32Context.html", "structLSM6DSO32Context" ],
+    [ "ms5611_message", "structms5611__message.html", "structms5611__message" ],
     [ "MS5611Context", "structMS5611Context.html", "structMS5611Context" ],
     [ "Sensor", "structSensor.html", "structSensor" ],
     [ "SensorContext", "structSensorContext.html", "structSensorContext" ],
