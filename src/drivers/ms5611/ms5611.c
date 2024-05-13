@@ -23,7 +23,7 @@
 
 /** Macro to early return an error. */
 #define return_err(err)                                                                                                \
-    if (err != EOK) goto return_defer
+    if (err != EOK) return err
 
 /** Defines the universal gas constant. */
 #define R 8.31432
@@ -62,14 +62,7 @@ errno_t ms5611_reset(SensorLocation *loc) {
     memcpy(reset_cmd, &reset, sizeof(reset));
     reset_cmd[sizeof(reset)] = CMD_RESET;
 
-    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL); // Lock I2C bus
-    return_err(err);
-
-    err = devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
-
-return_defer:
-    devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock I2C bus
-    return err;
+    return devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
 }
 
 /**
@@ -87,18 +80,10 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint32_t *val
     memcpy(conversion_cmd, &conversion, sizeof(conversion));
     conversion_cmd[sizeof(conversion)] = CMD_ADC_CONV + dreg;
 
-    // Lock I2C bus before sending command
-    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL);
-    if (err != EOK) return err;
-
-    err = devctl(loc->bus, DCMD_I2C_SEND, &conversion_cmd, sizeof(conversion_cmd), NULL);
-    if (err != EOK) {
-        devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
-        return err;
-    }
+    errno_t err = devctl(loc->bus, DCMD_I2C_SEND, &conversion_cmd, sizeof(conversion_cmd), NULL);
+    return_err(err);
 
     // Wait for appropriate conversion time
-    devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
     switch (dreg & 0xF) {
     case ADC_RES_256:
         usleep(900);
@@ -117,24 +102,13 @@ static errno_t ms5611_read_dreg(SensorLocation *loc, uint8_t dreg, uint32_t *val
         break;
     }
 
-    // Re-lock bus after waiting
-    err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL);
-    if (err != EOK) return err;
-
     // Read D register
     i2c_sendrecv_t read = {.slave = loc->addr, .stop = 1, .send_len = 1, .recv_len = 3};
     uint8_t read_cmd[sizeof(read) + 3];
     memcpy(read_cmd, &read, sizeof(read));
     read_cmd[sizeof(read)] = CMD_ADC_READ;
     err = devctl(loc->bus, DCMD_I2C_SENDRECV, &read_cmd, sizeof(read_cmd), NULL);
-
-    if (err != EOK) {
-        devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
-        return err;
-    }
-
-    // Unlock I2C bus
-    err = devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
+    return_err(err);
 
     *value = 0;
     *value += read_cmd[sizeof(read)] * 65536;
@@ -242,9 +216,7 @@ errno_t ms5611_init_coefs(SensorLocation *loc, MS5611Context *ctx) {
     memcpy(prom_read_cmd, &prom_read, sizeof(prom_read));
 
     // Read calibration data into sensor context
-    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL); // Lock I2C bus
-    if (err != EOK) return err;
-
+    errno_t err;
     for (uint8_t i = 0; i < MS5611_COEFFICIENT_COUNT; i++) {
 
         // Read from PROM
@@ -256,6 +228,5 @@ errno_t ms5611_init_coefs(SensorLocation *loc, MS5611Context *ctx) {
         memcpy_be(&ctx->coefs[i], &prom_read_cmd[sizeof(prom_read)], sizeof(uint16_t));
     }
 
-    err = devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock I2C bus
     return err;
 };
