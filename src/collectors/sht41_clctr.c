@@ -5,6 +5,15 @@
 #include "collectors.h"
 #include "sensor_api.h"
 
+/** Type to simplify sending measurements. */
+struct sht41_msg_t {
+    uint8_t type; /**< The measurement type (temperature, humidity). */
+    float data;   /**< The measurement data. */
+} __attribute__((packed));
+
+/** Macro to cast `errno_t` to void pointer before returning. */
+#define return_errno(err) return (void *)((uint64_t)err)
+
 /**
  * Collector thread for the SHT41 sensor.
  * @param args Arguments in the form of `collector_args_t`
@@ -19,35 +28,40 @@ void *sht41_collector(void *args) {
         return (void *)((uint64_t)errno);
     }
 
-    /* Create SHT41 instance. */
-    Sensor sht41;
-    sht41_init(&sht41, clctr_args(args)->bus, clctr_args(args)->addr, PRECISION_HIGH);
+    /* Set up SHT41. */
+    SensorLocation loc = {
+        .bus = clctr_args(args)->bus,
+        .addr = {.addr = clctr_args(args)->addr, .fmt = I2C_ADDRFMT_7BIT},
+    };
 
-    uint8_t sht41_context[sensor_get_ctx_size(sht41)];
-
-    sensor_set_ctx(&sht41, sht41_context);
-    errno_t err = sensor_open(sht41);
+    // Reset SHT41
+    errno_t err = sht41_reset(&loc);
     if (err != EOK) {
         fprintf(stderr, "%s\n", strerror(err));
-        return (void *)((uint64_t)err); // Extra uint64_t cast to silence compiler warning
+        return_errno(err);
     }
 
-    size_t nbytes;
-    uint8_t data[sensor_max_dsize(&sht41) + 1];
+    // Data storage
+    float temperature;
+    float humidity;
+    struct sht41_msg_t msg;
 
     for (;;) {
 
-        // Read temperature
-        sensor_read(sht41, TAG_TEMPERATURE, &data[1], &nbytes);
-        data[0] = TAG_TEMPERATURE;
-        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+        // Read temperature and humidity
+        sht41_read(&loc, SHT41_HIGH_PRES, &temperature, &humidity);
+
+        // Send temperature
+        msg.type = TAG_TEMPERATURE;
+        msg.data = temperature;
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "SHT41 couldn't send message: %s\n", strerror(errno));
         }
 
-        // Read humidity
-        sensor_read(sht41, TAG_HUMIDITY, &data[1], &nbytes);
-        data[0] = TAG_HUMIDITY;
-        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+        // Send humidity
+        msg.type = TAG_HUMIDITY;
+        msg.data = humidity;
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "SHT41 couldn't send message: %s\n", strerror(errno));
         }
     }
