@@ -17,6 +17,8 @@ struct sysclock_msg_t {
  */
 void *sysclock_collector(void *args) {
 
+    (void)(args); // Ignore that args is unused
+
     /* Open message queue to send data. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
