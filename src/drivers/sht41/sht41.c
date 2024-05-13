@@ -36,7 +36,13 @@ typedef enum {
     CMD_READ_LOW_PREC = 0xE0,  /**< Low precision read temp & humidity command. */
     CMD_READ_MED_PREC = 0xF6,  /**< Med precision read temp & humidity command. */
     CMD_READ_HIGH_PREC = 0xFD, /**< High precision read temp & humidity command. */
-} SHT41Cmd;
+    CMD_HEATER_200_1 = 0x39,   /**< Activate heater with 200mW for 1s. */
+    CMD_HEATER_200_P1 = 0x32,  /**< Activate heater with 200mW for 0.1s. */
+    CMD_HEATER_110_1 = 0x2F,   /**< Activate heater with 110mW for 1s. */
+    CMD_HEATER_110_P1 = 0x24,  /**< Activate heater with 110mW for 0.1s. */
+    CMD_HEATER_20_1 = 0x1E,    /**< Activate heater with 20mW for 1s. */
+    CMD_HEATER_20_P1 = 0x15,   /**< Activate heater with 20mW for 0.1s. */
+} sht41_cmd_e;
 
 /** Measurement times for the various precisions, in microseconds */
 static const uint16_t MEASUREMENT_TIMES[] = {
@@ -107,7 +113,7 @@ static inline errno_t check_crc(uint8_t *buf, size_t nbytes) {
  * @param humidity A pointer to store the relative humidity in percentage.
  * @return Error status of reading from the sensor. EOK if successful.
  */
-errno_t sht41_read(SensorLocation *loc, SHT41Precision precision, float *temperature, float *humidity) {
+errno_t sht41_read(SensorLocation const *loc, sht41_prec_e precision, float *temperature, float *humidity) {
 
     i2c_send_t send = {.slave = loc->addr, .stop = 1, .len = 1};
     uint8_t send_cmd[sizeof(send) + 1];
@@ -165,7 +171,7 @@ errno_t sht41_read(SensorLocation *loc, SHT41Precision precision, float *tempera
  * @param loc The sensor's location on the I2C bus.
  * @return Any error from the attempted reset. EOK if successful.
  */
-errno_t sht41_reset(SensorLocation *loc) {
+errno_t sht41_reset(SensorLocation const *loc) {
     i2c_send_t reset = {.stop = 1, .len = 1, .slave = loc->addr};
     uint8_t reset_cmd[sizeof(reset) + 1];
     memcpy(reset_cmd, &reset, sizeof(reset));
@@ -188,7 +194,7 @@ return_defer:
  * @param serial_no A pointer to the location to store the serial number.
  * @return EOK if successful, otherwise the error that occurred.
  */
-errno_t sht41_serial_no(SensorLocation *loc, uint32_t *serial_no) {
+errno_t sht41_serial_no(SensorLocation const *loc, uint32_t *serial_no) {
 
     // Prepare read command
     i2c_send_t hdr = {.stop = 1, .len = 1, .slave = loc->addr};
@@ -225,4 +231,16 @@ errno_t sht41_serial_no(SensorLocation *loc, uint32_t *serial_no) {
 return_defer:
     devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock bus
     return err;
+}
+
+/**
+ * Heats up the SHT41 sensor.
+ * WARNING: May draw a large amount of current.
+ * @param loc The location of the SHT41 sensor on the I2C bus.
+ * @param duration The duration to heat the SHT41 sensor for.
+ * @param wattage The wattage to use when heating the SHT41 sensor.
+ * @return EOK if successful, otherwise returns the error that occurred.
+ */
+errno_t sht41_heat(SensorLocation const *loc, sht41_dur_e duration, sht41_wattage_e wattage) {
+    return ENOSYS; // Not implemented yet
 }
