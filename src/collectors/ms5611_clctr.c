@@ -1,6 +1,15 @@
 #include "../drivers/ms5611/ms5611.h"
 #include "collectors.h"
 #include "sensor_api.h"
+#include <stdio.h>
+
+#define return_errno(err) return (void *)((uint64_t)err)
+
+/** Type for easily sending measurements over the message queue. */
+struct ms5611_message {
+    uint8_t type; /**< Measurement type (temperature, pressure or altitude) */
+    float data;   /**< Measurement data (temperature, pressure or altitude) */
+} __attribute__((packed));
 
 /**
  * Collector thread for the MS5611 sensor.
@@ -16,33 +25,72 @@ void *ms5611_collector(void *args) {
         return (void *)((uint64_t)errno);
     }
 
-    /* Create MS5611 instance */
-    Sensor ms5611;
-    ms5611_init(&ms5611, clctr_args(args)->bus, clctr_args(args)->addr, PRECISION_HIGH);
-    uint8_t ms5611_context[sensor_get_ctx_size(ms5611)];
-    sensor_set_ctx(&ms5611, ms5611_context);
-    errno_t err = sensor_open(ms5611);
+    /* Configure MS5611. */
+    SensorLocation loc = {
+        .bus = clctr_args(args)->bus,
+        .addr = {.addr = clctr_args(args)->addr, .fmt = I2C_ADDRFMT_7BIT},
+    };
+
+    // Reset the sensor
+    errno_t err = ms5611_reset(&loc);
     if (err != EOK) {
-        fprintf(stderr, "%s\n", strerror(err));
-        return (void *)((uint64_t)err);
+        fprintf(stderr, "Failed to reset MS5611: %s\n", strerror(err));
+        return_errno(err);
+    }
+    usleep(10000); // Takes some time to reset
+
+    // Get the calibration coefficients
+    MS5611Context ctx;
+    err = ms5611_init_coefs(&loc, &ctx);
+
+    if (err != EOK) {
+        fprintf(stderr, "Failed to initialize MS5611 calibration coefficients: %s\n", strerror(err));
+        return_errno(err);
     }
 
-    uint8_t data[sensor_max_dsize(&ms5611) + 1];
-    size_t nbytes;
+    // Get the current pressure (ground pressure)
+    err = ms5611_read_all(&loc, ADC_RES_4096, &ctx, 1, NULL, &ctx.ground_pressure, NULL);
+    if (err != EOK) {
+        fprintf(stderr, "MS5611 failed to read ground pressure: %s\n", strerror(err));
+        return_errno(err);
+    }
+    printf("GROUND PRESSURE: %f\n", ctx.ground_pressure);
+
+    // Data storage
+    struct ms5611_message measurement;
+    double pressure;
+    double altitude;
+    double temperature;
 
     for (;;) {
 
-        // Read pressure
-        sensor_read(ms5611, TAG_PRESSURE, &data[1], &nbytes);
-        data[0] = TAG_PRESSURE;
-        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+        // Read all three data types
+        err = ms5611_read_all(&loc, ADC_RES_4096, &ctx, 1, &temperature, &pressure, &altitude);
+
+        // If read failed, just continue without crashing
+        if (err != EOK) {
+            fprintf(stderr, "MS5611 failed to read data: %s\n", strerror(err));
+            continue;
+        }
+
+        // Transmit temperature
+        measurement.type = TAG_TEMPERATURE;
+        measurement.data = (float)temperature;
+        if (mq_send(sensor_q, (char *)&measurement, sizeof(measurement), 0) == -1) {
             fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
         }
 
-        // Read temperature
-        sensor_read(ms5611, TAG_TEMPERATURE, &data[1], &nbytes);
-        data[0] = TAG_TEMPERATURE;
-        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+        // Transmit pressure
+        measurement.type = TAG_PRESSURE;
+        measurement.data = (float)pressure;
+        if (mq_send(sensor_q, (char *)&measurement, sizeof(measurement), 0) == -1) {
+            fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
+        }
+
+        // Transmit altitude
+        measurement.type = TAG_ALTITUDE;
+        measurement.data = (float)altitude;
+        if (mq_send(sensor_q, (char *)&measurement, sizeof(measurement), 0) == -1) {
             fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
         }
     }
