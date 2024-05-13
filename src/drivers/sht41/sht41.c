@@ -114,12 +114,8 @@ static errno_t sht41_read(Sensor *sensor, const SensorTag tag, void *buf, size_t
     memcpy(send_cmd, &send, sizeof(send));
     send_cmd[sizeof(send)] = PRECISIONS[sensor->precision];
 
-    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_LOCK, NULL, 0, NULL);
-    if (err != EOK) return err;
-
-    err = devctl(sensor->loc.bus, DCMD_I2C_SEND, &send_cmd, sizeof(send_cmd), NULL);
+    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SEND, &send_cmd, sizeof(send_cmd), NULL);
     if (err != EOK) {
-        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
         return err;
     };
 
@@ -130,7 +126,6 @@ static errno_t sht41_read(Sensor *sensor, const SensorTag tag, void *buf, size_t
     memcpy(read_cmd, &read, sizeof(read));
     err = devctl(sensor->loc.bus, DCMD_I2C_RECV, &read_cmd, sizeof(read_cmd), NULL);
     if (err != EOK) {
-        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
         return err;
     };
 
@@ -165,10 +160,9 @@ static errno_t sht41_read(Sensor *sensor, const SensorTag tag, void *buf, size_t
         break;
     }
     default:
-        devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
         return EINVAL;
     }
-    return devctl(sensor->loc.bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
+    return err;
 }
 
 /**
@@ -183,13 +177,7 @@ static errno_t sht41_reset(SensorLocation *loc) {
     memcpy(reset_cmd, &reset, sizeof(reset));
     reset_cmd[sizeof(reset)] = CMD_RESET;
 
-    errno_t err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL);
-    err = devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
-    if (err != EOK) goto return_defer;
-
-return_defer:
-    devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL);
-    return err;
+    return devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
 }
 
 /**
