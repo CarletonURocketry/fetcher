@@ -96,7 +96,7 @@ typedef enum {
 } UBXValueType;
 
 /* Defines the maximum number of bytes to be used for a valset payload's configuration items (64 items max)*/
-#define MAX_VALSET_ITEM_BYTES 20
+#define MAX_VALSET_ITEM_BYTES 128
 /** A struct representing the payload of the UBX-VALSET message */
 typedef struct {
     uint8_t version;     /** The version of the message (always 0) */
@@ -323,9 +323,18 @@ static void debug_print_ubx_message(const UBXFrame *msg) {
     putchar('\n');
 }
 
+/**
+ * A function for debugging the interface with the M10SPG module, prints a number of bytes from the I2C buffer,
+ * displaying the bytes in hex and ascii. If the buffer is empty, a hex value of 0XFF is printed
+ * @param sensor The sensor whos read buffer will be dumped to stdout
+ * @param bytes The number of bytes to read from the buffer (can be greater than the number of bytes actually in the
+ * buffer)
+ * @return errno_t The status of the read operation, EOK if successful
+ */
 static errno_t debug_dump_buffer(Sensor *sensor, size_t bytes) {
     uint8_t buff[bytes];
-    m10spg_read_bytes(sensor, buff, bytes);
+    errno_t err = m10spg_read_bytes(sensor, buff, bytes);
+    return_err(err);
     for (size_t i = 0; i < bytes; i++) {
         printf("%x ", buff[i]);
     }
@@ -334,14 +343,15 @@ static errno_t debug_dump_buffer(Sensor *sensor, size_t bytes) {
         putchar(buff[i]);
     }
     putchar('\n');
+    return EOK;
 }
 
 /**
- *
- * @param sensor
- * @param max_bytes
- * @param timeout
- * @return errno_t
+ * Tries to read a UBX message from the buffer within a certain time limit, and if one exists, prints its contents
+ * @param sensor The sensor to read a UBX message from
+ * @param max_bytes The maximum number of bytes the message's payload can have
+ * @param timeout The maximum time to wait for a message in the buffer
+ * @return errno_t The status of the read operation on the buffer, EOK if successful
  */
 static errno_t debug_print_next_ubx(Sensor *sensor, size_t max_bytes, size_t timeout) {
     uint8_t buffer[max_bytes];
@@ -377,7 +387,9 @@ static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
  * @return errno_t The error status of the call. EOK if successful.
  */
 static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
-    errno_t err = EOK;
+    debug_dump_buffer(sensor, 100);
+    sleep(1);
+    /* errno_t err = EOK;
     // switch (tag) { case TAG_TIME: }
     send_ubx_message(sensor, &POLL_NAV_UTC);
     UBXUTCPayload payload;
@@ -400,7 +412,7 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
                            .tm_sec = payload.sec};
     time_t utc_time = mktime(&recv_time);
 
-    return EOK;
+    return EOK; */
 }
 
 /**
@@ -415,8 +427,27 @@ static errno_t m10spg_open(Sensor *sensor) {
 
     init_valset_message(&config_msg, RAM_LAYER);
     uint8_t config_disabled = 0;
+    // Disable NMEA output on I2C
     add_valset_item(&config_msg, (uint32_t)0x10720002, &config_disabled, UBX_TYPE_L);
-    debug_print_ubx_message(&config_msg);
+    // Disable NMEA input on I2C
+    add_valset_item(&config_msg, (uint32_t)0x10710002, &config_disabled, UBX_TYPE_L);
+
+    /*
+    // Disable periodic NMEA messages for I2C individually (test later to see if this speeds up response time)
+    // GGA Message
+    add_valset_item(&config_msg, (uint32_t)0x209100ba, &config_disabled, UBX_TYPE_U1);
+    // GLL Message
+    add_valset_item(&config_msg, (uint32_t)0x209100c9, &config_disabled, UBX_TYPE_U1);
+    // GSA Message
+    add_valset_item(&config_msg, (uint32_t)0x209100bf, &config_disabled, UBX_TYPE_U1);
+    // GSV Message
+    add_valset_item(&config_msg, (uint32_t)0x209100c4, &config_disabled, UBX_TYPE_U1);
+    // RMC Message
+    add_valset_item(&config_msg, (uint32_t)0x209100ab, &config_disabled, UBX_TYPE_U1);
+    // VTG Message
+    add_valset_item(&config_msg, (uint32_t)0x209100b0, &config_disabled, UBX_TYPE_U1);
+    */
+
     set_ubx_checksum(&config_msg);
     errno_t err = send_ubx_message(sensor, &config_msg);
     return_err(err);
