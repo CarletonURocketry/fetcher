@@ -1,6 +1,6 @@
 /**
  * @file sht41.h
- * @brief Sensor API implementation for the SHT41 temperature and humidity sensor.
+ * @brief Driver utilities for the SHT41 temperature and humidity sensor.
  */
 #include "sht41.h"
 #include "../../crc-utils/crc.h"
@@ -11,48 +11,60 @@
 #include <time.h>
 #include <unistd.h>
 
-/** Defines positions of most and least significant bytes in the sensor's response for temperatue */
-#define SHT41_T_MSB 0
-#define SHT41_T_LSB 1
-
-/** Defines positions of the most and least significant bytes in the sensor's response for humidity */
-#define SHT41_RH_MSB 3
-#define SHT41_RH_LSB 4
+/** Macro for early returning an error. */
+#define return_err(err)                                                                                                \
+    if (err != EOK) return err
 
 /** Defines the first byte to include in the CRC calculation */
 #define SHT41_T_CRC 0
 #define SHT41_RH_CRC 3
 
-/** Defines the number of bytes to be included in the CRC calculation*/
+/** Defines the number of bytes to be included in the CRC calculation. */
 #define SHT41_CRC_LEN 3
 
-/** A list of data types that can be read by the SHT41 */
-static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_HUMIDITY};
+/** Defines the number of bytes into the returned sensor data that humidity starts. */
+#define SHT41_HUMIDITY 3
+
+/** The number of microseconds to wait before reading serial number after making a read request. */
+#define SERIAL_WAIT 10
 
 /** Some of the I2C commands that can be used on the SHT41 sensor. */
-typedef enum sht41_cmd_t {
-    CMD_RESET = 0x94,          /**< Soft reset command */
-    CMD_SERIAL_NUM = 0x89,     /**< Read serial number command */
-    CMD_READ_LOW_PREC = 0xE0,  /**< Low precision read temp & humidity command*/
-    CMD_READ_MED_PREC = 0xF6,  /**< Med precision read temp & humidity command*/
-    CMD_READ_HIGH_PREC = 0xFD, /**< High precision read temp & humidity command*/
-} SHT41Cmd;
+typedef enum {
+    CMD_SOFT_RESET = 0x94,     /**< Soft reset command. */
+    CMD_READ_SERIAL = 0x89,    /**< Read serial number command. */
+    CMD_READ_LOW_PREC = 0xE0,  /**< Low precision read temp & humidity command. */
+    CMD_READ_MED_PREC = 0xF6,  /**< Med precision read temp & humidity command. */
+    CMD_READ_HIGH_PREC = 0xFD, /**< High precision read temp & humidity command. */
+    CMD_HEATER_200_1 = 0x39,   /**< Activate heater with 200mW for 1s. */
+    CMD_HEATER_200_P1 = 0x32,  /**< Activate heater with 200mW for 0.1s. */
+    CMD_HEATER_110_1 = 0x2F,   /**< Activate heater with 110mW for 1s. */
+    CMD_HEATER_110_P1 = 0x24,  /**< Activate heater with 110mW for 0.1s. */
+    CMD_HEATER_20_1 = 0x1E,    /**< Activate heater with 20mW for 1s. */
+    CMD_HEATER_20_P1 = 0x15,   /**< Activate heater with 20mW for 0.1s. */
+} sht41_cmd_e;
 
-/** Implementation of precision in sensor API for read precision. */
-static const SHT41Cmd PRECISIONS[] = {
-    [PRECISION_LOW] = CMD_READ_LOW_PREC,
-    [PRECISION_MED] = CMD_READ_MED_PREC,
-    [PRECISION_HIGH] = CMD_READ_HIGH_PREC,
-};
-
-/** Meausrement times for the various precisions, in microseconds */
+/** Measurement times for the various precisions, in microseconds */
 static const uint16_t MEASUREMENT_TIMES[] = {
-    [PRECISION_LOW] = 1600,
-    [PRECISION_MED] = 4500,
-    [PRECISION_HIGH] = 8300,
+    [SHT41_LOW_PRES] = 1600,
+    [SHT41_MED_PRES] = 4500,
+    [SHT41_HIGH_PRES] = 8300,
 };
 
-/** Initial value of the calcualted CRC */
+/** The commands for reading with a particular precision. */
+static const uint8_t PRECISION_READ[] = {
+    [SHT41_LOW_PRES] = CMD_READ_LOW_PREC,
+    [SHT41_MED_PRES] = CMD_READ_MED_PREC,
+    [SHT41_HIGH_PRES] = CMD_READ_HIGH_PREC,
+};
+
+/** The commands for heating and then performing a read. */
+static const uint8_t HEAT_CMDS[3][2] = {
+    [SHT41_WATT_20] = {[SHT41_HEAT_1S] = CMD_HEATER_20_1, [SHT41_HEAT_P1S] = CMD_HEATER_20_P1},
+    [SHT41_WATT_110] = {[SHT41_HEAT_1S] = CMD_HEATER_110_1, [SHT41_HEAT_P1S] = CMD_HEATER_110_P1},
+    [SHT41_WATT_200] = {[SHT41_HEAT_1S] = CMD_HEATER_200_1, [SHT41_HEAT_P1S] = CMD_HEATER_200_P1},
+};
+
+/** Initial value of the calculated CRC. */
 #define SHT41_CRC_INIT 0xFF
 #define SHT41_CRC_POLY 0x31
 
@@ -81,9 +93,9 @@ static const CRC8LookupTable CRC_LOOKUP = {
  * Checks if the calculated CRC for this section of data is equal to zero
  * @param start The start of the data which ends with it's own 8-bit CRC
  * @param nbytes The length of the data to be checked, including the CRC
- * @return errno_t EBADMSG
+ * @return int EBADMSG
  */
-static inline errno_t check_crc(uint8_t *buf, size_t nbytes) {
+static inline int check_crc(uint8_t *buf, size_t nbytes) {
 #ifdef SHT41_USE_CRC_LOOKUP
     // Check the CRC to make sure we're not about to read garbage
     if (calculate_crc8(buf, nbytes, &CRC_LOOKUP, SHT41_CRC_INIT) != 0) {
@@ -100,68 +112,72 @@ static inline errno_t check_crc(uint8_t *buf, size_t nbytes) {
 }
 
 /**
+ * Calculates temperature using the 16 bit word returned from the SHT41 sensor.
+ * @param data A pointer to the temperature data returned by the SHT41 starting at the beginning of the 16 bit word.
+ * @return Temperature in degrees Celsius.
+ */
+static float sht41_calculate_temp(uint8_t *data) {
+    int32_t t_ticks = (data[0] * 256 + data[1]);
+    return -45.0f + 175.0f * ((float)t_ticks / 65535.0f); // Degrees C
+}
+
+/**
+ * Calculates humidity using the 16 bit word returned from the SHT41 sensor.
+ * @param data A pointer to the humidity data returned by the SHT41 starting at the beginning of the 16 bit word.
+ * @return Relative humidity in percentage.
+ */
+static float sht41_calculate_humidity(uint8_t *data) {
+    int32_t rh_ticks = (data[0] * 256 + data[1]);
+    float humidity = -6.0f + 125.0f * ((float)rh_ticks / 65535.0f); // Degrees C
+
+    // Limit values of humidity, since values outside of 0-100 are invalid
+    if (humidity < 0) {
+        humidity = 0;
+    } else if (humidity > 100) {
+        humidity = 100;
+    }
+
+    return humidity;
+}
+
+/**
  * Reads the specified data from the SHT41.
- * @param sensor A reference to an SHT41 sensor.
- * @param tag The tag of the data type that should be read.
- * @param buf A pointer to the memory location to store the data.
- * @param nbytes The number of bytes that were written into the byte array buffer.
+ * @param loc The location of the SHT41 on the I2C bus.
+ * @param precision The precision to use when reading data.
+ * @param temperature A pointer to store the temperature in degrees Celsius.
+ * @param humidity A pointer to store the relative humidity in percentage.
  * @return Error status of reading from the sensor. EOK if successful.
  */
-static errno_t sht41_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
-    // No point calling a separate function, since the reading is so simple
-    i2c_send_t send = {.slave = sensor->loc.addr, .stop = 1, .len = 1};
+int sht41_read(SensorLocation const *loc, sht41_prec_e precision, float *temperature, float *humidity) {
+
+    i2c_send_t send = {.slave = loc->addr, .stop = 1, .len = 1};
     uint8_t send_cmd[sizeof(send) + 1];
     memcpy(send_cmd, &send, sizeof(send));
-    send_cmd[sizeof(send)] = PRECISIONS[sensor->precision];
+    send_cmd[sizeof(send)] = PRECISION_READ[precision];
 
-    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SEND, &send_cmd, sizeof(send_cmd), NULL);
-    if (err != EOK) {
-        return err;
-    };
+    int err = devctl(loc->bus, DCMD_I2C_SEND, &send_cmd, sizeof(send_cmd), NULL);
+    return_err(err);
 
-    // Wait for the measurement to take place, depends on precision
-    usleep(MEASUREMENT_TIMES[sensor->precision]);
-    i2c_recv_t read = {.slave = sensor->loc.addr, .stop = 1, .len = 6};
-    uint8_t read_cmd[sizeof(send) + 6];
+    usleep(MEASUREMENT_TIMES[precision]); // Wait for the measurement to take place, depends on precision
+
+    // Read data from sensor
+    i2c_recv_t read = {.slave = loc->addr, .stop = 1, .len = 6};
+    uint8_t read_cmd[sizeof(read) + 6];
     memcpy(read_cmd, &read, sizeof(read));
-    err = devctl(sensor->loc.bus, DCMD_I2C_RECV, &read_cmd, sizeof(read_cmd), NULL);
-    if (err != EOK) {
-        return err;
-    };
 
-    // For now, just discard one half of the measurement due to timestamping and the sensor interface
-    switch (tag) {
-    case TAG_TEMPERATURE: {
-        err = check_crc(read_cmd + sizeof(read) + SHT41_T_CRC, SHT41_CRC_LEN);
-        if (err != EOK) return err;
+    err = devctl(loc->bus, DCMD_I2C_RECV, &read_cmd, sizeof(read_cmd), NULL);
+    return_err(err);
 
-        int t_ticks = (read_cmd[sizeof(read) + SHT41_T_MSB] * 256 + read_cmd[sizeof(read) + SHT41_T_LSB]);
-        float temp = -45 + 175 * ((float)t_ticks / 65535); // Degrees C
-        memcpy(buf, &temp, sizeof(temp));
-        *nbytes = sizeof(temp);
-        break;
-    }
-    case TAG_HUMIDITY: {
-        err = check_crc(read_cmd + sizeof(read) + SHT41_RH_CRC, SHT41_CRC_LEN);
-        if (err != EOK) return err;
+    // Calculate temperature
+    err = check_crc(read_cmd + sizeof(read) + SHT41_T_CRC, SHT41_CRC_LEN);
+    return_err(err);
+    *temperature = sht41_calculate_temp(read_cmd + sizeof(read));
 
-        int rh_ticks = (read_cmd[sizeof(read) + SHT41_RH_MSB] * 256 + read_cmd[sizeof(read) + SHT41_RH_LSB]);
-        float hum = -6 + 125 * ((float)rh_ticks / 65535); // Degrees C
-        // Limit values of humidity, since values outside of 0-100
-        if (hum < 0) {
-            hum = 0;
-        } else if (hum > 100) {
-            hum = 100;
-        }
-        // Round, because sensor has accuracy of, at best, +/-1.0%
-        hum = rintf(hum);
-        memcpy(buf, &hum, sizeof(hum));
-        *nbytes = sizeof(hum);
-        break;
-    }
-    default:
-        return EINVAL;
-    }
+    // Calculate humidity
+    err = check_crc(read_cmd + sizeof(read) + SHT41_RH_CRC, SHT41_CRC_LEN);
+    return_err(err);
+    *humidity = sht41_calculate_humidity(read_cmd + sizeof(read) + SHT41_HUMIDITY);
+
     return err;
 }
 
@@ -170,38 +186,112 @@ static errno_t sht41_read(Sensor *sensor, const SensorTag tag, void *buf, size_t
  * @param loc The sensor's location on the I2C bus.
  * @return Any error from the attempted reset. EOK if successful.
  */
-static errno_t sht41_reset(SensorLocation *loc) {
-    // Reset the sensor
+int sht41_reset(SensorLocation const *loc) {
     i2c_send_t reset = {.stop = 1, .len = 1, .slave = loc->addr};
-    uint8_t reset_cmd[sizeof(i2c_send_t) + 1];
+    uint8_t reset_cmd[sizeof(reset) + 1];
     memcpy(reset_cmd, &reset, sizeof(reset));
-    reset_cmd[sizeof(reset)] = CMD_RESET;
+    reset_cmd[sizeof(reset)] = CMD_SOFT_RESET;
 
     return devctl(loc->bus, DCMD_I2C_SEND, &reset_cmd, sizeof(reset_cmd), NULL);
 }
 
 /**
- * Prepares the SHT41 for reading and initializes the sensor context with the calibration coefficients.
- * @param sensor A reference to an SHT41 sensor.
- * @return The error status of the call. EOK if successful.
+ * Read the serial number of the SHT41 sensor.
+ * @param loc The location of the SHT41 on the I2C bus.
+ * @param serial_no A pointer to the location to store the serial number.
+ * @return EOK if successful, otherwise the error that occurred.
  */
-static errno_t sht41_open(Sensor *sensor) {
-    return sht41_reset(&sensor->loc);
-    // Could read the sensor or check serial number if wanted in the future
+int sht41_serial_no(SensorLocation const *loc, uint32_t *serial_no) {
+
+    // Prepare read command
+    i2c_send_t hdr = {.stop = 1, .len = 1, .slave = loc->addr};
+    uint8_t read_cmd[sizeof(hdr) + 6];
+    memcpy(read_cmd, &hdr, sizeof(hdr));
+    read_cmd[sizeof(hdr)] = CMD_READ_SERIAL;
+
+    int err = devctl(loc->bus, DCMD_I2C_LOCK, NULL, 0, NULL); // Lock bus
+    if (err != EOK) return err;
+
+    // Prepare sensor for read
+    err = devctl(loc->bus, DCMD_I2C_SEND, read_cmd, sizeof(read_cmd), NULL);
+    if (err != EOK) goto return_defer;
+    usleep(SERIAL_WAIT);
+
+    // Receive serial number
+    i2c_recv_t rcv_hdr = {.slave = loc->addr, .len = 6, .stop = 1};
+    memcpy(read_cmd, &rcv_hdr, sizeof(rcv_hdr));
+    err = devctl(loc->bus, DCMD_I2C_RECV, read_cmd, sizeof(read_cmd), NULL);
+    if (err != EOK) goto return_defer;
+
+    // Perform CRC checks and store in result variable
+    *serial_no = 0;
+    *serial_no |= (*(read_cmd + sizeof(rcv_hdr))) << 24;
+    *serial_no |= (*(read_cmd + sizeof(rcv_hdr) + 1)) << 16;
+    err = check_crc(read_cmd + sizeof(rcv_hdr), SHT41_CRC_LEN);
+    if (err != EOK) goto return_defer;
+
+    *serial_no |= (*(read_cmd + sizeof(rcv_hdr) + 3)) << 8;
+    *serial_no |= (*(read_cmd + sizeof(rcv_hdr) + 4));
+    err = check_crc(read_cmd + sizeof(rcv_hdr) + 3, SHT41_CRC_LEN);
+    if (err != EOK) goto return_defer;
+
+return_defer:
+    devctl(loc->bus, DCMD_I2C_UNLOCK, NULL, 0, NULL); // Unlock bus
+    return err;
 }
 
 /**
- * Initializes a sensor struct with the interface to interact with the SHT41.
- * @param sensor The sensor interface to be initialized.
- * @param bus The file descriptor of the I2C bus.
- * @param addr The address of the sensor on the I2C bus.
- * @param precision The precision to read measurements with.
+ * Heats up the SHT41 sensor and then performs a high precision read of temperature and humidity.
+ * WARNING: May draw a large amount of current.
+ * @param loc The location of the SHT41 sensor on the I2C bus.
+ * @param duration The duration to heat the SHT41 sensor for.
+ * @param wattage The wattage to use when heating the SHT41 sensor.
+ * @param temperature A pointer to store the temperature in degrees Celsius.
+ * @param humidity A pointer to store the relative humidity in percentage.
+ * @return EOK if successful, otherwise returns the error that occurred.
  */
-void sht41_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
-    sensor->precision = precision;
-    sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
-    sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
-    sensor->context.size = 0;
-    sensor->open = &sht41_open;
-    sensor->read = &sht41_read;
+int sht41_heat(SensorLocation const *loc, sht41_dur_e duration, sht41_wattage_e wattage, float *temperature,
+               float *humidity) {
+
+    i2c_send_t send_hdr = {.slave = loc->addr, .stop = 1, .len = 1};
+    uint8_t heat_cmd[sizeof(send_hdr) + 1];
+    memcpy(heat_cmd, &send_hdr, sizeof(send_hdr));
+
+    // Select correct commands for argument combo
+    heat_cmd[sizeof(send_hdr)] = HEAT_CMDS[wattage][duration];
+
+    int err = devctl(loc->bus, DCMD_I2C_SEND, &heat_cmd, sizeof(heat_cmd), NULL);
+    return_err(err);
+
+    // Wait for heating duration to complete
+    switch (duration) {
+    case SHT41_HEAT_1S:
+        usleep(1000000 + MEASUREMENT_TIMES[SHT41_HIGH_PRES]);
+        break;
+    case SHT41_HEAT_P1S:
+        usleep(100000 + MEASUREMENT_TIMES[SHT41_HIGH_PRES]);
+        break;
+    }
+
+    // Read data from sensor
+    i2c_recv_t read = {.slave = loc->addr, .stop = 1, .len = 6};
+    uint8_t read_cmd[sizeof(read) + 6];
+    memcpy(read_cmd, &read, sizeof(read));
+
+    err = devctl(loc->bus, DCMD_I2C_RECV, &read_cmd, sizeof(read_cmd), NULL);
+    return_err(err);
+
+    // Calculate temperature
+    err = check_crc(read_cmd + sizeof(read) + SHT41_T_CRC, SHT41_CRC_LEN);
+    return_err(err);
+    *temperature = sht41_calculate_temp(read_cmd + sizeof(read));
+
+    // Calculate humidity
+    err = check_crc(read_cmd + sizeof(read) + SHT41_RH_CRC, SHT41_CRC_LEN);
+    return_err(err);
+    *humidity = sht41_calculate_humidity(read_cmd + sizeof(read) + SHT41_HUMIDITY);
+
+    return err;
+
+    return err;
 }
