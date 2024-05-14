@@ -35,7 +35,8 @@ void *sht41_collector(void *args) {
     };
 
     // Reset SHT41
-    errno_t err = sht41_reset(&loc);
+    int err = sht41_reset(&loc);
+    usleep(100); // Wait just a little bit
     if (err != EOK) {
         fprintf(stderr, "%s\n", strerror(err));
         return_errno(err);

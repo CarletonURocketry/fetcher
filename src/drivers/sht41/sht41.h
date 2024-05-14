@@ -27,13 +27,14 @@ typedef enum {
 
 /** The duration to heat the SHT41 sensor for. */
 typedef enum {
-    SHT41_HEAT_1s,  /**< 1 second. */
-    SHT41_HEAT_P1s, /**< 0.1 seconds. */
+    SHT41_HEAT_1S,  /**< 1 second. */
+    SHT41_HEAT_P1S, /**< 0.1 seconds. */
 } sht41_dur_e;
 
-errno_t sht41_reset(SensorLocation const *loc);
-errno_t sht41_read(SensorLocation const *loc, sht41_prec_e precision, float *temperature, float *humidity);
-errno_t sht41_serial_no(SensorLocation const *loc, uint32_t *serial_no);
-errno_t sht41_heat(SensorLocation const *loc, sht41_dur_e duration, sht41_wattage_e wattage);
+int sht41_reset(SensorLocation const *loc);
+int sht41_read(SensorLocation const *loc, sht41_prec_e precision, float *temperature, float *humidity);
+int sht41_serial_no(SensorLocation const *loc, uint32_t *serial_no);
+int sht41_heat(SensorLocation const *loc, sht41_dur_e duration, sht41_wattage_e wattage, float *temperature,
+               float *humidity);
 
 #endif // _SHT41_H_
