@@ -88,56 +88,155 @@ $(document).ready(function(){initNavTree('sht41_8h.html',''); initResizable(); }
 
 <div class="header">
   <div class="summary">
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">sht41.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="structSensor.html">Sensor</a> API implementation for the SHT41 temperature and humidity sensor.  
+<p>Driver utilities for the SHT41 temperature and humidity sensor.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="sensor__api_8h_source.html">../sensor_api.h</a>&quot;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 </div>
 <p><a href="sht41_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:adf81795989bd3f31b5b87973be2ce143"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143">sht41_prec_e</a> { <a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143a09fd02d67f9b160129b473e53bf76139">SHT41_LOW_PRES</a>
+, <a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143a451e34902facf55878dc2ced95c26ffb">SHT41_MED_PRES</a>
+, <a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143a0ac9f4647a2c840717bf40656049cea1">SHT41_HIGH_PRES</a>
+ }</td></tr>
+<tr class="separator:adf81795989bd3f31b5b87973be2ce143"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66233f8673010418619872dc555ec438"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438">sht41_wattage_e</a> { <a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438a5efb31123aabdedffcccede0d8d5972f">SHT41_WATT_200</a>
+, <a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438ab4675cb745fddd6dd8106110a8aef3d4">SHT41_WATT_110</a>
+, <a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438a99797fb0da52b3e21f733c831d5a7b6d">SHT41_WATT_20</a>
+ }</td></tr>
+<tr class="separator:a66233f8673010418619872dc555ec438"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf07070bc8a669c8d20754a4b26c20c7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sht41_8h.html#aaf07070bc8a669c8d20754a4b26c20c7">sht41_dur_e</a> { <a class="el" href="sht41_8h.html#aaf07070bc8a669c8d20754a4b26c20c7a705d51c1fc8c8298f1c380e4611bc342">SHT41_HEAT_1S</a>
+, <a class="el" href="sht41_8h.html#aaf07070bc8a669c8d20754a4b26c20c7acaa04ab551d3d22a1b657d6734b4b4d5">SHT41_HEAT_P1S</a>
+ }</td></tr>
+<tr class="separator:aaf07070bc8a669c8d20754a4b26c20c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a108c7468d960850bae88f4f4766b6961"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sht41_8h.html#a108c7468d960850bae88f4f4766b6961">sht41_init</a> (<a class="el" href="structSensor.html">Sensor</a> *sensor, const int bus, const uint8_t addr, const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision)</td></tr>
-<tr class="separator:a108c7468d960850bae88f4f4766b6961"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a415d50d649690388bc011d88f9a13f72"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sht41_8h.html#a415d50d649690388bc011d88f9a13f72">sht41_reset</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:a415d50d649690388bc011d88f9a13f72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dd22c067355670f1ed7293f5c0a9175"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sht41_8h.html#a9dd22c067355670f1ed7293f5c0a9175">sht41_read</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143">sht41_prec_e</a> precision, float *temperature, float *humidity)</td></tr>
+<tr class="separator:a9dd22c067355670f1ed7293f5c0a9175"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d9dcd41fc0aad0f331e936089d6bbb1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sht41_8h.html#a8d9dcd41fc0aad0f331e936089d6bbb1">sht41_serial_no</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, uint32_t *serial_no)</td></tr>
+<tr class="separator:a8d9dcd41fc0aad0f331e936089d6bbb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57e88db9304e65e67fb895b2162b6765"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sht41_8h.html#a57e88db9304e65e67fb895b2162b6765">sht41_heat</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="sht41_8h.html#aaf07070bc8a669c8d20754a4b26c20c7">sht41_dur_e</a> duration, <a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438">sht41_wattage_e</a> wattage, float *temperature, float *humidity)</td></tr>
+<tr class="separator:a57e88db9304e65e67fb895b2162b6765"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p ><a class="el" href="structSensor.html">Sensor</a> API implementation for the SHT41 temperature and humidity sensor. </p>
+<div class="textblock"><p >Driver utilities for the SHT41 temperature and humidity sensor. </p>
 <p >Header file containing the necessary types and function prototypes for controlling the SHT41 temperature and humidity sensor.</p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a108c7468d960850bae88f4f4766b6961" name="a108c7468d960850bae88f4f4766b6961"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a108c7468d960850bae88f4f4766b6961">&#9670;&nbsp;</a></span>sht41_init()</h2>
+<p >Define SHT41_USE_CRC_LOOKUP to use a lookup table for the sht41's CRC. CRCs on the SHT41 disabled otherwise. </p>
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="aaf07070bc8a669c8d20754a4b26c20c7" name="aaf07070bc8a669c8d20754a4b26c20c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf07070bc8a669c8d20754a4b26c20c7">&#9670;&nbsp;</a></span>sht41_dur_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void sht41_init </td>
+          <td class="memname">enum <a class="el" href="sht41_8h.html#aaf07070bc8a669c8d20754a4b26c20c7">sht41_dur_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The duration to heat the SHT41 sensor for. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aaf07070bc8a669c8d20754a4b26c20c7a705d51c1fc8c8298f1c380e4611bc342" name="aaf07070bc8a669c8d20754a4b26c20c7a705d51c1fc8c8298f1c380e4611bc342"></a>SHT41_HEAT_1S&#160;</td><td class="fielddoc"><p >1 second. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aaf07070bc8a669c8d20754a4b26c20c7acaa04ab551d3d22a1b657d6734b4b4d5" name="aaf07070bc8a669c8d20754a4b26c20c7acaa04ab551d3d22a1b657d6734b4b4d5"></a>SHT41_HEAT_P1S&#160;</td><td class="fielddoc"><p >0.1 seconds. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="adf81795989bd3f31b5b87973be2ce143" name="adf81795989bd3f31b5b87973be2ce143"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf81795989bd3f31b5b87973be2ce143">&#9670;&nbsp;</a></span>sht41_prec_e</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143">sht41_prec_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The precision to read the SHT41 sensor with. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adf81795989bd3f31b5b87973be2ce143a09fd02d67f9b160129b473e53bf76139" name="adf81795989bd3f31b5b87973be2ce143a09fd02d67f9b160129b473e53bf76139"></a>SHT41_LOW_PRES&#160;</td><td class="fielddoc"><p >Low precision. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adf81795989bd3f31b5b87973be2ce143a451e34902facf55878dc2ced95c26ffb" name="adf81795989bd3f31b5b87973be2ce143a451e34902facf55878dc2ced95c26ffb"></a>SHT41_MED_PRES&#160;</td><td class="fielddoc"><p >Medium precision. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="adf81795989bd3f31b5b87973be2ce143a0ac9f4647a2c840717bf40656049cea1" name="adf81795989bd3f31b5b87973be2ce143a0ac9f4647a2c840717bf40656049cea1"></a>SHT41_HIGH_PRES&#160;</td><td class="fielddoc"><p >High precision. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a66233f8673010418619872dc555ec438" name="a66233f8673010418619872dc555ec438"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66233f8673010418619872dc555ec438">&#9670;&nbsp;</a></span>sht41_wattage_e</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438">sht41_wattage_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The wattage to use for heating the SHT41 sensor. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a66233f8673010418619872dc555ec438a5efb31123aabdedffcccede0d8d5972f" name="a66233f8673010418619872dc555ec438a5efb31123aabdedffcccede0d8d5972f"></a>SHT41_WATT_200&#160;</td><td class="fielddoc"><p >200mW. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a66233f8673010418619872dc555ec438ab4675cb745fddd6dd8106110a8aef3d4" name="a66233f8673010418619872dc555ec438ab4675cb745fddd6dd8106110a8aef3d4"></a>SHT41_WATT_110&#160;</td><td class="fielddoc"><p >110mW. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a66233f8673010418619872dc555ec438a99797fb0da52b3e21f733c831d5a7b6d" name="a66233f8673010418619872dc555ec438a99797fb0da52b3e21f733c831d5a7b6d"></a>SHT41_WATT_20&#160;</td><td class="fielddoc"><p >20mW. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a57e88db9304e65e67fb895b2162b6765" name="a57e88db9304e65e67fb895b2162b6765"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57e88db9304e65e67fb895b2162b6765">&#9670;&nbsp;</a></span>sht41_heat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int sht41_heat </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a> *&#160;</td>
-          <td class="paramname"><em>sensor</em>, </td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>bus</em>, </td>
+          <td class="paramtype"><a class="el" href="sht41_8h.html#aaf07070bc8a669c8d20754a4b26c20c7">sht41_dur_e</a>&#160;</td>
+          <td class="paramname"><em>duration</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint8_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
+          <td class="paramtype"><a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438">sht41_wattage_e</a>&#160;</td>
+          <td class="paramname"><em>wattage</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a>&#160;</td>
-          <td class="paramname"><em>precision</em>&#160;</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>temperature</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>humidity</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -146,15 +245,128 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Initializes a sensor struct with the interface to interact with the SHT41. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Heats up the SHT41 sensor and then performs a high precision read of temperature and humidity. WARNING: May draw a large amount of current. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sensor</td><td>The sensor interface to be initialized. </td></tr>
-    <tr><td class="paramname">bus</td><td>The file descriptor of the I2C bus. </td></tr>
-    <tr><td class="paramname">addr</td><td>The address of the sensor on the I2C bus. </td></tr>
-    <tr><td class="paramname">precision</td><td>The precision to read measurements with. </td></tr>
+    <tr><td class="paramname">loc</td><td>The location of the SHT41 sensor on the I2C bus. </td></tr>
+    <tr><td class="paramname">duration</td><td>The duration to heat the SHT41 sensor for. </td></tr>
+    <tr><td class="paramname">wattage</td><td>The wattage to use when heating the SHT41 sensor. </td></tr>
+    <tr><td class="paramname">temperature</td><td>A pointer to store the temperature in degrees Celsius. </td></tr>
+    <tr><td class="paramname">humidity</td><td>A pointer to store the relative humidity in percentage. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>EOK if successful, otherwise returns the error that occurred. </dd></dl>
+
+</div>
+</div>
+<a id="a9dd22c067355670f1ed7293f5c0a9175" name="a9dd22c067355670f1ed7293f5c0a9175"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dd22c067355670f1ed7293f5c0a9175">&#9670;&nbsp;</a></span>sht41_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int sht41_read </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143">sht41_prec_e</a>&#160;</td>
+          <td class="paramname"><em>precision</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>temperature</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>humidity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads the specified data from the SHT41. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the SHT41 on the I2C bus. </td></tr>
+    <tr><td class="paramname">precision</td><td>The precision to use when reading data. </td></tr>
+    <tr><td class="paramname">temperature</td><td>A pointer to store the temperature in degrees Celsius. </td></tr>
+    <tr><td class="paramname">humidity</td><td>A pointer to store the relative humidity in percentage. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Error status of reading from the sensor. EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a415d50d649690388bc011d88f9a13f72" name="a415d50d649690388bc011d88f9a13f72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a415d50d649690388bc011d88f9a13f72">&#9670;&nbsp;</a></span>sht41_reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int sht41_reset </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Resets the SHT41 sensor </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The sensor's location on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error from the attempted reset. EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a8d9dcd41fc0aad0f331e936089d6bbb1" name="a8d9dcd41fc0aad0f331e936089d6bbb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d9dcd41fc0aad0f331e936089d6bbb1">&#9670;&nbsp;</a></span>sht41_serial_no()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int sht41_serial_no </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>serial_no</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Read the serial number of the SHT41 sensor. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the SHT41 on the I2C bus. </td></tr>
+    <tr><td class="paramname">serial_no</td><td>A pointer to the location to store the serial number. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>EOK if successful, otherwise the error that occurred. </dd></dl>
 
 </div>
 </div>

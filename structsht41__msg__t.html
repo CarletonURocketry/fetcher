@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: Globals</title>
+<title>fetcher: sht41_msg_t Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,7 +68,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('globals_enum.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structsht41__msg__t.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -86,19 +86,55 @@ $(document).ready(function(){initNavTree('globals_enum.html',''); initResizable(
 </iframe>
 </div>
 
+<div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
+  <div class="headertitle"><div class="title">sht41_msg_t Struct Reference</div></div>
+</div><!--header-->
 <div class="contents">
-&#160;<ul>
-<li>imu_reg&#160;:&#160;<a class="el" href="lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677">lsm6dso32.c</a></li>
-<li>MS5611Cmd&#160;:&#160;<a class="el" href="ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455">ms5611.c</a></li>
-<li>MS5611DReg&#160;:&#160;<a class="el" href="ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18">ms5611.c</a></li>
-<li>MS5611Resolution&#160;:&#160;<a class="el" href="ms5611_8h.html#aab94c0c8692d1629420105ba506d49eb">ms5611.h</a></li>
-<li>SensorPrecision&#160;:&#160;<a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">sensor_api.h</a></li>
-<li>SensorTag&#160;:&#160;<a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">sensor_api.h</a></li>
-<li>SensorTagDType&#160;:&#160;<a class="el" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84">sensor_api.h</a></li>
-<li>sht41_cmd_e&#160;:&#160;<a class="el" href="sht41_8c.html#ae6a9c32be046813d31c4f4ca86a38dad">sht41.c</a></li>
-<li>sht41_dur_e&#160;:&#160;<a class="el" href="sht41_8h.html#aaf07070bc8a669c8d20754a4b26c20c7">sht41.h</a></li>
-<li>sht41_prec_e&#160;:&#160;<a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143">sht41.h</a></li>
-<li>sht41_wattage_e&#160;:&#160;<a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438">sht41.h</a></li>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a868fbfb28c3d6d72bfae9e857493728f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsht41__msg__t.html#a868fbfb28c3d6d72bfae9e857493728f">type</a></td></tr>
+<tr class="separator:a868fbfb28c3d6d72bfae9e857493728f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c902b11caab833eb9a6c1b39a644f9d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsht41__msg__t.html#a2c902b11caab833eb9a6c1b39a644f9d">data</a></td></tr>
+<tr class="separator:a2c902b11caab833eb9a6c1b39a644f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Type to simplify sending measurements. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="a2c902b11caab833eb9a6c1b39a644f9d" name="a2c902b11caab833eb9a6c1b39a644f9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c902b11caab833eb9a6c1b39a644f9d">&#9670;&nbsp;</a></span>data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float sht41_msg_t::data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The measurement data. </p>
+
+</div>
+</div>
+<a id="a868fbfb28c3d6d72bfae9e857493728f" name="a868fbfb28c3d6d72bfae9e857493728f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a868fbfb28c3d6d72bfae9e857493728f">&#9670;&nbsp;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t sht41_msg_t::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The measurement type (temperature, humidity). </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/collectors/<a class="el" href="sht41__clctr_8c.html">sht41_clctr.c</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
