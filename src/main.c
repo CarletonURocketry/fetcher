@@ -105,7 +105,8 @@ int main(int argc, char **argv) {
     sensor_set_ctx(&sensors[0], ms5611_context);
     errno_t setup_res = sensor_open(sensors[0]);
     if (setup_res != EOK) {
-        fprintf(stderr, "%s\n", strerror(setup_res));
+        fprintf(stderr, "Could not open sensor with with error %d, %s (line %d)\n", setup_res, strerror(setup_res),
+                __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -116,7 +117,8 @@ int main(int argc, char **argv) {
     sensor_set_ctx(&sensors[1], sysclock_context);
     setup_res = sensor_open(sensors[1]);
     if (setup_res != EOK) {
-        fprintf(stderr, "%s\n", strerror(setup_res));
+        fprintf(stderr, "Could not open sensor with with error %d, %s (line %d)\n", setup_res, strerror(setup_res),
+                __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -127,7 +129,8 @@ int main(int argc, char **argv) {
     sensor_set_ctx(&sensors[2], sht41_context);
     setup_res = sensor_open(sensors[2]);
     if (setup_res != EOK) {
-        fprintf(stderr, "%s\n", strerror(setup_res));
+        fprintf(stderr, "Could not open sensor with with error %d, %s (line %d)\n", setup_res, strerror(setup_res),
+                __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -137,7 +140,8 @@ int main(int argc, char **argv) {
     sensor_set_ctx(&sensors[3], m10spg_context);
     setup_res = sensor_open(sensors[3]);
     if (setup_res != EOK) {
-        fprintf(stderr, "%s\n", strerror(setup_res));
+        fprintf(stderr, "Could not open sensor with with error %d, %s (line %d)\n", setup_res, strerror(setup_res),
+                __LINE__);
         exit(EXIT_FAILURE);
     }
     return EXIT_SUCCESS;
