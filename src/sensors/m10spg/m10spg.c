@@ -73,7 +73,7 @@ typedef enum {
     UBX_TYPE_U4 = 4, /** Four bytes, little endian (excluding U8 because it's not used) */
 } UBXValueType;
 
-/** A struct representing the payload of a UBX-NAV-TIMEUTC message */
+/** A struct representing the UBX-NAV-TIMEUTC (UTC Time) payload */
 typedef struct {
     uint32_t iTOW;
     uint32_t tAcc;
@@ -90,7 +90,7 @@ typedef struct {
 /** Max bytes to be used for valset payload items (limit of 64 items per message) */
 #define MAX_VALSET_ITEM_BYTES 128
 
-/** A struct representing the payload of the UBX-VALSET message */
+/** A struct representing the UBX-VALSET (set configuration) payload */
 typedef struct {
     uint8_t version;     /** The version of the message (always 0) */
     uint8_t layer;       /** The layer of this config, one of the UBXConfigLayer (typed to ensure one byte) */
@@ -98,13 +98,14 @@ typedef struct {
     uint8_t config_items[MAX_VALSET_ITEM_BYTES]; /** An array of keys and value pairs */
 } UBXValsetPayload;
 
+/** A struct representing the UBX-SEC-UNIQID (unique chip id) payload */
 typedef struct {
     uint8_t version;
     uint8_t reserved[3];
     uint8_t unique_id[6];
-} UBXSecUniqidPayload;
+} UBXUniqIDPayload;
 
-/** A struct representing the navigation status of the reciever */
+/** A struct representing the UBX-NAV-STAT (navigation status) payload */
 typedef struct {
     uint32_t iTOW;   /** The GPS time of week of the navigation epoch that created this payload */
     uint8_t gpsFix;  /** The type of fix */
@@ -114,6 +115,12 @@ typedef struct {
     uint32_t ttff;   /** The time to first fix, in milliseconds */
     uint32_t msss;   /** Milliseconds since startup */
 } UBXNavStatusPayload;
+
+/** A struct representing the UBX-ACK-ACK/UBX-ACK-NACK (acknowledgement) payload */
+typedef struct {
+    uint8_t clsId; /** The class ID of the acknowledged or not acknowledged message */
+    uint8_t msgId; /** The message ID of the acknowledged or not acknowledged message */
+} UBXAckPayload;
 
 /** Pre-built frame for polling the UBX-MON-VER message */
 static const UBXFrame POLL_MON_VER = {
