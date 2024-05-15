@@ -1,15 +1,11 @@
 #include "eeprom.h"
+#include "sensor_api.h"
 #include <hw/i2c.h>
 #include <string.h>
+#include <time.h>
 
 /** The address of the EEPROM on the I2C bus. */
 #define EEPROM_ADDR 0x50
-
-/** Address for reading the EEPROM. */
-#define EEPROM_READ (EEPROM_ADDR | 0x1)
-
-/** Address for writing to the EEPROM. */
-#define EEPROM_WRITE (EEPROM_ADDR & 0xFE)
 
 /** Defines a small buffer for the dummy write request. */
 struct dummy_write_t {
@@ -27,15 +23,15 @@ struct dummy_write_t {
 errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
 
     // Dummy write to start from address
-    static struct dummy_write_t dummy_write = {
+    struct dummy_write_t dummy_write = {
         .header =
             {
                 .stop = 0,
                 .len = 1,
-                .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_WRITE},
+                .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_ADDR},
             },
+        .byte_address = addr,
     };
-    dummy_write.byte_address = addr;
 
     errno_t err = devctl(bus, DCMD_I2C_SEND, &dummy_write, sizeof(dummy_write), NULL);
     if (err != EOK) return err;
@@ -45,12 +41,10 @@ errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
         .stop = 1,
         .send_len = 0,
         .recv_len = n,
-        .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_WRITE},
+        .slave = {.fmt = I2C_ADDRFMT_7BIT, .addr = EEPROM_ADDR},
     };
     memcpy(buf, &read_header, sizeof(read_header));
-    err = devctl(bus, DCMD_I2C_SENDRECV, buf, n + sizeof(read_header), NULL);
-    if (err != EOK) return err;
-    return EOK;
+    return devctl(bus, DCMD_I2C_SENDRECV, buf, n + sizeof(read_header), NULL);
 }
 
 /**
@@ -59,7 +53,8 @@ errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
  * @return A pointer to the array of bytes containing the EEPROM contents.
  */
 const uint8_t *eeprom_contents(int bus) {
-    static uint8_t contents[EEPROM_CAP + 20];
+    static uint8_t contents[EEPROM_CAP + 20]; // +20 for I2C header
     eeprom_read(0, bus, contents, EEPROM_CAP);
+    contents[EEPROM_CAP + 19] = '\0';
     return contents + 20;
 }
