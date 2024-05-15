@@ -5,6 +5,9 @@
  * Contains the building blocks of UBX messages, such as the message structure, data types, and
  */
 
+#ifndef _UBX_DEF_
+#define _UBX_DEF_
+
 #include <stdint.h>
 
 /** UBX header for all UBX protocol messages sent to the reciever */
@@ -83,11 +86,12 @@ typedef struct {
 /** A struct representing the UBX-NAV-POSLLH (position and height) payload */
 typedef struct {
     uint32_t iTOW;  /** The GPS time of week of the navigation epoch that created this payload */
-    int32_t lon;    /** Longitude */
-    int32_t lat;    /** Latitude */
-    int32_t height; /** Height above ellipsoid */
-    int32_t hMSL;   /** Height above mean sea level */
-    uint32_t hAcc;  /** Horizontal accuracy measurement */
+    int32_t lon;    /** Longitude, in 0.0000001 * degrees */
+    int32_t lat;    /** Latitude, in 0.0000001 * degrees */
+    int32_t height; /** Height above ellipsoid in millimeters */
+    int32_t hMSL;   /** Height above mean sea level in millimeters */
+    uint32_t hAcc;  /** Horizontal accuracy measurement in millimeters */
+    uint32_t vAcc;  /** Vertical accuracy measurement in millimeters */
 } UBXNavPositionPayload;
 
 typedef struct {
@@ -107,3 +111,5 @@ typedef struct {
     uint8_t clsId; /** The class ID of the acknowledged or not acknowledged message */
     uint8_t msgId; /** The message ID of the acknowledged or not acknowledged message */
 } UBXAckPayload;
+
+#endif // _UBX_DEF_
