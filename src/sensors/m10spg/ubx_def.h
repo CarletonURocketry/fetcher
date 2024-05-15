@@ -1,0 +1,109 @@
+/**
+ * @file ubx_def.c
+ * @brief Definitions (structures and types) for the UBX message protocol
+ *
+ * Contains the building blocks of UBX messages, such as the message structure, data types, and
+ */
+
+#include <stdint.h>
+
+/** UBX header for all UBX protocol messages sent to the reciever */
+typedef struct {
+    uint8_t class;
+    uint8_t id;
+    uint16_t length;
+} UBXHeader;
+
+/** UBX protcol style message, can be sent directly to the reciever */
+typedef struct {
+    UBXHeader header;   /** A UBX protocol header*/
+    void *payload;      /** The payload of the message (length is stored in the header) */
+    uint8_t checksum_a; /** The first checksum byte of the message, including all fields past the synch characters */
+    uint8_t checksum_b; /** The second checksum byte */
+} UBXFrame;
+
+/** A struct representing the configuration layer selected in a configuration message (valset or valget) */
+typedef enum {
+    RAM_LAYER = 0x01,   /** The current configuration - cleared if the reciever enters power saving mode */
+    BBR_LAYER = 0x02,   /** The battery backed memory configuration - not cleared unless the backup battery removed */
+    FLASH_LAYER = 0x04, /** The flash configuration - does not exist on the M10 MAX */
+} UBXConfigLayer;
+
+/** An enum representing the different sizes of values that a configuration message can contain */
+typedef enum {
+    UBX_TYPE_L = 1,  /** One bit, occupies one byte */
+    UBX_TYPE_U1 = 1, /** One byte */
+    UBX_TYPE_U2 = 2, /** Two bytes, little endian */
+    UBX_TYPE_U4 = 4, /** Four bytes, little endian (excluding U8 because it's not used) */
+} UBXValueType;
+
+/** A struct representing the UBX-NAV-TIMEUTC (UTC Time) payload */
+typedef struct {
+    uint32_t iTOW;
+    uint32_t tAcc;
+    int32_t nano;
+    uint16_t year;
+    uint8_t month;
+    uint8_t day;
+    uint8_t hour;
+    uint8_t min;
+    uint8_t sec;
+    uint8_t flags;
+} UBXUTCPayload;
+
+/** Max bytes to be used for valset payload items (limit of 64 items per message) */
+#define MAX_VALSET_ITEM_BYTES 128
+
+/** A struct representing the UBX-VALSET (set configuration) payload */
+typedef struct {
+    uint8_t version;     /** The version of the message (always 0) */
+    uint8_t layer;       /** The layer of this config, one of the UBXConfigLayer (typed to ensure one byte) */
+    uint8_t reserved[2]; /** Reserved bytes */
+    uint8_t config_items[MAX_VALSET_ITEM_BYTES]; /** An array of keys and value pairs */
+} UBXValsetPayload;
+
+/** A struct representing the UBX-SEC-UNIQID (unique chip id) payload */
+typedef struct {
+    uint8_t version;
+    uint8_t reserved[3];
+    uint8_t unique_id[6];
+} UBXUniqIDPayload;
+
+/** A struct representing the UBX-NAV-STAT (navigation status) payload */
+typedef struct {
+    uint32_t iTOW;   /** The GPS time of week of the navigation epoch that created this payload */
+    uint8_t gpsFix;  /** The type of fix */
+    uint8_t flags;   /** Navigation status flags */
+    uint8_t fixStat; /** The fix status */
+    uint8_t flags2;  /** More flags about navigation output */
+    uint32_t ttff;   /** The time to first fix, in milliseconds */
+    uint32_t msss;   /** Milliseconds since startup */
+} UBXNavStatusPayload;
+
+/** A struct representing the UBX-NAV-POSLLH (position and height) payload */
+typedef struct {
+    uint32_t iTOW;  /** The GPS time of week of the navigation epoch that created this payload */
+    int32_t lon;    /** Longitude */
+    int32_t lat;    /** Latitude */
+    int32_t height; /** Height above ellipsoid */
+    int32_t hMSL;   /** Height above mean sea level */
+    uint32_t hAcc;  /** Horizontal accuracy measurement */
+} UBXNavPositionPayload;
+
+typedef struct {
+    uint32_t iTOW;   /** The GPS time of week of the navigation epoch that created this payload */
+    int32_t velN;    /** North velocity component, in cm/s */
+    int32_t velE;    /** East velocity component, in cm/s */
+    int32_t velD;    /** Down velocity component, in cm/s */
+    uint32_t speed;  /** Speed (3-D), in cm/s */
+    uint32_t gSpeed; /** Ground speed (2-D), in cm/s */
+    int32_t heading; /** Heading of motion (2-D), in 0.00001 * degrees */
+    uint32_t sAcc;   /** Speed accuracy estimate, in cm/s */
+    uint32_t cAcc;   /** Course/heading accuracy estimate, in 0.00001 * degrees */
+} UBXNavVelocityPayload;
+
+/** A struct representing the UBX-ACK-ACK/UBX-ACK-NACK (acknowledgement) payload */
+typedef struct {
+    uint8_t clsId; /** The class ID of the acknowledged or not acknowledged message */
+    uint8_t msgId; /** The message ID of the acknowledged or not acknowledged message */
+} UBXAckPayload;

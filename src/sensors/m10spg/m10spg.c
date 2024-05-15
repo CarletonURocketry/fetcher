@@ -7,6 +7,7 @@
 
 #include "m10spg.h"
 #include "../sensor_api.h"
+#include "ubx_def.h"
 #include <errno.h>
 #include <hw/i2c.h>
 #include <stdint.h>
@@ -25,102 +26,13 @@
 /** The second preamble synchronization header. */
 #define SYNC_TWO 0x62
 
-/** How long the recieve command for UBX messages should wait between trying to read a message*/
+/** How long the recieve command for UBX messages should wait between trying to read a message, in usec */
 #define RECV_SLEEP_TIME 10000
 
 /** How long m10spg_read should wait for a response in seconds */
-#define DEFAULT_TIMEOUT 10
+#define DEFAULT_TIMEOUT 1
 
 static const SensorTag TAGS[] = {TAG_TIME};
-
-/** UBX commands to be used on the GPS sensor */
-typedef enum ubx_nav_protocol {
-    UBX_NAV_POSLLH = 0x02,   /**< Fetches a 28 byte long block containing geodetic positioning information. */
-    UBX_NAV_DOP = 0x04,      /**< Fetches an 18 byte long block containing dilution of precision values */
-    UBX_NAV_ODO = 0x09,      /**< Fetches a 20 byte long block containing ground distance information */
-    UBX_NAV_RESETODO = 0x10, /**< Resets the odometer. */
-    UBX_NAV_TIMEUTC = 0x21,  /**< Fetches a 20 byte long block containing UTC time information. */
-    UBX_NAV_SAT = 0x35 /**<Fetches a 8 + #Satellites in view * 12 byte long block containing satellite information. */
-} UBXNavProtocolCmds;
-
-/** UBX header for all UBX protocol messages sent to the reciever */
-typedef struct {
-    uint8_t class;
-    uint8_t id;
-    uint16_t length;
-} UBXHeader;
-
-/** UBX protcol style message, can be sent directly to the reciever */
-typedef struct {
-    UBXHeader header;   /** A UBX protocol header*/
-    void *payload;      /** The payload of the message (length is stored in the header) */
-    uint8_t checksum_a; /** The first checksum byte of the message, including all fields past the synch characters */
-    uint8_t checksum_b; /** The second checksum byte */
-} UBXFrame;
-
-/** A struct representing the configuration layer selected in a configuration message (valset or valget) */
-typedef enum {
-    RAM_LAYER = 0x01,   /** The current configuration - cleared if the reciever enters power saving mode */
-    BBR_LAYER = 0x02,   /** The battery backed memory configuration - not cleared unless the backup battery removed */
-    FLASH_LAYER = 0x04, /** The flash configuration - does not exist on the M10 MAX */
-} UBXConfigLayer;
-
-/** An enum representing the different sizes of values that a configuration message can contain */
-typedef enum {
-    UBX_TYPE_L = 1,  /** One bit, occupies one byte */
-    UBX_TYPE_U1 = 1, /** One byte */
-    UBX_TYPE_U2 = 2, /** Two bytes, little endian */
-    UBX_TYPE_U4 = 4, /** Four bytes, little endian (excluding U8 because it's not used) */
-} UBXValueType;
-
-/** A struct representing the UBX-NAV-TIMEUTC (UTC Time) payload */
-typedef struct {
-    uint32_t iTOW;
-    uint32_t tAcc;
-    int32_t nano;
-    uint16_t year;
-    uint8_t month;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t min;
-    uint8_t sec;
-    uint8_t flags;
-} UBXUTCPayload;
-
-/** Max bytes to be used for valset payload items (limit of 64 items per message) */
-#define MAX_VALSET_ITEM_BYTES 128
-
-/** A struct representing the UBX-VALSET (set configuration) payload */
-typedef struct {
-    uint8_t version;     /** The version of the message (always 0) */
-    uint8_t layer;       /** The layer of this config, one of the UBXConfigLayer (typed to ensure one byte) */
-    uint8_t reserved[2]; /** Reserved bytes */
-    uint8_t config_items[MAX_VALSET_ITEM_BYTES]; /** An array of keys and value pairs */
-} UBXValsetPayload;
-
-/** A struct representing the UBX-SEC-UNIQID (unique chip id) payload */
-typedef struct {
-    uint8_t version;
-    uint8_t reserved[3];
-    uint8_t unique_id[6];
-} UBXUniqIDPayload;
-
-/** A struct representing the UBX-NAV-STAT (navigation status) payload */
-typedef struct {
-    uint32_t iTOW;   /** The GPS time of week of the navigation epoch that created this payload */
-    uint8_t gpsFix;  /** The type of fix */
-    uint8_t flags;   /** Navigation status flags */
-    uint8_t fixStat; /** The fix status */
-    uint8_t flags2;  /** More flags about navigation output */
-    uint32_t ttff;   /** The time to first fix, in milliseconds */
-    uint32_t msss;   /** Milliseconds since startup */
-} UBXNavStatusPayload;
-
-/** A struct representing the UBX-ACK-ACK/UBX-ACK-NACK (acknowledgement) payload */
-typedef struct {
-    uint8_t clsId; /** The class ID of the acknowledged or not acknowledged message */
-    uint8_t msgId; /** The message ID of the acknowledged or not acknowledged message */
-} UBXAckPayload;
 
 /** Pre-built frame for polling the UBX-MON-VER message */
 static const UBXFrame POLL_MON_VER = {
@@ -404,7 +316,6 @@ static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
  * @return errno_t The error status of the call. EOK if successful.
  */
 static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
-
     UBXNavStatusPayload payload = {};
     UBXFrame msg;
     msg.payload = &payload;
@@ -413,37 +324,12 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
     msg.header.length = 0;
     set_ubx_checksum(&msg);
 
+    debug_print_ubx_message(&msg);
     errno_t err = send_ubx_message(sensor, &msg);
     return_err(err);
     err = recv_ubx_message(sensor, &msg, sizeof(UBXNavStatusPayload), 2);
     return_err(err);
-
     debug_print_ubx_message(&msg);
-
-    /* errno_t err = EOK;
-    // switch (tag) { case TAG_TIME: }
-    send_ubx_message(sensor, &POLL_NAV_UTC);
-    UBXUTCPayload payload;
-    UBXFrame recieved;
-    recieved.payload = &payload;
-    err = recv_ubx_message(sensor, &recieved, sizeof(payload), DEFAULT_TIMEOUT);
-    return_err(err);
-
-    // May be invalid
-    if (payload.flags & 0x04) {
-        printf("Invalid payload\n");
-        return EINVAL;
-    }
-    printf("GPS UTC: %d, %d, %d, %d, %d\n", payload.year, payload.day, payload.hour, payload.min, payload.sec);
-    struct tm recv_time = {.tm_year = 1900 - payload.year,
-                           .tm_mon = payload.month - 1,
-                           .tm_mday = payload.day,
-                           .tm_hour = payload.hour,
-                           .tm_min = payload.min,
-                           .tm_sec = payload.sec};
-    time_t utc_time = mktime(&recv_time);
-
-    return EOK; */
 }
 
 /**
