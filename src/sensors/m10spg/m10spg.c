@@ -452,38 +452,37 @@ static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_
  * @return errno_t The error status of the call. EOK if successful.
  */
 static errno_t m10spg_open(Sensor *sensor) {
-    UBXFrame config_msg;
-    UBXValsetPayload payload;
-    config_msg.payload = &payload;
+    UBXFrame msg;
+    UBXValsetPayload valset_payload;
+    UBXAckPayload ack_payload;
 
-    init_valset_message(&config_msg, RAM_LAYER);
+    // Configure the chip
+    msg.payload = &valset_payload;
+    init_valset_message(&msg, RAM_LAYER);
     uint8_t config_disabled = 0;
     // Disable NMEA output on I2C
-    add_valset_item(&config_msg, (uint32_t)0x10720002, &config_disabled, UBX_TYPE_L);
+    add_valset_item(&msg, (uint32_t)0x10720002, &config_disabled, UBX_TYPE_L);
     // Disable NMEA input on I2C
-    add_valset_item(&config_msg, (uint32_t)0x10710002, &config_disabled, UBX_TYPE_L);
+    add_valset_item(&msg, (uint32_t)0x10710002, &config_disabled, UBX_TYPE_L);
+    set_ubx_checksum(&msg);
 
-    /*
-    // Disable periodic NMEA messages for I2C individually (test later to see if this speeds up response time)
-    // GGA Message
-    add_valset_item(&config_msg, (uint32_t)0x209100ba, &config_disabled, UBX_TYPE_U1);
-    // GLL Message
-    add_valset_item(&config_msg, (uint32_t)0x209100c9, &config_disabled, UBX_TYPE_U1);
-    // GSA Message
-    add_valset_item(&config_msg, (uint32_t)0x209100bf, &config_disabled, UBX_TYPE_U1);
-    // GSV Message
-    add_valset_item(&config_msg, (uint32_t)0x209100c4, &config_disabled, UBX_TYPE_U1);
-    // RMC Message
-    add_valset_item(&config_msg, (uint32_t)0x209100ab, &config_disabled, UBX_TYPE_U1);
-    // VTG Message
-    add_valset_item(&config_msg, (uint32_t)0x209100b0, &config_disabled, UBX_TYPE_U1);
-    */
-
-    set_ubx_checksum(&config_msg);
-    errno_t err = send_ubx_message(sensor, &config_msg);
+    errno_t err = send_ubx_message(sensor, &msg);
     return_err(err);
-    // debug_dump_buffer(sensor, 300);
-    return debug_print_next_ubx(sensor, 300, 10);
+
+    // Check if configuration was successful
+    msg.payload = &ack_payload;
+    err = recv_ubx_message(sensor, &msg, sizeof(ack_payload), 1);
+    return_err(err);
+    if (msg.header.class == 0x05) {
+        if (msg.header.id == 0x01) {
+            return EOK;
+        } else if (msg.header.id == 0x00) {
+            // Valset was not successful, check interface manual for possible reasons
+            return EINVAL;
+        }
+    }
+    // Some other response interrupted our exchange
+    return EINTR;
 }
 
 /**
