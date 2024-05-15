@@ -36,11 +36,23 @@ static const SensorTag TAGS[] = {TAG_TIME};
 
 /** Pre-built frame for polling the UBX-MON-VER message */
 static const UBXFrame POLL_MON_VER = {
-    .header = {.class = 0x0A, .id = 0x04, .length = 0}, .checksum_a = 0x0E, .checksum_b = 0x34};
+    .header = {.class = 0x0A, .id = 0x04, .length = 0x00}, .checksum_a = 0x0E, .checksum_b = 0x34};
 
 /** Pre-built frame for polling the UBX-NAV-UTC message */
 static const UBXFrame POLL_NAV_UTC = {
-    .header = {.class = 0x01, .id = 0x21, .length = 0}, .checksum_a = 0x22, .checksum_b = 0x67};
+    .header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67};
+
+/** Pre-built frame for polling the UBX-NAV-STAT message */
+static const UBXFrame POLL_NAV_STAT = {
+    .header = {.class = 0x01, .id = 0x03, .length = 0x00}, .checksum_a = 0x04, .checksum_b = 0x0d};
+
+/** Pre-built frame for polling the UBX-NAV-POSLLH message */
+static const UBXFrame POLL_NAV_POSLLH = {
+    .header = {.class = 0x01, .id = 0x02, .length = 0x00}, .checksum_a = 0x03, .checksum_b = 0x0a};
+
+/** Pre-built frame for polling the UBX-NAV-VELNED message */
+static const UBXFrame POLL_NAV_VELNED = {
+    .header = {.class = 0x01, .id = 0x12, .length = 0x00}, .checksum_a = 0x13, .checksum_b = 0x3a};
 
 /**
  * Reads a certain number of bytes into the specified buffer
@@ -260,15 +272,15 @@ static errno_t send_ubx_message(Sensor *sensor, const UBXFrame *msg) {
 }
 
 /**
- * Prints a populated message structure to standard output, as both hex and ascii
- * @param msg The message to print. Prints the fields as hexidecimal
+ * Prints a populated message structure to standard output, which is useful when creating a pre-built message
+ * @param msg The message to print. Prints the fields as hexidecimal and ascii
  */
 static void debug_print_ubx_message(const UBXFrame *msg) {
-    printf("Class: %x, ID: %x, Length: %x, Payload: ", msg->header.class, msg->header.id, msg->header.length);
+    printf("Class: %x, ID: %x, Length: %x, Payload:", msg->header.class, msg->header.id, msg->header.length);
     for (uint8_t *byte = msg->payload; byte < (uint8_t *)msg->payload + msg->header.length; byte++) {
-        printf("%x ", *byte);
+        printf(" %x", *byte);
     }
-    putchar('\n');
+    printf(", Checksum: %x %x\n", msg->checksum_a, msg->checksum_b);
     for (uint8_t *byte = msg->payload; byte < (uint8_t *)msg->payload + msg->header.length; byte++) {
         putchar(*byte);
     }
@@ -315,22 +327,7 @@ static errno_t m10spg_write(Sensor *sensor, void *buf, size_t nbytes) {
  * @param nbytes The number of bytes to read into the buffer
  * @return errno_t The error status of the call. EOK if successful.
  */
-static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
-    UBXNavStatusPayload payload = {};
-    UBXFrame msg;
-    msg.payload = &payload;
-    msg.header.class = 0x01;
-    msg.header.id = 0x03;
-    msg.header.length = 0;
-    set_ubx_checksum(&msg);
-
-    debug_print_ubx_message(&msg);
-    errno_t err = send_ubx_message(sensor, &msg);
-    return_err(err);
-    err = recv_ubx_message(sensor, &msg, sizeof(UBXNavStatusPayload), 2);
-    return_err(err);
-    debug_print_ubx_message(&msg);
-}
+static errno_t m10spg_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) { return EOK; }
 
 /**
  * Prepares the M10SPG for reading.
