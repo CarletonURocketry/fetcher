@@ -16,9 +16,10 @@ typedef enum {
     UBX_NAV_UTC,
     UBX_NAV_POSLLH,
     UBX_NAV_VELNED,
+    UBX_NAV_STAT,
 } M10spgCmd;
 
-errno_t m10spg_open(const SensorLocation *loc);
-errno_t m10spg_read(const SensorLocation *loc, M10spgCmd command, void *response, size_t size);
+int m10spg_open(const SensorLocation *loc);
+int m10spg_read(const SensorLocation *loc, M10spgCmd command, void *response, size_t size);
 
 #endif // _MAXM10S_
