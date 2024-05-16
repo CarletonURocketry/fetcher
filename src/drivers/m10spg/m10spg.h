@@ -11,6 +11,14 @@
 #include "../sensor_api.h"
 #include <stdint.h>
 
-void m10spg_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision);
+/** An enum representing the commands that can be used for polling m10spg data */
+typedef enum {
+    UBX_NAV_UTC,
+    UBX_NAV_POSLLH,
+    UBX_NAV_VELNED,
+} M10spgCmd;
+
+errno_t m10spg_open(const SensorLocation *loc);
+errno_t m10spg_read(const SensorLocation *loc, M10spgCmd command, void *response, size_t size);
 
 #endif // _MAXM10S_

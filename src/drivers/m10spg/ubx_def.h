@@ -94,6 +94,7 @@ typedef struct {
     uint32_t vAcc;  /** Vertical accuracy measurement in millimeters */
 } UBXNavPositionPayload;
 
+/** A struct representing the UBX-NAV-VELNED (velocity) payload */
 typedef struct {
     uint32_t iTOW;   /** The GPS time of week of the navigation epoch that created this payload */
     int32_t velN;    /** North velocity component, in cm/s */
