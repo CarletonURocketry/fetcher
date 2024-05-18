@@ -54,7 +54,6 @@ void *ms5611_collector(void *args) {
         fprintf(stderr, "MS5611 failed to read ground pressure: %s\n", strerror(err));
         return_errno(err);
     }
-    printf("GROUND PRESSURE: %f\n", ctx.ground_pressure);
 
     // Data storage
     struct ms5611_message measurement;
