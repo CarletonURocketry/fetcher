@@ -10,10 +10,8 @@ DESCRIPTION:
     over stdout.
 
 SYNTAX:
-    fetcher [-e file -o file]
+    fetcher [-o file]
 
 OPTIONS:
-    -e file      Causes fetcher to run in endless mode (constantly re-reads the
-                 file it's provided).
     -o file      Provides an output file for fetcher to write sensor data. If
                  none provided, the stdout is used.

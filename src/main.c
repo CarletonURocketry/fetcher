@@ -40,9 +40,6 @@ static pthread_t collector_threads[MAX_SENSORS];
 /** Stores the collector arguments of all the collector threads. */
 static collector_args_t collector_args[MAX_SENSORS];
 
-/** Flag to indicate reading from file in endless mode for debugging. */
-static bool endless = false;
-
 /** Name of file to read from, if one is provided. */
 static char *filename = NULL;
 
@@ -118,12 +115,8 @@ int main(int argc, char **argv) {
     opterr = 0;
 
     /* Get command line options. */
-    while ((c = getopt(argc, argv, ":e:o:")) != -1) {
+    while ((c = getopt(argc, argv, ":o:")) != -1) {
         switch (c) {
-        case 'e':
-            endless = true;
-            filename = optarg;
-            break;
         case 'o':
             outfile = optarg;
             break;
@@ -228,7 +221,7 @@ int main(int argc, char **argv) {
     err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, NULL);
 
     /* Constantly receive from sensors on message queue and print data. */
-    while (!endless) {
+    while (1) {
         if (mq_receive(sensor_q, buffer, sensor_q_attr.mq_msgsize, NULL) == -1) {
             // Handle error without exiting
             fprintf(stderr, "Failed to receive message on queue '%s': %s\n", SENSOR_QUEUE, strerror(errno));
@@ -237,32 +230,6 @@ int main(int argc, char **argv) {
 
         // Successfully received data, print it to output stream
         sensor_write_data(stream, buffer[0], &buffer[1]);
-    }
-
-    // Only read from a file if in endless mode
-    if (endless) {
-
-        /* Open file for reading. */
-        FILE *f = fopen(filename, "r");
-        if (f == NULL) {
-            fprintf(stderr, "File '%s' cannot be opened.\n", filename);
-            exit(EXIT_FAILURE);
-        }
-
-        /* Loop over file to get data. */
-        for (;;) {
-            size_t items_read = fread(&buffer, sizeof(uint8_t), BUFFER_SIZE, f);
-            fwrite(&buffer, sizeof(uint8_t), items_read, stdout);
-
-            // In endless mode, go back to the file start when we reach the end of the file
-            if (feof(f)) {
-                if (endless) {
-                    rewind(f);
-                } else {
-                    return 0; // Otherwise complete
-                }
-            }
-        }
     }
 
     /* Wait for collectors to terminate before terminating. */
