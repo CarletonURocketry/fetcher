@@ -24,7 +24,7 @@ typedef struct {
     float z;
 } vec3d_t;
 
-/** Describes what data type the sensor is able to read. */
+/** Describes possible data types that fetcher is capable of producing. */
 typedef enum {
     TAG_TEMPERATURE = 0,      /**< Temperature in degrees Celsius */
     TAG_PRESSURE = 1,         /**< Pressure in kilo Pascals */
