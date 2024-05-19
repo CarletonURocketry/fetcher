@@ -34,20 +34,17 @@
 /** The maximum number of sensors that fetcher can support. */
 #define MAX_SENSORS 8
 
+/** Whether or not to print data to stdout. */
+bool print_output = false;
+
 /** Stores the thread IDs of all the collector threads. */
 static pthread_t collector_threads[MAX_SENSORS];
 
 /** Stores the collector arguments of all the collector threads. */
 static collector_args_t collector_args[MAX_SENSORS];
 
-/** Name of file to read from, if one is provided. */
-static char *filename = NULL;
-
-/** Name of file to write to, if one is provided. */
-static char *outfile = NULL;
-
-/** Buffer for reading data. */
-static char buffer[BUFFER_SIZE];
+/** Buffer for reading sensor messages when print option is selected. */
+uint8_t buffer[BUFFER_SIZE];
 
 /**
  * Reads the sensor name from the board ID into a new buffer.
@@ -115,10 +112,10 @@ int main(int argc, char **argv) {
     opterr = 0;
 
     /* Get command line options. */
-    while ((c = getopt(argc, argv, ":o:")) != -1) {
+    while ((c = getopt(argc, argv, ":p")) != -1) {
         switch (c) {
-        case 'o':
-            outfile = optarg;
+        case 'p':
+            print_output = true;
             break;
         case ':':
             fprintf(stderr, "Option -%c requires an argument.\n", optopt);
@@ -132,22 +129,19 @@ int main(int argc, char **argv) {
         }
     }
 
-    /** Decide on output stream. */
-    FILE *stream = stdout;
-    if (outfile != NULL) {
-        stream = fopen(outfile, "w");
-        if (stream == NULL) {
-            fprintf(stderr, "Could not open file '%s' for reading.\n", outfile);
-            exit(EXIT_FAILURE);
-        }
-    }
-
     /*
      * Open/create the message queue.
      * Main thread can only read incoming messages from sensors.
      * Other threads (collectors) can only write.
      */
-    mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, NULL);
+    struct mq_attr q_attr = {
+        .mq_flags = 0,
+        .mq_maxmsg = 30,
+        .mq_msgsize = 50,
+        .mq_recvwait = 1,
+        .mq_sendwait = 1,
+    };
+    mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, &q_attr);
     if (sensor_q == -1) {
         fprintf(stderr, "Could not create internal queue '%s' with error: '%s'\n", SENSOR_QUEUE, strerror(errno));
         exit(EXIT_FAILURE);
@@ -221,15 +215,15 @@ int main(int argc, char **argv) {
     err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, NULL);
 
     /* Constantly receive from sensors on message queue and print data. */
-    while (1) {
-        if (mq_receive(sensor_q, buffer, sensor_q_attr.mq_msgsize, NULL) == -1) {
+    while (print_output) {
+        if (mq_receive(sensor_q, (char *)buffer, sensor_q_attr.mq_msgsize, NULL) == -1) {
             // Handle error without exiting
             fprintf(stderr, "Failed to receive message on queue '%s': %s\n", SENSOR_QUEUE, strerror(errno));
             continue;
         }
 
         // Successfully received data, print it to output stream
-        sensor_write_data(stream, buffer[0], &buffer[1]);
+        sensor_write_data(stdout, buffer[0], &buffer[1]);
     }
 
     /* Wait for collectors to terminate before terminating. */

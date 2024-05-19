@@ -10,8 +10,9 @@ DESCRIPTION:
     over stdout.
 
 SYNTAX:
-    fetcher [-o file]
+    fetcher
 
 OPTIONS:
-    -o file      Provides an output file for fetcher to write sensor data. If
-                 none provided, the stdout is used.
+    -p           If this flag is passed, fetcher will print its sensor data to
+                 stdout. Enabling this flag will take messages off the output
+                 message queue.
