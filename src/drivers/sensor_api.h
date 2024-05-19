@@ -14,6 +14,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define EOK 0   // Standard error code for success (no error)
+
 /** Type for a 3 dimensional vector with x, y, z components. */
 typedef struct {
     /** X component. */

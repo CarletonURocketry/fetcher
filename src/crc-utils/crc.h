@@ -8,6 +8,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define EOK 0   // Standard error code for success (no error)
+
 /** Structure that contains information required for a CRC-8 lookup table */
 typedef struct crc8_lookup_t {
     uint8_t table[256];

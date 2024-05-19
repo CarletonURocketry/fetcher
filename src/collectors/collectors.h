@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define EOK 0   // Standard error code for success (no error)
+
 /** The name of the message queue to be used for sensors to write their data. */
 #define SENSOR_QUEUE "fetcher/sensors"
 

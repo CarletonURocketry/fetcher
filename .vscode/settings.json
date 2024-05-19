@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "sensor_api.h": "c",
+        "errno.h": "c"
+    }
+}
