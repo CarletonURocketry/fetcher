@@ -171,6 +171,10 @@ int main(int argc, char **argv) {
 
     /* Parse the board ID EEPROM contents and configure drivers. */
     char const *board_id = (const char *)eeprom_contents(bus);
+    if (board_id == NULL) {
+        fprintf(stderr, "Failed to read EEPROM configuration.\n");
+        exit(EXIT_FAILURE);
+    }
     const char *cur = board_id;
 
     // Skip the first two lines (board ID and CU InSpace credit)
