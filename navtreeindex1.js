@@ -1,5 +1,9 @@
 var NAVTREEINDEX1 =
 {
+"structSensorLocation.html#a19f80f6f28e1df846d58e58a89099b97":[0,0,9,0],
+"structSensorLocation.html#a3b86112a0ac8e1b3cf5f7ebcb1d10288":[0,0,9,1],
+"structSensorTagData.html":[0,0,10],
+"structSensorTagData.html#a33a39a04ccac7d79e70dc57e9d568183":[0,0,10,1],
 "structSensorTagData.html#a541ffcea2b96538148f60b29794d5f66":[0,0,10,0],
 "structSensorTagData.html#a8d8260b5e99941b1c26f699e749c2883":[0,0,10,2],
 "structSensorTagData.html#abf98d4502e9e8026504ef49143a7bec9":[0,0,10,4],

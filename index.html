@@ -98,18 +98,47 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">Temperature: 25.02 C</div>
 <div class="line">Pressure: 99.94 kPa</div>
 <div class="line">...</div>
-</div><!-- fragment --><p >All sensor data output is printed in plain-text, with its type specifier (i.e. temperature), its value and its unit.</p>
+</div><!-- fragment --><p ><a class="el" href="structSensor.html">Sensor</a> data output can either be printed in plain-text, or it can be read from the named message queue <code>fetcher/sensors</code>.</p>
+<p >Messages on the message queue start with a one-byte type specifier which is one of the following:</p>
+<div class="fragment"><div class="line"> </div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08">TAG_TEMPERATURE</a> = 0,      </div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13">TAG_PRESSURE</a> = 1,         </div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e">TAG_HUMIDITY</a> = 2,         </div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba">TAG_TIME</a> = 3,             </div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0">TAG_ALTITUDE_SEA</a> = 4,     </div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627aa48af8706c919611056f8f453b200431">TAG_ALTITUDE_REL</a> = 5,     </div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9e65523ce44fc3e7de9689d2d589cdc9">TAG_ANGULAR_VEL</a> = 6,      </div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191">TAG_LINEAR_ACCEL_REL</a> = 7, </div>
+<div class="line">    <a class="code hl_enumvalue" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2">TAG_LINEAR_ACCEL_ABS</a> = 8, </div>
+<div class="line">} <a class="code hl_enumeration" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>;</div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a></div><div class="ttdeci">SensorTag</div><div class="ttdef"><b>Definition:</b> sensor_api.h:28</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a355a6c724a8aa8d6723fa5eb957aec08">TAG_TEMPERATURE</a></div><div class="ttdeci">@ TAG_TEMPERATURE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:29</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191">TAG_LINEAR_ACCEL_REL</a></div><div class="ttdeci">@ TAG_LINEAR_ACCEL_REL</div><div class="ttdef"><b>Definition:</b> sensor_api.h:36</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0">TAG_ALTITUDE_SEA</a></div><div class="ttdeci">@ TAG_ALTITUDE_SEA</div><div class="ttdef"><b>Definition:</b> sensor_api.h:33</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2">TAG_LINEAR_ACCEL_ABS</a></div><div class="ttdeci">@ TAG_LINEAR_ACCEL_ABS</div><div class="ttdef"><b>Definition:</b> sensor_api.h:37</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba">TAG_TIME</a></div><div class="ttdeci">@ TAG_TIME</div><div class="ttdef"><b>Definition:</b> sensor_api.h:32</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627a9e65523ce44fc3e7de9689d2d589cdc9"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9e65523ce44fc3e7de9689d2d589cdc9">TAG_ANGULAR_VEL</a></div><div class="ttdeci">@ TAG_ANGULAR_VEL</div><div class="ttdef"><b>Definition:</b> sensor_api.h:35</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627aa48af8706c919611056f8f453b200431"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627aa48af8706c919611056f8f453b200431">TAG_ALTITUDE_REL</a></div><div class="ttdeci">@ TAG_ALTITUDE_REL</div><div class="ttdef"><b>Definition:</b> sensor_api.h:34</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13">TAG_PRESSURE</a></div><div class="ttdeci">@ TAG_PRESSURE</div><div class="ttdef"><b>Definition:</b> sensor_api.h:30</div></div>
+<div class="ttc" id="asensor__api_8h_html_af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e"><div class="ttname"><a href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e">TAG_HUMIDITY</a></div><div class="ttdeci">@ TAG_HUMIDITY</div><div class="ttdef"><b>Definition:</b> sensor_api.h:31</div></div>
+</div><!-- fragment --><p >Followed by data representing the measurement.</p>
+<p >Temperature, pressure, humidity and altitude are floats. Time is a 32 bit integer. Linear acceleration and angular velocity are 3D vectors (<code><a class="el" href="structvec3d__t.html">vec3d_t</a></code>) of 3 floats.</p>
 <h1>Board ID EEPROM Encoding</h1>
 <p >In order for fetcher to recognize the sensors on the board, the EEPROM must encode the ID in this format:</p>
-<div class="fragment"><div class="line">CU InSpace &lt;board name&gt; REV &lt;x&gt;: &lt;manufacture date&gt;</div>
+<div class="fragment"><div class="line">CU InSpace &lt;board name&gt;</div>
+<div class="line">REV &lt;x&gt;: &lt;manufacture date&gt;</div>
 <div class="line">&lt;sensor 1 id&gt; &lt;address&gt;</div>
-<div class="line">&lt;sensor 2 id&gt; &lt;address&gt;</div>
+<div class="line">&lt;sensor 2 id&gt; &lt;address&gt; &lt;address2&gt;</div>
 </div><!-- fragment --><p ><b>Fields:</b></p>
 <ul>
 <li><code>&lt;board name&gt;</code>: The name of the board. Ex: <code><a class="el" href="structSensor.html">Sensor</a> board</code></li>
 <li><code>REV &lt;x&gt;</code>: The revision of the board. Ex: <code>REV B</code></li>
 <li><code>&lt;sensor id&gt;</code>: The identifier of the sensor. Ex: <code>MS5611</code></li>
-<li><code>&lt;address&gt;</code>: The 7 bit I2C address of the sensor in hexadecimal (without the leading 0x). Ex: <code>77</code> </li>
+<li><code>&lt;address&gt;</code>: The 7 bit I2C address of the sensor in hexadecimal (without the leading 0x). Ex: <code>77</code><ul>
+<li>It is possible to have more than one address per sensor type for boards with duplicates </li>
+</ul>
+</li>
 </ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->

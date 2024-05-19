@@ -7,5 +7,7 @@ var main_8c =
     [ "MAX_SENSORS", "main_8c.html#aa3d1fc2927eec213e6b5f9e854c392d2", null ],
     [ "main", "main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627", null ],
     [ "read_sensor_addresses", "main_8c.html#ab0a7c62a4dea52bfde2183ef30bbb7e5", null ],
-    [ "read_sensor_name", "main_8c.html#ab1a5d7af04dab3154414440255c7929d", null ]
+    [ "read_sensor_name", "main_8c.html#ab1a5d7af04dab3154414440255c7929d", null ],
+    [ "buffer", "main_8c.html#a97eaba5b61706891a4da114bde40da4d", null ],
+    [ "print_output", "main_8c.html#a8242881422ac2b44e5c917658a45ed1a", null ]
 ];

@@ -89,7 +89,8 @@ $(document).ready(function(){initNavTree('main_8c.html',''); initResizable(); })
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">main.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -132,6 +133,13 @@ Functions</h2></td></tr>
 <tr class="separator:ab0a7c62a4dea52bfde2183ef30bbb7e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
 <tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a8242881422ac2b44e5c917658a45ed1a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a8242881422ac2b44e5c917658a45ed1a">print_output</a> = false</td></tr>
+<tr class="separator:a8242881422ac2b44e5c917658a45ed1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97eaba5b61706891a4da114bde40da4d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a97eaba5b61706891a4da114bde40da4d">buffer</a> [<a class="el" href="main_8c.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>]</td></tr>
+<tr class="separator:a97eaba5b61706891a4da114bde40da4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The main function for the fetcher module, where program logic is used to create a console application. </p>
@@ -238,7 +246,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Decide on output stream.</p>
 
 </div>
 </div>
@@ -325,6 +332,37 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The current position inside the board ID after reading, or NULL if nbytes needs to be larger. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a97eaba5b61706891a4da114bde40da4d" name="a97eaba5b61706891a4da114bde40da4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97eaba5b61706891a4da114bde40da4d">&#9670;&nbsp;</a></span>buffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t buffer[<a class="el" href="main_8c.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Buffer for reading sensor messages when print option is selected. </p>
+
+</div>
+</div>
+<a id="a8242881422ac2b44e5c917658a45ed1a" name="a8242881422ac2b44e5c917658a45ed1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8242881422ac2b44e5c917658a45ed1a">&#9670;&nbsp;</a></span>print_output</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool print_output = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Whether or not to print data to stdout. </p>
 
 </div>
 </div>

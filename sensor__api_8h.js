@@ -16,9 +16,11 @@ var sensor__api_8h =
       [ "TAG_PRESSURE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abf9f2746271f7514ff45127e1f3fde13", null ],
       [ "TAG_HUMIDITY", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ac9207f86c503725f7fdd921633fd5b3e", null ],
       [ "TAG_TIME", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba", null ],
-      [ "TAG_ALTITUDE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a3a098e26994f813d7552afb278aaf54f", null ],
+      [ "TAG_ALTITUDE_SEA", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0", null ],
+      [ "TAG_ALTITUDE_REL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627aa48af8706c919611056f8f453b200431", null ],
       [ "TAG_ANGULAR_VEL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9e65523ce44fc3e7de9689d2d589cdc9", null ],
-      [ "TAG_LINEAR_ACCEL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627aeabe7d03b1396813ec3139fe8fb08100", null ]
+      [ "TAG_LINEAR_ACCEL_REL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191", null ],
+      [ "TAG_LINEAR_ACCEL_ABS", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2", null ]
     ] ],
     [ "SensorTagDType", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84", [
       [ "TYPE_FLOAT", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f", null ],
