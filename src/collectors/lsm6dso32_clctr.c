@@ -43,8 +43,8 @@ void *lsm6dso32_collector(void *args) {
         }
 
         // Read linear acceleration
-        sensor_read(lsm6dso32, TAG_LINEAR_ACCEL, &data[1], &nbytes);
-        data[0] = TAG_LINEAR_ACCEL;
+        sensor_read(lsm6dso32, TAG_LINEAR_ACCEL_REL, &data[1], &nbytes);
+        data[0] = TAG_LINEAR_ACCEL_REL;
         if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
             fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
         }

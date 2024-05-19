@@ -83,7 +83,7 @@ enum imu_reg {
     if (err != EOK) return err
 
 /** A list of data types that can be read by the LSM6DSO32. */
-static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_LINEAR_ACCEL, TAG_ANGULAR_VEL};
+static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_LINEAR_ACCEL_REL, TAG_ANGULAR_VEL};
 
 /**
  * Write data to a register of the LSM6DSO32.
@@ -156,7 +156,7 @@ static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, si
         *nbytes = sizeof(float);
         break;
     }
-    case TAG_LINEAR_ACCEL: {
+    case TAG_LINEAR_ACCEL_REL: {
 
         int16_t x;
         err = lsm6dso32_read_byte(sensor, OUTX_L_A, (uint8_t *)(&x)); // Read low byte

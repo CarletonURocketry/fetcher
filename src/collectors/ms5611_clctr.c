@@ -87,7 +87,7 @@ void *ms5611_collector(void *args) {
         }
 
         // Transmit altitude
-        measurement.type = TAG_ALTITUDE;
+        measurement.type = TAG_ALTITUDE_REL;
         measurement.data = (float)altitude;
         if (mq_send(sensor_q, (char *)&measurement, sizeof(measurement), 0) == -1) {
             fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
