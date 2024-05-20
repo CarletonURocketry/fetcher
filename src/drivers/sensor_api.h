@@ -33,11 +33,12 @@ typedef enum {
     TAG_ALTITUDE,     /**< Altitude in meters */
     TAG_ANGULAR_VEL,  /**< Angular velocity in degrees per second */
     TAG_LINEAR_ACCEL, /**< Linear acceleration in meters per second squared */
-    TAG_LATITUDE,     /**< Latitude in TODO: conversions */
-    TAG_LONGITUDE,    /**< Longitude in TODO: conversions */
-    TAG_SPEED,        /** Speed over the ground in hundreths of a knot */
-    TAG_COURSE,       /** Course over ground (heading) in hundredths of a degree*/
-    TAG_FIX,
+    TAG_LATITUDE,     /**< Latitude in units of 0.1 microdegrees */
+    TAG_LONGITUDE,    /**< Longitude in units of 0.1 microdegrees */
+    TAG_ALTITUDE_MSL, /**< The height above mean sea level in millimeters*/
+    TAG_SPEED,        /**< Speed over the ground in cm/s */
+    TAG_COURSE,       /**< Course over ground (heading) in units of 10 microdegrees */
+    TAG_FIX,          /**< The type of GPS fix that is currently held, as a combination of flags */
 } SensorTag;
 
 /** Describes the data type of the data associated with a tag. */
