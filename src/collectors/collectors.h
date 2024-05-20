@@ -34,5 +34,6 @@ void *sysclock_collector(void *args);
 void *ms5611_collector(void *args);
 void *sht41_collector(void *args);
 void *lsm6dso32_collector(void *args);
+void *m10spg_collector(void *args);
 
 #endif // _COLLECTORS_H_
