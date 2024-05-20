@@ -130,7 +130,7 @@ int lsm6dso32_get_temp(SensorLocation const *loc, int16_t *temperature) {
     return_err(err);
     err = lsm6dso32_read_byte(loc, OUT_TEMP_H, ((uint8_t *)(temperature) + 1)); // Read high byte
     return_err(err);
-    *temperature /= 256.0f + 25.0f; // In degrees Celsius
+    *temperature = (*temperature / 256.0f) + 25.0f; // In degrees Celsius
     return err;
 }
 

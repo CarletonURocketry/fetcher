@@ -71,7 +71,6 @@ void *lsm6dso32_collector(void *args) {
             fprintf(stderr, "LSM6DSO32 could not read temperature: %s\n", strerror(errno));
         } else {
             data[0] = TAG_TEMPERATURE;
-            printf("===== %f\n", (float)temperature);
             *((float *)(data + 1)) = (float)temperature;
             if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
                 fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
