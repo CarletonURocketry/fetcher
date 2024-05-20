@@ -35,14 +35,6 @@
  */
 #define MILLI_UNIT_PER_LSB_TO_UNIT 2.0f / 65535.0f
 
-/** Type to store the context of the IMU. */
-typedef struct {
-    /** Acceleration full scale range. */
-    uint8_t acc_fsr;
-    /** Gyroscope full scale range. */
-    uint16_t gyro_fsr;
-} LSM6DSO32Context;
-
 /** The different registers that are present in the IMU (and used by this program). */
 enum imu_reg {
     WHO_AM_I = 0x0F,   /**< Returns the hard-coded address of the IMU on the I2C bus. */
@@ -342,34 +334,3 @@ int lsm6dso32_disable_gyro(SensorLocation const *loc) { return lsm6dso32_set_gyr
  * @return Any error which occurred communicating with the IMU, EOK if successful.
  */
 int lsm6dso32_disable_accel(SensorLocation const *loc) { return lsm6dso32_set_gyro_odr(loc, 0); }
-
-/**
- * Prepares the LSM6DSO32 for reading.
- * @param sensor A reference to an LSM6DSO32 sensor.
- * @return The error status of the call. EOK if successful.
- */
-static errno_t lsm6dso32_open(Sensor *sensor) {
-
-    // Perform software reset
-    errno_t err = lsm6dso32_write_byte(sensor, CTRL3_C, 0x01);
-    return_err(err);
-
-    // TODO: We will want to operate in continuous mode for our use case (polling)
-
-    // Set the operating mode of the accelerometer to ODR of 6.66kHz (high perf)
-    // TODO: set based on configured sensor performance
-    // Full scale range of +-32g (necessary for rocket)
-    ((LSM6DSO32Context *)(sensor->context.data))->acc_fsr = 32;
-    err = lsm6dso32_write_byte(sensor, CTRL1_XL, 0xA4);
-    return_err(err);
-
-    // Set the operating mode of the gyroscope to ODR of 6.66kHz (high perf)
-    // TODO: set based on configured sensor performance
-    // TODO: what full-scale selection? Keep 500 for now
-    ((LSM6DSO32Context *)(sensor->context.data))->gyro_fsr = 500;
-    err = lsm6dso32_write_byte(sensor, CTRL2_G, 0xA1);
-    return_err(err);
-
-    // TODO: what filter configuration will give the best measurements?
-    return err;
-}
