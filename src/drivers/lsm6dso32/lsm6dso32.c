@@ -14,7 +14,6 @@
 #include <hw/i2c.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -239,13 +238,13 @@ int lsm6dso32_set_acc_fsr(SensorLocation const *loc, accel_fsr_e fsr) {
         // All zeroes
         break;
     case LA_FS_8G:
-        reg_val |= (0x2 << 3);
+        reg_val |= (1 << 3);
         break;
     case LA_FS_16G:
-        reg_val |= (0x3 << 3);
+        reg_val |= ((1 << 3) | (1 << 2));
         break;
     case LA_FS_32G:
-        reg_val |= (0x1 << 3);
+        reg_val |= (1 << 2);
         break;
     default:
         return EINVAL;
@@ -263,7 +262,7 @@ int lsm6dso32_set_gyro_fsr(SensorLocation const *loc, gyro_fsr_e fsr) {
 
     uint8_t reg_val;
     int err = lsm6dso32_read_byte(loc, CTRL2_G, &reg_val); // Don't overwrite other configurations
-    reg_val &= ~((1 << 3) | (1 << 2) | (1 << 1));          // Clear FSR selection bits
+    reg_val &= ~(0x0F);                                    // Clear FSR selection bits
     return_err(err);
 
     switch (fsr) {

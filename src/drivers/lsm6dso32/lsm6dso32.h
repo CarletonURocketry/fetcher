@@ -34,7 +34,7 @@ typedef enum {
 
 /** Possible output data rates for linear acceleration in Hz. */
 typedef enum {
-    LA_ODR_1_6 = 0xD0,  /** 1.6 Hz */
+    LA_ODR_1_6 = 0xB0,  /** 1.6 Hz */
     LA_ODR_12_5 = 0x10, /** 12.5 Hz */
     LA_ODR_26 = 0x20,   /** 26 Hz */
     LA_ODR_52 = 0x30,   /** 52 Hz */
@@ -49,16 +49,16 @@ typedef enum {
 
 /** Possible output data rates for the gyroscope in Hz. */
 typedef enum {
-    G_ODR_12_5, /** 12.5 Hz */
-    G_ODR_26,   /** 26 Hz */
-    G_ODR_52,   /** 52 Hz */
-    G_ODR_104,  /** 104 Hz */
-    G_ODR_208,  /** 208 Hz */
-    G_ODR_416,  /** 416 Hz */
-    G_ODR_833,  /** 833 Hz */
-    G_ODR_1666, /** 1666 Hz */
-    G_ODR_3332, /** 3332 Hz */
-    G_ODR_6664, /** 6644 Hz */
+    G_ODR_12_5 = 0x10, /** 12.5 Hz */
+    G_ODR_26 = 0x20,   /** 26 Hz */
+    G_ODR_52 = 0x30,   /** 52 Hz */
+    G_ODR_104 = 0x40,  /** 104 Hz */
+    G_ODR_208 = 0x50,  /** 208 Hz */
+    G_ODR_416 = 0x60,  /** 416 Hz */
+    G_ODR_833 = 0x70,  /** 833 Hz */
+    G_ODR_1666 = 0x80, /** 1666 Hz */
+    G_ODR_3332 = 0x90, /** 3332 Hz */
+    G_ODR_6664 = 0xA0, /** 6644 Hz */
 } gyro_odr_e;
 
 int lsm6dso32_reset(SensorLocation const *loc);
