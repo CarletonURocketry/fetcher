@@ -82,22 +82,18 @@ enum imu_reg {
 #define return_err(err)                                                                                                \
     if (err != EOK) return err
 
-/** A list of data types that can be read by the LSM6DSO32. */
-static const SensorTag TAGS[] = {TAG_TEMPERATURE, TAG_LINEAR_ACCEL_REL, TAG_ANGULAR_VEL};
-
 /**
  * Write data to a register of the LSM6DSO32.
  * WARNING: This function does not lock the I2C bus. It is meant to be called multiple times and therefore the bus must
  * be locked by the caller.
- * @param sensor A pointer to a LSM6DSO32 sensor instance.
+ * @param loc The location of the IMU on the I2C bus.
  * @param reg The address of the register to write to.
  * @param data The byte of data to write to the register.
  */
-static errno_t lsm6dso32_write_byte(Sensor const *sensor, const uint8_t reg, const uint8_t data) {
+static errno_t lsm6dso32_write_byte(SensorLocation const *loc, const uint8_t reg, const uint8_t data) {
 
     // Construct header
-    i2c_send_t header = {.slave = {0}, .stop = 1, .len = 2};
-    header.slave = sensor->loc.addr;
+    i2c_send_t header = {.slave = loc->addr, .stop = 1, .len = 2};
 
     // Create command
     uint8_t cmd[sizeof(header) + 2];
@@ -106,122 +102,246 @@ static errno_t lsm6dso32_write_byte(Sensor const *sensor, const uint8_t reg, con
     cmd[sizeof(header) + 1] = data;
 
     // Send command
-    return devctl(sensor->loc.bus, DCMD_I2C_SEND, cmd, sizeof(cmd), NULL);
+    return devctl(loc->bus, DCMD_I2C_SEND, cmd, sizeof(cmd), NULL);
 }
 
 /**
  * Read data from register address `reg`.
  * WARNING: This function does not lock the I2C bus, as it is meant to be used in a continuous stream of calls.
- * @param sensor A reference to an LSM6DSO32 sensor instance.
+ * @param loc The location of the IMU on the I2C bus.
  * @param reg The register address to read from.
  * @param buf The buffer to read data into.
  * @return EOK if the read was okay, otherwise the error status of the read command.
  */
-static errno_t lsm6dso32_read_byte(Sensor *sensor, uint8_t reg, uint8_t *buf) {
+static errno_t lsm6dso32_read_byte(SensorLocation const *loc, uint8_t reg, uint8_t *buf) {
 
-    i2c_sendrecv_t read_hdr = {.stop = 1, .send_len = 1, .recv_len = 1, .slave = {0}};
-    read_hdr.slave = sensor->loc.addr;
+    i2c_sendrecv_t read_hdr = {.stop = 1, .send_len = 1, .recv_len = 1, .slave = loc->addr};
 
     uint8_t read_cmd[sizeof(read_hdr) + 1];
     memcpy(read_cmd, &read_hdr, sizeof(read_hdr));
     read_cmd[sizeof(read_hdr)] = reg; // Data to be send is the register address
 
-    errno_t err = devctl(sensor->loc.bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
-    if (err != EOK) return err;
+    errno_t err = devctl(loc->bus, DCMD_I2C_SENDRECV, read_cmd, sizeof(read_cmd), NULL);
+    return_err(err);
 
     *buf = read_cmd[sizeof(read_hdr)]; // Received byte will be the last one
     return err;
 }
 
 /**
- * Reads the specified data from the LSM6DSO32.
- * @param sensor A reference to an LSM6DSO32 sensor.
- * @param tag The tag of the data type that should be read.
- * @param buf A pointer to the memory location to store the data.
- * @param nbytes The number of bytes that were written into the byte array buffer.
- * @return Error status of reading from the sensor. EOK if successful. EINVAL if unrecognized tag.
+ * Reads temperature from the IMU.
+ * @param loc The sensor location.
+ * @temperature A pointer to where to store the temperature in degrees Celsius.
+ * @return The error status of reading from the sensor. EOK if successful.
  */
-static errno_t lsm6dso32_read(Sensor *sensor, const SensorTag tag, void *buf, size_t *nbytes) {
-    errno_t err;
+int lsm6dso32_get_temp(SensorLocation const *loc, int16_t *temperature) {
+    int err = lsm6dso32_read_byte(loc, OUT_TEMP_L, (uint8_t *)(temperature)); // Read low byte
+    return_err(err);
+    err = lsm6dso32_read_byte(loc, OUT_TEMP_H, (uint8_t *)(temperature) + 1); // Read high byte
+    return_err(err);
+    *temperature /= 256.0f + 25.0f; // In degrees Celsius
+    return err;
+}
 
-    switch (tag) {
-    case TAG_TEMPERATURE: {
-        int16_t temp;
-        err = lsm6dso32_read_byte(sensor, OUT_TEMP_L, (uint8_t *)(&temp)); // Read low byte
-        return_err(err);
-        err = lsm6dso32_read_byte(sensor, OUT_TEMP_H, (uint8_t *)(&temp) + 1); // Read high byte
-        return_err(err);
+/**
+ * Read the linear acceleration data from the IMU.
+ * @param x A pointer to where to store the X component of the acceleration in milli-Gs per LSB.
+ * @param y A pointer to where to store the Y component of the acceleration in milli-Gs per LSB.
+ * @param z A pointer to where to store the Z component of the acceleration in milli-Gs per LSB.
+ * @return Any error that occurred while reading the sensor, EOK if successful.
+ */
+int lsm6dso32_get_accel(SensorLocation const *loc, int16_t *x, int16_t *y, int16_t *z) {
 
-        *(float *)buf = (float)(temp) / 256.0f + 25.0f; // In degrees Celsius
-        *nbytes = sizeof(float);
+    int err = lsm6dso32_read_byte(loc, OUTX_L_A, (uint8_t *)(x)); // Read low byte
+    return_err(err);
+    err = lsm6dso32_read_byte(loc, OUTX_H_A, (uint8_t *)(x) + 1); // Read high byte
+    return_err(err);
+
+    err = lsm6dso32_read_byte(loc, OUTY_L_A, (uint8_t *)(y));
+    return_err(err);
+    err = lsm6dso32_read_byte(loc, OUTY_H_A, (uint8_t *)(y) + 1);
+    return_err(err);
+
+    err = lsm6dso32_read_byte(loc, OUTZ_L_A, (uint8_t *)(z));
+    return_err(err);
+    err = lsm6dso32_read_byte(loc, OUTZ_H_A, (uint8_t *)(z) + 1);
+    return err;
+}
+
+/**
+ * Read the linear angular velocity data from the IMU.
+ * @param x A pointer to where to store the X component of the angular velocity in millidegrees per LSB.
+ * @param y A pointer to where to store the Y component of the angular velocity in millidegrees per LSB.
+ * @param z A pointer to where to store the Z component of the angular velocity in millidegrees per LSB.
+ * @return Any error that occurred while reading the sensor, EOK if successful.
+ */
+int lsm6dso32_get_angular_vel(SensorLocation const *loc, int16_t *x, int16_t *y, int16_t *z) {
+    int err = lsm6dso32_read_byte(loc, OUTX_L_G, (uint8_t *)(x)); // Read low byte
+    return_err(err);
+    err = lsm6dso32_read_byte(loc, OUTX_H_G, (uint8_t *)(x) + 1); // Read high byte
+    return_err(err);
+
+    err = lsm6dso32_read_byte(loc, OUTY_L_G, (uint8_t *)(y));
+    return_err(err);
+    err = lsm6dso32_read_byte(loc, OUTY_H_G, (uint8_t *)(y) + 1);
+    return_err(err);
+
+    err = lsm6dso32_read_byte(loc, OUTZ_L_G, (uint8_t *)(z));
+    return_err(err);
+    err = lsm6dso32_read_byte(loc, OUTZ_H_G, (uint8_t *)(z) + 1);
+    return err;
+}
+
+/**
+ * Converts acceleration in milli-Gs per LSB to meters per second squared. Results are stored back in the pointers
+ * themselves. Passing NULL as any of the pointers will result in the calculation being skipped.
+ * @param acc_fsr The full scale range of the accelerometer.
+ * @param x A pointer to the X component of the acceleration in milli-Gs per LSB.
+ * @param y A pointer to the Y component of the acceleration in milli-Gs per LSB.
+ * @param z A pointer to the Z component of the acceleration in milli-Gs per LSB.
+ */
+void lsm6dso32_convert_accel(accel_fsr_e acc_fsr, int16_t *x, int16_t *y, int16_t *z) {
+    float conversion_factor = acc_fsr * MILLI_UNIT_PER_LSB_TO_UNIT * GRAVIT_ACC;
+    if (x) (*x) *= conversion_factor;
+    if (y) (*y) *= conversion_factor;
+    if (z) (*z) *= conversion_factor;
+}
+
+/**
+ * Converts angular velocity in millidegrees per LSB to meters per second squared. Results are stored back in the
+ * pointers themselves. Passing NULL as any of the pointers will result in the calculation being skipped.
+ * @param gyro_fsr The full scale range of the gyroscope.
+ * @param x A pointer to the X component of the angular velocity in millidegrees per LSB.
+ * @param y A pointer to the Y component of the angular velocity in millidegrees per LSB.
+ * @param z A pointer to the Z component of the angular velocity in millidegrees per LSB.
+ */
+void lsm6dso32_convert_angular_vel(gyro_fsr_e gyro_fsr, int16_t *x, int16_t *y, int16_t *z) {
+    float conversion_factor = gyro_fsr * MILLI_UNIT_PER_LSB_TO_UNIT;
+    if (x) (*x) *= conversion_factor;
+    if (y) (*y) *= conversion_factor;
+    if (z) (*z) *= conversion_factor;
+}
+
+/**
+ * Performs a software reset of the LSM6DSO32.
+ * @param loc The location of the IMU on the I2C bus.
+ * @return Any error which occurred while resetting the IMU, EOK if successful.
+ */
+int lsm6dso32_reset(SensorLocation const *loc) { return lsm6dso32_write_byte(loc, CTRL3_C, 0x01); }
+
+/**
+ * Sets the accelerometer full scale range.
+ * @param loc The location of the IMU on the I2C bus.
+ * @param fsr The FSR to set.
+ * @return Any error which occurred communicating with the IMU, EOK if successful, EINVAL if bad fsr.
+ */
+int lsm6dso32_set_acc_fsr(SensorLocation const *loc, accel_fsr_e fsr) {
+
+    uint8_t reg_val;
+    int err = lsm6dso32_read_byte(loc, CTRL1_XL, &reg_val); // Don't overwrite other configurations
+    reg_val &= ~((1 << 3) | (1 << 2));                      // Clear FSR selection bits
+    return_err(err);
+
+    switch (fsr) {
+    case LA_FS_4G:
+        // All zeroes
         break;
-    }
-    case TAG_LINEAR_ACCEL_REL: {
-
-        int16_t x;
-        err = lsm6dso32_read_byte(sensor, OUTX_L_A, (uint8_t *)(&x)); // Read low byte
-        return_err(err);
-        err = lsm6dso32_read_byte(sensor, OUTX_H_A, (uint8_t *)(&x) + 1); // Read high byte
-        return_err(err);
-
-        int16_t y;
-        err = lsm6dso32_read_byte(sensor, OUTY_L_A, (uint8_t *)(&y));
-        return_err(err);
-        err = lsm6dso32_read_byte(sensor, OUTY_H_A, (uint8_t *)(&y) + 1);
-        return_err(err);
-
-        int16_t z;
-        err = lsm6dso32_read_byte(sensor, OUTZ_L_A, (uint8_t *)(&z));
-        return_err(err);
-        err = lsm6dso32_read_byte(sensor, OUTZ_H_A, (uint8_t *)(&z) + 1);
-        return_err(err);
-
-        // Converts milli-Gs per LSB to m/s^2
-        float conversion_factor =
-            (float)((LSM6DSO32Context *)(sensor->context.data))->acc_fsr * MILLI_UNIT_PER_LSB_TO_UNIT * GRAVIT_ACC;
-
-        ((vec3d_t *)(buf))->x = (float)(x)*conversion_factor;
-        ((vec3d_t *)(buf))->y = (float)(y)*conversion_factor;
-        ((vec3d_t *)(buf))->z = (float)(z)*conversion_factor;
-        *nbytes = sizeof(vec3d_t);
+    case LA_FS_8G:
+        reg_val |= (0x2 << 3);
         break;
-    }
-    case TAG_ANGULAR_VEL: {
-
-        int16_t x;
-        err = lsm6dso32_read_byte(sensor, OUTX_L_G, (uint8_t *)(&x)); // Read low byte
-        return_err(err);
-        err = lsm6dso32_read_byte(sensor, OUTX_H_G, (uint8_t *)(&x) + 1); // Read high byte
-        return_err(err);
-
-        int16_t y;
-        err = lsm6dso32_read_byte(sensor, OUTY_L_G, (uint8_t *)(&y));
-        return_err(err);
-        err = lsm6dso32_read_byte(sensor, OUTY_H_G, (uint8_t *)(&y) + 1);
-        return_err(err);
-
-        int16_t z;
-        err = lsm6dso32_read_byte(sensor, OUTZ_L_G, (uint8_t *)(&z));
-        return_err(err);
-        err = lsm6dso32_read_byte(sensor, OUTZ_H_G, (uint8_t *)(&z) + 1);
-        return_err(err);
-
-        // Converts millidegrees per second per LSB to degrees per second
-        float conversion_factor =
-            (float)((LSM6DSO32Context *)(sensor->context.data))->gyro_fsr * MILLI_UNIT_PER_LSB_TO_UNIT;
-
-        ((vec3d_t *)(buf))->x = (float)(x)*conversion_factor;
-        ((vec3d_t *)(buf))->y = (float)(y)*conversion_factor;
-        ((vec3d_t *)(buf))->z = (float)(z)*conversion_factor;
-        *nbytes = sizeof(vec3d_t);
+    case LA_FS_16G:
+        reg_val |= (0x3 << 3);
         break;
-    }
+    case LA_FS_32G:
+        reg_val |= (0x1 << 3);
+        break;
     default:
         return EINVAL;
     }
-
-    return err;
+    return lsm6dso32_write_byte(loc, CTRL1_XL, reg_val);
 }
+
+/**
+ * Sets the gyroscope full scale range.
+ * @param loc The location of the IMU on the I2C bus.
+ * @param fsr The FSR to set.
+ * @return Any error which occurred communicating with the IMU, EOK if successful, EINVAL if bad fsr.
+ */
+int lsm6dso32_set_gyro_fsr(SensorLocation const *loc, gyro_fsr_e fsr) {
+
+    uint8_t reg_val;
+    int err = lsm6dso32_read_byte(loc, CTRL2_G, &reg_val); // Don't overwrite other configurations
+    reg_val &= ~((1 << 3) | (1 << 2) | (1 << 1));          // Clear FSR selection bits
+    return_err(err);
+
+    switch (fsr) {
+    case G_FS_125:
+        reg_val |= (1 << 1);
+        break;
+    case G_FS_250:
+        // All zeroes
+        break;
+    case G_FS_500:
+        reg_val |= (1 << 2);
+        break;
+    case G_FS_1000:
+        reg_val |= (1 << 3);
+        break;
+    case G_FS_2000:
+        reg_val |= ((1 << 3) | (1 << 2));
+        break;
+    default:
+        return EINVAL;
+    }
+    return lsm6dso32_write_byte(loc, CTRL2_G, reg_val);
+}
+
+/**
+ * Sets the accelerometer output data rate.
+ * NOTE: An ODR of 1.6Hz can only be set if high performance operating mode is disabled. Otherwise the effect will be
+ * 12.6Hz ODR. It is the responsibility of the caller to set disable the high performance operating mode before or after
+ * this function is called.
+ * @param loc The location of the IMU on the I2C bus.
+ * @param odr The ODR to set.
+ * @return Any error which occurred communicating with the IMU, EOK if successful.
+ */
+int lsm6dso32_set_acc_odr(SensorLocation const *loc, accel_odr_e odr) {
+    uint8_t reg_val;
+    int err = lsm6dso32_read_byte(loc, CTRL1_XL, &reg_val); // Don't overwrite other configurations
+    reg_val &= ~(0xF0);                                     // Clear ODR selection bits
+    reg_val |= (uint8_t)(odr);                              // Set ODR selection
+    return_err(err);
+    return lsm6dso32_write_byte(loc, CTRL1_XL, reg_val);
+}
+
+/**
+ * Sets the gyroscope output data rate.
+ * @param loc The location of the IMU on the I2C bus.
+ * @param odr The ODR to set.
+ * @return Any error which occurred communicating with the IMU, EOK if successful.
+ */
+int lsm6dso32_set_gyro_odr(SensorLocation const *loc, gyro_odr_e odr) {
+    uint8_t reg_val;
+    int err = lsm6dso32_read_byte(loc, CTRL2_G, &reg_val); // Don't overwrite other configurations
+    reg_val &= ~(0xF0);                                    // Clear ODR selection bits
+    reg_val |= (uint8_t)(odr);                             // Set ODR selection
+    return_err(err);
+    return lsm6dso32_write_byte(loc, CTRL2_G, reg_val);
+}
+
+/**
+ * Powers down the gyroscope.
+ * @param loc The location of the IMU on the I2C bus.
+ * @return Any error which occurred communicating with the IMU, EOK if successful.
+ */
+int lsm6dso32_disable_gyro(SensorLocation const *loc) { return lsm6dso32_set_gyro_odr(loc, 0); }
+
+/**
+ * Powers down the accelerometer.
+ * @param loc The location of the IMU on the I2C bus.
+ * @return Any error which occurred communicating with the IMU, EOK if successful.
+ */
+int lsm6dso32_disable_accel(SensorLocation const *loc) { return lsm6dso32_set_gyro_odr(loc, 0); }
 
 /**
  * Prepares the LSM6DSO32 for reading.
@@ -252,20 +372,4 @@ static errno_t lsm6dso32_open(Sensor *sensor) {
 
     // TODO: what filter configuration will give the best measurements?
     return err;
-}
-
-/**
- * Initializes a sensor struct with the interface to interact with the LSM6DSO32.
- * @param sensor The sensor interface to be initialized.
- * @param bus The file descriptor of the I2C bus.
- * @param addr The address of the sensor on the I2C bus.
- * @param precision The precision to read measurements with.
- */
-void lsm6dso32_init(Sensor *sensor, const int bus, const uint8_t addr, const SensorPrecision precision) {
-    sensor->precision = precision;
-    sensor->loc = (SensorLocation){.bus = bus, .addr = {.addr = (addr & 0x7F), .fmt = I2C_ADDRFMT_7BIT}};
-    sensor->tag_list = (SensorTagList){.tags = TAGS, .len = sizeof(TAGS) / sizeof(SensorTag)};
-    sensor->context.size = sizeof(LSM6DSO32Context);
-    sensor->open = &lsm6dso32_open;
-    sensor->read = &lsm6dso32_read;
 }
