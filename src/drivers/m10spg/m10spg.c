@@ -30,7 +30,7 @@
 #define RECV_SLEEP_TIME 10000
 
 /** How long m10spg_read should wait for a response in seconds */
-#define DEFAULT_TIMEOUT 1
+#define DEFAULT_TIMEOUT 10
 
 static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_UTC] = {.header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67},
@@ -241,7 +241,6 @@ static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_p
                 err = read_bytes(loc, &msg->header.class,
                                  sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(msg->header.length));
                 return_err(err);
-                printf("Found a message length : %d\n", msg->header.length);
                 // Make sure the space we allocated for the payload is big enough
                 if (msg->header.length > max_payload) {
                     return EINVAL;
@@ -313,7 +312,7 @@ int m10spg_open(const SensorLocation *loc) {
             return EOK;
         } else if (msg.header.id == 0x00) {
             // Valset was not successful, check interface manual for possible reasons
-            return EINVAL;
+            return ECANCELED;
         }
     }
     // Some other response interrupted our exchange
