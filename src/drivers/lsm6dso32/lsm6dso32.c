@@ -129,7 +129,7 @@ static errno_t lsm6dso32_read_byte(SensorLocation const *loc, uint8_t reg, uint8
 int lsm6dso32_get_temp(SensorLocation const *loc, int16_t *temperature) {
     int err = lsm6dso32_read_byte(loc, OUT_TEMP_L, (uint8_t *)(temperature)); // Read low byte
     return_err(err);
-    err = lsm6dso32_read_byte(loc, OUT_TEMP_H, (uint8_t *)(temperature) + 1); // Read high byte
+    err = lsm6dso32_read_byte(loc, OUT_TEMP_H, ((uint8_t *)(temperature) + 1)); // Read high byte
     return_err(err);
     *temperature /= 256.0f + 25.0f; // In degrees Celsius
     return err;
@@ -334,3 +334,11 @@ int lsm6dso32_disable_gyro(SensorLocation const *loc) { return lsm6dso32_set_gyr
  * @return Any error which occurred communicating with the IMU, EOK if successful.
  */
 int lsm6dso32_disable_accel(SensorLocation const *loc) { return lsm6dso32_set_gyro_odr(loc, 0); }
+
+/**
+ * Reads the "who am I" value from the sensor. Should always be equal to 0x6C.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param val The value returned by the WHOAMI command.
+ * @return Any error which occurred communicating with the IMU, EOK if successful.
+ */
+int lsm6dso32_whoami(SensorLocation const *loc, uint8_t *val) { return lsm6dso32_read_byte(loc, WHO_AM_I, val); }

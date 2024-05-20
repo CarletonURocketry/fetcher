@@ -12,6 +12,9 @@
 #include "../sensor_api.h"
 #include <stdint.h>
 
+/** The value that should be returned from the WHOAMI register. */
+#define WHOAMI_VALUE 0x6C
+
 /** Represents the possible full scale range settings for linear acceleration in Gs (gravitational acceleration). */
 typedef enum {
     LA_FS_4G = 4,   /**< Full scale range of +/- 4Gs */
@@ -70,6 +73,7 @@ int lsm6dso32_set_gyro_odr(SensorLocation const *loc, gyro_odr_e odr);
 int lsm6dso32_get_temp(SensorLocation const *loc, int16_t *temperature);
 int lsm6dso32_get_accel(SensorLocation const *loc, int16_t *x, int16_t *y, int16_t *z);
 int lsm6dso32_get_angular_vel(SensorLocation const *loc, int16_t *x, int16_t *y, int16_t *z);
+int lsm6dso32_whoami(SensorLocation const *loc, uint8_t *val);
 
 void lsm6dso32_convert_accel(accel_fsr_e acc_fsr, int16_t *x, int16_t *y, int16_t *z);
 void lsm6dso32_convert_angular_vel(gyro_fsr_e gyro_fsr, int16_t *x, int16_t *y, int16_t *z);

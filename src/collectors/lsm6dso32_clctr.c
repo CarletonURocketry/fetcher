@@ -31,6 +31,7 @@ void *lsm6dso32_collector(void *args) {
         fprintf(stderr, "Failed to reset LSM6DSO32: %s\n", strerror(errno));
         return_err(err);
     }
+    usleep(100);
 
     err = lsm6dso32_set_acc_fsr(&loc, LA_FS_32G);
     if (err != EOK) {
@@ -70,6 +71,7 @@ void *lsm6dso32_collector(void *args) {
             fprintf(stderr, "LSM6DSO32 could not read temperature: %s\n", strerror(errno));
         } else {
             data[0] = TAG_TEMPERATURE;
+            printf("===== %f\n", (float)temperature);
             *((float *)(data + 1)) = (float)temperature;
             if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
                 fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
