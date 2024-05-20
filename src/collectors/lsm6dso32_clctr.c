@@ -44,6 +44,18 @@ void *lsm6dso32_collector(void *args) {
         return_err(err);
     }
 
+    err = lsm6dso32_set_acc_odr(&loc, LA_ODR_6664);
+    if (err != EOK) {
+        fprintf(stderr, "Failed to set LSM6DSO32 accelerometer ODR: %s\n", strerror(errno));
+        return_err(err);
+    }
+
+    err = lsm6dso32_set_gyro_odr(&loc, G_ODR_6664);
+    if (err != EOK) {
+        fprintf(stderr, "Failed to set LSM6DSO32 gyroscope ODR: %s\n", strerror(errno));
+        return_err(err);
+    }
+
     uint8_t data[sizeof(vec3d_t) + 1];
     int16_t temperature;
     int16_t x;
@@ -53,27 +65,42 @@ void *lsm6dso32_collector(void *args) {
     for (;;) {
 
         // Read temperature
-        lsm6dso32_get_temp(&loc, &temperature);
-        data[0] = TAG_TEMPERATURE;
-        *((float *)(data + 1)) = (float)temperature;
-        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
-            fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
+        err = lsm6dso32_get_temp(&loc, &temperature);
+        if (err != EOK) {
+            fprintf(stderr, "LSM6DSO32 could not read temperature: %s\n", strerror(errno));
+        } else {
+            data[0] = TAG_TEMPERATURE;
+            *((float *)(data + 1)) = (float)temperature;
+            if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+                fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
+            }
         }
 
         // Read linear acceleration
-        lsm6dso32_get_accel(&loc, &x, &y, &z);
-        data[0] = TAG_LINEAR_ACCEL_REL;
-        *((vec3d_t *)(data + 1)) = (vec3d_t){.x = x, .y = y, .z = z};
-        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
-            fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
+        err = lsm6dso32_get_accel(&loc, &x, &y, &z);
+        if (err != EOK) {
+            fprintf(stderr, "LSM6DSO32 could not read linear acceleration: %s\n", strerror(errno));
+        } else {
+            lsm6dso32_convert_accel(LA_FS_32G, &x, &y, &z);
+            data[0] = TAG_LINEAR_ACCEL_REL;
+            *((vec3d_t *)(data + 1)) = (vec3d_t){.x = x, .y = y, .z = z};
+            if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+                fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
+            }
         }
 
         // Read angular velocity
-        lsm6dso32_get_angular_vel(&loc, &x, &y, &z);
-        data[0] = TAG_ANGULAR_VEL;
-        *((vec3d_t *)(data + 1)) = (vec3d_t){.x = x, .y = y, .z = z};
-        if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
-            fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
+        err = lsm6dso32_get_angular_vel(&loc, &x, &y, &z);
+
+        if (err != EOK) {
+            fprintf(stderr, "LSM6DSO32 could not read angular velocity: %s\n", strerror(errno));
+        } else {
+            lsm6dso32_convert_angular_vel(G_FS_500, &x, &y, &z);
+            data[0] = TAG_ANGULAR_VEL;
+            *((vec3d_t *)(data + 1)) = (vec3d_t){.x = x, .y = y, .z = z};
+            if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+                fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
+            }
         }
     }
 }
