@@ -139,12 +139,15 @@ static int add_valset_item(UBXFrame *msg, uint32_t key, const void *value, UBXVa
  */
 static int m10spg_available_bytes(const SensorLocation *loc, uint16_t *result) {
     // Send the address of the first register, then the second byte read will be the next register (0xFE)
-    i2c_send_t header = {.stop = 0, .slave = loc->addr, .len = 1};
-    uint8_t address_cmd[sizeof(header) + 1];
-    memcpy(address_cmd, &header, sizeof(header));
-    address_cmd[sizeof(header)] = 0xFD;
+    static i2c_send_t write_header = {.stop = 0, .len = 1};
+    write_header.slave = loc->addr;
 
-    i2c_recv_t read_header = {.stop = 1, .slave = loc->addr, .len = 2};
+    uint8_t address_cmd[sizeof(write_header) + 1];
+    memcpy(address_cmd, &write_header, sizeof(write_header));
+    address_cmd[sizeof(write_header)] = 0xFD;
+
+    static i2c_recv_t read_header = {.stop = 1, .len = 2};
+    read_header.slave = loc->addr;
     uint8_t read_cmd[sizeof(read_header) + 2];
     memcpy(read_cmd, &read_header, sizeof(read_header));
 
@@ -154,7 +157,7 @@ static int m10spg_available_bytes(const SensorLocation *loc, uint16_t *result) {
     err = devctl(loc->bus, DCMD_I2C_RECV, read_cmd, sizeof(read_cmd), NULL);
     return_err(err);
 
-    *result = ((uint16_t)read_cmd[sizeof(header)]) * 256 + (uint16_t)(read_cmd[sizeof(header) + 1]);
+    *result = ((uint16_t)read_cmd[sizeof(write_header)]) * 256 + (uint16_t)(read_cmd[sizeof(write_header) + 1]);
     return EOK;
 }
 
@@ -166,7 +169,9 @@ static int m10spg_available_bytes(const SensorLocation *loc, uint16_t *result) {
  * @return int The error status of the call. EOK if successful.
  */
 static int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
-    i2c_recv_t header = {.stop = 1, .slave = loc->addr, .len = nbytes};
+    static i2c_recv_t header = {.stop = 1};
+    header.slave = loc->addr;
+    header.len = nbytes;
     uint8_t read_cmd[sizeof(header) + nbytes];
     memcpy(read_cmd, &header, sizeof(header));
 
@@ -186,7 +191,9 @@ static int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
  * @return int Status of reading from the sensor, EOK if successful.
  */
 static int write_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
-    i2c_send_t header = {.stop = 1, .slave = loc->addr, .len = nbytes};
+    i2c_send_t header = {.stop = 1};
+    header.slave = loc->addr;
+    header.len = nbytes;
     uint8_t data[sizeof(header) + nbytes];
     memcpy(data, &header, sizeof(header));
     memcpy(data + sizeof(header), buf, nbytes);
@@ -201,7 +208,9 @@ static int write_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
  * @return int Status of writing to the sensor, EOK if successful
  */
 static int send_message(const SensorLocation *loc, const UBXFrame *msg) {
-    i2c_send_t header = {.stop = 1, .slave = loc->addr, .len = ubx_message_length(msg)};
+    static i2c_send_t header = {.stop = 1};
+    header.slave = loc->addr;
+    header.len = ubx_message_length(msg);
     uint8_t data[sizeof(header) + ubx_message_length(msg)];
     memcpy(data, &header, sizeof(header));
     // Add sync characters
