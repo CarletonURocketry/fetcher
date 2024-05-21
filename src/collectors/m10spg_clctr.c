@@ -70,7 +70,7 @@ void *m10spg_collector(void *args) {
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
             }
-            msg.type = TAG_ALTITUDE_MSL;
+            msg.type = TAG_ALTITUDE_SEA;
             msg.I32 = buf.pos.hMSL;
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));

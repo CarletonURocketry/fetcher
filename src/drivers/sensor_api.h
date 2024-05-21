@@ -24,21 +24,23 @@ typedef struct {
     float z;
 } vec3d_t;
 
-/** Describes what data type the sensor is able to read. */
+/** Describes possible data types that fetcher is capable of producing. */
 typedef enum {
-    TAG_TEMPERATURE,  /**< Temperature in degrees Celsius */
-    TAG_PRESSURE,     /**< Pressure in kilo Pascals */
-    TAG_HUMIDITY,     /**< Humidity in % relative humidity */
-    TAG_TIME,         /**< Time in milliseconds */
-    TAG_ALTITUDE,     /**< Altitude in meters */
-    TAG_ANGULAR_VEL,  /**< Angular velocity in degrees per second */
-    TAG_LINEAR_ACCEL, /**< Linear acceleration in meters per second squared */
-    TAG_LATITUDE,     /**< Latitude in units of 0.1 microdegrees */
-    TAG_LONGITUDE,    /**< Longitude in units of 0.1 microdegrees */
-    TAG_ALTITUDE_MSL, /**< The height above mean sea level in millimeters*/
-    TAG_SPEED,        /**< Speed over the ground in cm/s */
-    TAG_COURSE,       /**< Course over ground (heading) in units of 10 microdegrees */
-    TAG_FIX,          /**< The type of GPS fix that is currently held, as a combination of flags */
+    TAG_TEMPERATURE = 0,      /**< Temperature in degrees Celsius */
+    TAG_PRESSURE = 1,         /**< Pressure in kilo Pascals */
+    TAG_HUMIDITY = 2,         /**< Humidity in % relative humidity */
+    TAG_TIME = 3,             /**< Time in milliseconds */
+    TAG_ALTITUDE_SEA = 4,     /**< Altitude above sea level in milimeters */
+    TAG_ALTITUDE_REL = 5,     /**< Altitude above launch height in meters */
+    TAG_ANGULAR_VEL = 6,      /**< Angular velocity in degrees per second */
+    TAG_LINEAR_ACCEL_REL = 7, /**< Relative linear acceleration in meters per second squared */
+    TAG_LINEAR_ACCEL_ABS = 8, /**< Absolute linear acceleration in meters per second squared */
+    TAG_LATITUDE = 9,         /**< Latitude in units of 0.1 microdegrees */
+    TAG_LONGITUDE = 10,       /**< Longitude in units of 0.1 microdegrees */
+    TAG_ALTITUDE_MSL = 11,    /**< The height above mean sea level in millimeters*/
+    TAG_SPEED = 12,           /**< Speed over the ground in cm/s */
+    TAG_COURSE = 13,          /**< Course over ground (heading) in units of 10 microdegrees */
+    TAG_FIX = 14,             /**< The type of GPS fix that is currently held, as a combination of flags */
 } SensorTag;
 
 /** Describes the data type of the data associated with a tag. */

@@ -50,11 +50,12 @@ errno_t eeprom_read(uint8_t addr, int bus, void *buf, size_t n) {
 /**
  * Reads the entire contents of the EEPROM and returns a pointer to them.
  * @param bus The I2C bus where the EEPROM is located.
- * @return A pointer to the array of bytes containing the EEPROM contents.
+ * @return A pointer to the array of bytes containing the EEPROM contents. NULL if there was an error.
  */
 const uint8_t *eeprom_contents(int bus) {
     static uint8_t contents[EEPROM_CAP + 20]; // +20 for I2C header
-    eeprom_read(0, bus, contents, EEPROM_CAP);
+    int err = eeprom_read(0, bus, contents, EEPROM_CAP);
+    if (err != EOK) return NULL;
     contents[EEPROM_CAP + 19] = '\0';
     return contents + 20;
 }
