@@ -40,6 +40,12 @@ void *lsm6dso32_collector(void *args) {
 
     usleep(100);
 
+    err = lsm6dso32_high_performance(&loc, true);
+    if (err != EOK) {
+        fprintf(stderr, "Failed to set LSM6DSO32 to high performance mode: %s\n", strerror(err));
+        return_err(err);
+    }
+
     err = lsm6dso32_set_acc_fsr(&loc, LA_FS_32G);
     if (err != EOK) {
         fprintf(stderr, "Failed to set LSM6DSO32 accelerometer FSR: %s\n", strerror(err));

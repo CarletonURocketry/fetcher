@@ -10,6 +10,7 @@
 #define _LSM6DSO32_
 
 #include "../sensor_api.h"
+#include <stdbool.h>
 #include <stdint.h>
 
 /** The value that should be returned from the WHOAMI register. */
@@ -70,6 +71,7 @@ int lsm6dso32_set_acc_fsr(SensorLocation const *loc, accel_fsr_e fsr);
 int lsm6dso32_set_gyro_fsr(SensorLocation const *loc, gyro_fsr_e fsr);
 int lsm6dso32_set_acc_odr(SensorLocation const *loc, accel_odr_e odr);
 int lsm6dso32_set_gyro_odr(SensorLocation const *loc, gyro_odr_e odr);
+int lsm6dso32_high_performance(SensorLocation const *loc, bool on);
 
 int lsm6dso32_get_temp(SensorLocation const *loc, int16_t *temperature);
 int lsm6dso32_get_accel(SensorLocation const *loc, int16_t *x, int16_t *y, int16_t *z);

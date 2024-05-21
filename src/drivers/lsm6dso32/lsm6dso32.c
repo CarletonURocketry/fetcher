@@ -12,8 +12,6 @@
 #include "sensor_api.h"
 #include <errno.h>
 #include <hw/i2c.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -347,6 +345,27 @@ int lsm6dso32_set_gyro_odr(SensorLocation const *loc, gyro_odr_e odr) {
     reg_val |= (uint8_t)(odr);                             // Set ODR selection
     return_err(err);
     return lsm6dso32_write_byte(loc, CTRL2_G, reg_val);
+}
+
+/**
+ * Allows high performance operating mode to be enabled/disabled.
+ * @param loc The location of the IMU on the I2C bus.
+ * @param on True to turn on high performance, false to turn it off.
+ * @return Any error which occurred communicating with the IMU, EOK if successful.
+ */
+int lsm6dso32_high_performance(SensorLocation const *loc, bool on) {
+
+    uint8_t reg_val;
+    int err = lsm6dso32_read_byte(loc, CTRL6_C, &reg_val);
+    return_err(err);
+
+    if (on) {
+        reg_val |= 0x10;
+    } else {
+        reg_val &= ~0x10;
+    }
+
+    return lsm6dso32_write_byte(loc, CTRL6_C, reg_val);
 }
 
 /**
