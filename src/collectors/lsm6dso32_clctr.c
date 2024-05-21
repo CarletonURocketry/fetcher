@@ -28,32 +28,39 @@ void *lsm6dso32_collector(void *args) {
     int err;
     err = lsm6dso32_reset(&loc);
     if (err != EOK) {
-        fprintf(stderr, "Failed to reset LSM6DSO32: %s\n", strerror(errno));
+        fprintf(stderr, "Failed to reset LSM6DSO32: %s\n", strerror(err));
         return_err(err);
     }
+
+    err = lsm6dso32_mem_reboot(&loc);
+    if (err != EOK) {
+        fprintf(stderr, "Failed to reboot LSM6DSO32 memory content: %s\n", strerror(err));
+        return_err(err);
+    }
+
     usleep(100);
 
     err = lsm6dso32_set_acc_fsr(&loc, LA_FS_32G);
     if (err != EOK) {
-        fprintf(stderr, "Failed to set LSM6DSO32 accelerometer FSR: %s\n", strerror(errno));
+        fprintf(stderr, "Failed to set LSM6DSO32 accelerometer FSR: %s\n", strerror(err));
         return_err(err);
     }
 
     err = lsm6dso32_set_gyro_fsr(&loc, G_FS_500);
     if (err != EOK) {
-        fprintf(stderr, "Failed to set LSM6DSO32 gyroscope FSR: %s\n", strerror(errno));
+        fprintf(stderr, "Failed to set LSM6DSO32 gyroscope FSR: %s\n", strerror(err));
         return_err(err);
     }
 
     err = lsm6dso32_set_acc_odr(&loc, LA_ODR_6664);
     if (err != EOK) {
-        fprintf(stderr, "Failed to set LSM6DSO32 accelerometer ODR: %s\n", strerror(errno));
+        fprintf(stderr, "Failed to set LSM6DSO32 accelerometer ODR: %s\n", strerror(err));
         return_err(err);
     }
 
     err = lsm6dso32_set_gyro_odr(&loc, G_ODR_6664);
     if (err != EOK) {
-        fprintf(stderr, "Failed to set LSM6DSO32 gyroscope ODR: %s\n", strerror(errno));
+        fprintf(stderr, "Failed to set LSM6DSO32 gyroscope ODR: %s\n", strerror(err));
         return_err(err);
     }
 

@@ -243,6 +243,13 @@ void lsm6dso32_convert_angular_vel(gyro_fsr_e gyro_fsr, int16_t *x, int16_t *y, 
 int lsm6dso32_reset(SensorLocation const *loc) { return lsm6dso32_write_byte(loc, CTRL3_C, 0x01); }
 
 /**
+ * Reboots the memory content of the LSM6DSO32.
+ * @param loc The location of the IMU on the I2C bus.
+ * @return Any error which occurred while rebooting the IMU, EOK if successful.
+ */
+int lsm6dso32_mem_reboot(SensorLocation const *loc) { return lsm6dso32_write_byte(loc, CTRL3_C, 0x80); }
+
+/**
  * Sets the accelerometer full scale range.
  * @param loc The location of the IMU on the I2C bus.
  * @param fsr The FSR to set.

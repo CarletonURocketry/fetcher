@@ -62,6 +62,7 @@ typedef enum {
 } gyro_odr_e;
 
 int lsm6dso32_reset(SensorLocation const *loc);
+int lsm6dso32_mem_reboot(SensorLocation const *loc);
 int lsm6dso32_disable_accel(SensorLocation const *loc);
 int lsm6dso32_disable_gyro(SensorLocation const *loc);
 
