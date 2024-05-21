@@ -18,21 +18,8 @@
 #include <time.h>
 #include <unistd.h>
 
-/** Acceleration due to gravity in m/s^2. */
-#define GRAVIT_ACC 9.81f
-
-/**
- * All units being converted are being stored in milli-units.
- *
- * Ex:
- * Milli-Gs per least significant bit to Gs conversion rate using 32g full scale range.
- * 32g FSR * 2 = 64g range * 1000 = 64000mg range
- * Result is given in 16b integer, so 65535 possible different values for 64000mg
- * Conversion factor = 64000/65535 (mg per bit)
- * See https://ozzmaker.com/accelerometer-to-g/
- * We will return units in regular units instead of milli-units, so the multiplication of 1000 is removed.
- */
-#define MILLI_UNIT_PER_LSB_TO_UNIT 2.0f / 65535.0f
+/** The acceleration of 1 G in meters per second squared. */
+#define GRAVIT_ACC 9.81
 
 /** The different registers that are present in the IMU (and used by this program). */
 enum imu_reg {
@@ -192,14 +179,30 @@ int lsm6dso32_get_angular_vel(SensorLocation const *loc, int16_t *x, int16_t *y,
  * @param z A pointer to the Z component of the acceleration in milli-Gs per LSB.
  */
 void lsm6dso32_convert_accel(accel_fsr_e acc_fsr, int16_t *x, int16_t *y, int16_t *z) {
-    float conversion_factor = acc_fsr * MILLI_UNIT_PER_LSB_TO_UNIT * GRAVIT_ACC;
-    if (x) (*x) *= conversion_factor;
-    if (y) (*y) *= conversion_factor;
-    if (z) (*z) *= conversion_factor;
+
+    int16_t conversion_factor;
+    switch (acc_fsr) {
+    case LA_FS_4G:
+        conversion_factor = 8197;
+        break;
+    case LA_FS_8G:
+        conversion_factor = 4098;
+        break;
+    case LA_FS_16G:
+        conversion_factor = 2049;
+        break;
+    case LA_FS_32G:
+        conversion_factor = 1025;
+        break;
+    }
+
+    if (x) (*x) = ((*x) / conversion_factor) * (int16_t)GRAVIT_ACC;
+    if (y) (*y) = ((*y) / conversion_factor) * (int16_t)GRAVIT_ACC;
+    if (z) (*z) = ((*z) / conversion_factor) * (int16_t)GRAVIT_ACC;
 }
 
 /**
- * Converts angular velocity in millidegrees per LSB to meters per second squared. Results are stored back in the
+ * Converts angular velocity in millidegrees per LSB to degrees per second. Results are stored back in the
  * pointers themselves. Passing NULL as any of the pointers will result in the calculation being skipped.
  * @param gyro_fsr The full scale range of the gyroscope.
  * @param x A pointer to the X component of the angular velocity in millidegrees per LSB.
@@ -207,10 +210,29 @@ void lsm6dso32_convert_accel(accel_fsr_e acc_fsr, int16_t *x, int16_t *y, int16_
  * @param z A pointer to the Z component of the angular velocity in millidegrees per LSB.
  */
 void lsm6dso32_convert_angular_vel(gyro_fsr_e gyro_fsr, int16_t *x, int16_t *y, int16_t *z) {
-    float conversion_factor = gyro_fsr * MILLI_UNIT_PER_LSB_TO_UNIT;
-    if (x) (*x) *= conversion_factor;
-    if (y) (*y) *= conversion_factor;
-    if (z) (*z) *= conversion_factor;
+
+    int16_t conversion_factor;
+    switch (gyro_fsr) {
+    case G_FS_125:
+        conversion_factor = 229;
+        break;
+    case G_FS_250:
+        conversion_factor = 114;
+        break;
+    case G_FS_500:
+        conversion_factor = 57;
+        break;
+    case G_FS_1000:
+        conversion_factor = 29;
+        break;
+    case G_FS_2000:
+        conversion_factor = 14;
+        break;
+    }
+
+    if (x) (*x) /= conversion_factor;
+    if (y) (*y) /= conversion_factor;
+    if (z) (*z) /= conversion_factor;
 }
 
 /**
