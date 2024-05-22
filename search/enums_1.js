@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['m10spgcmd_0',['M10spgCmd',['../m10spg_8h.html#ac2b813bc43cf0ab1640aef43099a4c08',1,'m10spg.h']]],
-  ['ms5611cmd_1',['MS5611Cmd',['../ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455',1,'ms5611.c']]],
-  ['ms5611dreg_2',['MS5611DReg',['../ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18',1,'ms5611.c']]],
-  ['ms5611resolution_3',['MS5611Resolution',['../ms5611_8h.html#aab94c0c8692d1629420105ba506d49eb',1,'ms5611.h']]]
+  ['gyro_5ffsr_5fe_0',['gyro_fsr_e',['../lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90',1,'lsm6dso32.h']]],
+  ['gyro_5fodr_5fe_1',['gyro_odr_e',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a',1,'lsm6dso32.h']]]
 ];

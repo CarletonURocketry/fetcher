@@ -88,7 +88,6 @@ $(document).ready(function(){initNavTree('lsm6dso32_8c.html',''); initResizable(
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -102,24 +101,14 @@ $(document).ready(function(){initNavTree('lsm6dso32_8c.html',''); initResizable(
 <code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;hw/i2c.h&gt;</code><br />
-<code>#include &lt;stdbool.h&gt;</code><br />
-<code>#include &lt;stdint.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLSM6DSO32Context.html">LSM6DSO32Context</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ae93eef7df99ce96ee99ff06b5bd78ac3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#ae93eef7df99ce96ee99ff06b5bd78ac3">GRAVIT_ACC</a>&#160;&#160;&#160;9.81f</td></tr>
+<tr class="memitem:ae93eef7df99ce96ee99ff06b5bd78ac3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#ae93eef7df99ce96ee99ff06b5bd78ac3">GRAVIT_ACC</a>&#160;&#160;&#160;9.81</td></tr>
 <tr class="separator:ae93eef7df99ce96ee99ff06b5bd78ac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4dbe1dd4c45f7e6b23fa6f8b88f9c52c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a4dbe1dd4c45f7e6b23fa6f8b88f9c52c">MILLI_UNIT_PER_LSB_TO_UNIT</a>&#160;&#160;&#160;2.0f / 65535.0f</td></tr>
-<tr class="separator:a4dbe1dd4c45f7e6b23fa6f8b88f9c52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c">return_err</a>(err)&#160;&#160;&#160;    if (err != EOK) return err</td></tr>
 <tr class="separator:a27755b354cac0ca34fbdb8ffd6b0f34c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -170,8 +159,36 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3071833f9d2ab2cea07a4d9e3d7827aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a3071833f9d2ab2cea07a4d9e3d7827aa">lsm6dso32_init</a> (<a class="el" href="structSensor.html">Sensor</a> *sensor, const int bus, const uint8_t addr, const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision)</td></tr>
-<tr class="separator:a3071833f9d2ab2cea07a4d9e3d7827aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3672b7848902f96c35e213c5044b16c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#ae3672b7848902f96c35e213c5044b16c">lsm6dso32_get_temp</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, int16_t *temperature)</td></tr>
+<tr class="separator:ae3672b7848902f96c35e213c5044b16c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcab9c3450b62c779dbb175af35136eb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#adcab9c3450b62c779dbb175af35136eb">lsm6dso32_get_accel</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, int16_t *x, int16_t *y, int16_t *z)</td></tr>
+<tr class="separator:adcab9c3450b62c779dbb175af35136eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab31e576c085b8a6c7257b5a880da3697"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#ab31e576c085b8a6c7257b5a880da3697">lsm6dso32_get_angular_vel</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, int16_t *x, int16_t *y, int16_t *z)</td></tr>
+<tr class="separator:ab31e576c085b8a6c7257b5a880da3697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc6299688f0953554a33596dcb2564cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#acc6299688f0953554a33596dcb2564cd">lsm6dso32_convert_accel</a> (<a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a> acc_fsr, int16_t *x, int16_t *y, int16_t *z)</td></tr>
+<tr class="separator:acc6299688f0953554a33596dcb2564cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e0852a5d594e29e426e2df84ca4ff01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a7e0852a5d594e29e426e2df84ca4ff01">lsm6dso32_convert_angular_vel</a> (<a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a> gyro_fsr, int16_t *x, int16_t *y, int16_t *z)</td></tr>
+<tr class="separator:a7e0852a5d594e29e426e2df84ca4ff01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab57edd8be62d2301636663736d039a76"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#ab57edd8be62d2301636663736d039a76">lsm6dso32_reset</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:ab57edd8be62d2301636663736d039a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c94692d3a22c7bc3fdbc33c5c3b7831"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a0c94692d3a22c7bc3fdbc33c5c3b7831">lsm6dso32_mem_reboot</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:a0c94692d3a22c7bc3fdbc33c5c3b7831"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8af99fbfb61236351c4f207014b0da2c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a8af99fbfb61236351c4f207014b0da2c">lsm6dso32_set_acc_fsr</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a> fsr)</td></tr>
+<tr class="separator:a8af99fbfb61236351c4f207014b0da2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a842674ec4d135fcef9bd560fa25b879d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a842674ec4d135fcef9bd560fa25b879d">lsm6dso32_set_gyro_fsr</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a> fsr)</td></tr>
+<tr class="separator:a842674ec4d135fcef9bd560fa25b879d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe7579c4901c54aba4c6f6b4d358c532"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#abe7579c4901c54aba4c6f6b4d358c532">lsm6dso32_set_acc_odr</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111ed">accel_odr_e</a> odr)</td></tr>
+<tr class="separator:abe7579c4901c54aba4c6f6b4d358c532"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a8872e347cbca93aca1803ef432e398"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a3a8872e347cbca93aca1803ef432e398">lsm6dso32_set_gyro_odr</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a">gyro_odr_e</a> odr)</td></tr>
+<tr class="separator:a3a8872e347cbca93aca1803ef432e398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4704f8833eeb05f5b9b054e6aea1295"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#ad4704f8833eeb05f5b9b054e6aea1295">lsm6dso32_high_performance</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, bool on)</td></tr>
+<tr class="separator:ad4704f8833eeb05f5b9b054e6aea1295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40a9df9d13a004c794b0bf23e43ac916"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#a40a9df9d13a004c794b0bf23e43ac916">lsm6dso32_disable_gyro</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:a40a9df9d13a004c794b0bf23e43ac916"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3f83f32a2d18b4867ded355fc872e28"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#ac3f83f32a2d18b4867ded355fc872e28">lsm6dso32_disable_accel</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:ac3f83f32a2d18b4867ded355fc872e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab73d1934530dc24f951068b94d11bd1d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8c.html#ab73d1934530dc24f951068b94d11bd1d">lsm6dso32_whoami</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, uint8_t *val)</td></tr>
+<tr class="separator:ab73d1934530dc24f951068b94d11bd1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="structSensor.html">Sensor</a> API interface implementation for the LSM6DSO32 inertial module. </p>
@@ -185,27 +202,11 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GRAVIT_ACC&#160;&#160;&#160;9.81f</td>
+          <td class="memname">#define GRAVIT_ACC&#160;&#160;&#160;9.81</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Acceleration due to gravity in m/s^2. </p>
-
-</div>
-</div>
-<a id="a4dbe1dd4c45f7e6b23fa6f8b88f9c52c" name="a4dbe1dd4c45f7e6b23fa6f8b88f9c52c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4dbe1dd4c45f7e6b23fa6f8b88f9c52c">&#9670;&nbsp;</a></span>MILLI_UNIT_PER_LSB_TO_UNIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MILLI_UNIT_PER_LSB_TO_UNIT&#160;&#160;&#160;2.0f / 65535.0f</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >All units being converted are being stored in milli-units.</p>
-<p >Ex: Milli-Gs per least significant bit to Gs conversion rate using 32g full scale range. 32g FSR * 2 = 64g range * 1000 = 64000mg range Result is given in 16b integer, so 65535 possible different values for 64000mg Conversion factor = 64000/65535 (mg per bit) See <a href="https://ozzmaker.com/accelerometer-to-g/">https://ozzmaker.com/accelerometer-to-g/</a> We will return units in regular units instead of milli-units, so the multiplication of 1000 is removed. </p>
+<p >The acceleration of 1 G in meters per second squared. </p>
 
 </div>
 </div>
@@ -308,35 +309,35 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a3071833f9d2ab2cea07a4d9e3d7827aa" name="a3071833f9d2ab2cea07a4d9e3d7827aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3071833f9d2ab2cea07a4d9e3d7827aa">&#9670;&nbsp;</a></span>lsm6dso32_init()</h2>
+<a id="acc6299688f0953554a33596dcb2564cd" name="acc6299688f0953554a33596dcb2564cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc6299688f0953554a33596dcb2564cd">&#9670;&nbsp;</a></span>lsm6dso32_convert_accel()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void lsm6dso32_init </td>
+          <td class="memname">void lsm6dso32_convert_accel </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a> *&#160;</td>
-          <td class="paramname"><em>sensor</em>, </td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a>&#160;</td>
+          <td class="paramname"><em>acc_fsr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>bus</em>, </td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint8_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a>&#160;</td>
-          <td class="paramname"><em>precision</em>&#160;</td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -345,15 +346,513 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Initializes a sensor struct with the interface to interact with the LSM6DSO32. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Converts acceleration in milli-Gs per LSB to meters per second squared. Results are stored back in the pointers themselves. Passing NULL as any of the pointers will result in the calculation being skipped. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sensor</td><td>The sensor interface to be initialized. </td></tr>
-    <tr><td class="paramname">bus</td><td>The file descriptor of the I2C bus. </td></tr>
-    <tr><td class="paramname">addr</td><td>The address of the sensor on the I2C bus. </td></tr>
-    <tr><td class="paramname">precision</td><td>The precision to read measurements with. </td></tr>
+    <tr><td class="paramname">acc_fsr</td><td>The full scale range of the accelerometer. </td></tr>
+    <tr><td class="paramname">x</td><td>A pointer to the X component of the acceleration in milli-Gs per LSB. </td></tr>
+    <tr><td class="paramname">y</td><td>A pointer to the Y component of the acceleration in milli-Gs per LSB. </td></tr>
+    <tr><td class="paramname">z</td><td>A pointer to the Z component of the acceleration in milli-Gs per LSB. </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a7e0852a5d594e29e426e2df84ca4ff01" name="a7e0852a5d594e29e426e2df84ca4ff01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e0852a5d594e29e426e2df84ca4ff01">&#9670;&nbsp;</a></span>lsm6dso32_convert_angular_vel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void lsm6dso32_convert_angular_vel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a>&#160;</td>
+          <td class="paramname"><em>gyro_fsr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Converts angular velocity in millidegrees per LSB to degrees per second. Results are stored back in the pointers themselves. Passing NULL as any of the pointers will result in the calculation being skipped. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gyro_fsr</td><td>The full scale range of the gyroscope. </td></tr>
+    <tr><td class="paramname">x</td><td>A pointer to the X component of the angular velocity in millidegrees per LSB. </td></tr>
+    <tr><td class="paramname">y</td><td>A pointer to the Y component of the angular velocity in millidegrees per LSB. </td></tr>
+    <tr><td class="paramname">z</td><td>A pointer to the Z component of the angular velocity in millidegrees per LSB. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac3f83f32a2d18b4867ded355fc872e28" name="ac3f83f32a2d18b4867ded355fc872e28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3f83f32a2d18b4867ded355fc872e28">&#9670;&nbsp;</a></span>lsm6dso32_disable_accel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_disable_accel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Powers down the accelerometer. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a40a9df9d13a004c794b0bf23e43ac916" name="a40a9df9d13a004c794b0bf23e43ac916"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40a9df9d13a004c794b0bf23e43ac916">&#9670;&nbsp;</a></span>lsm6dso32_disable_gyro()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_disable_gyro </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Powers down the gyroscope. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="adcab9c3450b62c779dbb175af35136eb" name="adcab9c3450b62c779dbb175af35136eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcab9c3450b62c779dbb175af35136eb">&#9670;&nbsp;</a></span>lsm6dso32_get_accel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_get_accel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Read the linear acceleration data from the IMU. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>A pointer to where to store the X component of the acceleration in milli-Gs per LSB. </td></tr>
+    <tr><td class="paramname">y</td><td>A pointer to where to store the Y component of the acceleration in milli-Gs per LSB. </td></tr>
+    <tr><td class="paramname">z</td><td>A pointer to where to store the Z component of the acceleration in milli-Gs per LSB. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error that occurred while reading the sensor, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ab31e576c085b8a6c7257b5a880da3697" name="ab31e576c085b8a6c7257b5a880da3697"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab31e576c085b8a6c7257b5a880da3697">&#9670;&nbsp;</a></span>lsm6dso32_get_angular_vel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_get_angular_vel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Read the linear angular velocity data from the IMU. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>A pointer to where to store the X component of the angular velocity in millidegrees per LSB. </td></tr>
+    <tr><td class="paramname">y</td><td>A pointer to where to store the Y component of the angular velocity in millidegrees per LSB. </td></tr>
+    <tr><td class="paramname">z</td><td>A pointer to where to store the Z component of the angular velocity in millidegrees per LSB. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error that occurred while reading the sensor, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ae3672b7848902f96c35e213c5044b16c" name="ae3672b7848902f96c35e213c5044b16c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3672b7848902f96c35e213c5044b16c">&#9670;&nbsp;</a></span>lsm6dso32_get_temp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_get_temp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>temperature</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads temperature from the IMU. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The sensor location. @temperature A pointer to where to store the temperature in degrees Celsius. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The error status of reading from the sensor. EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ad4704f8833eeb05f5b9b054e6aea1295" name="ad4704f8833eeb05f5b9b054e6aea1295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4704f8833eeb05f5b9b054e6aea1295">&#9670;&nbsp;</a></span>lsm6dso32_high_performance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_high_performance </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>on</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Allows high performance operating mode to be enabled/disabled. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">on</td><td>True to turn on high performance, false to turn it off. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a0c94692d3a22c7bc3fdbc33c5c3b7831" name="a0c94692d3a22c7bc3fdbc33c5c3b7831"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c94692d3a22c7bc3fdbc33c5c3b7831">&#9670;&nbsp;</a></span>lsm6dso32_mem_reboot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_mem_reboot </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reboots the memory content of the LSM6DSO32. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred while rebooting the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ab57edd8be62d2301636663736d039a76" name="ab57edd8be62d2301636663736d039a76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab57edd8be62d2301636663736d039a76">&#9670;&nbsp;</a></span>lsm6dso32_reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_reset </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Performs a software reset of the LSM6DSO32. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred while resetting the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a8af99fbfb61236351c4f207014b0da2c" name="a8af99fbfb61236351c4f207014b0da2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8af99fbfb61236351c4f207014b0da2c">&#9670;&nbsp;</a></span>lsm6dso32_set_acc_fsr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_set_acc_fsr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a>&#160;</td>
+          <td class="paramname"><em>fsr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Sets the accelerometer full scale range. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">fsr</td><td>The FSR to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful, EINVAL if bad fsr. </dd></dl>
+
+</div>
+</div>
+<a id="abe7579c4901c54aba4c6f6b4d358c532" name="abe7579c4901c54aba4c6f6b4d358c532"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe7579c4901c54aba4c6f6b4d358c532">&#9670;&nbsp;</a></span>lsm6dso32_set_acc_odr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_set_acc_odr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111ed">accel_odr_e</a>&#160;</td>
+          <td class="paramname"><em>odr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Sets the accelerometer output data rate. NOTE: An ODR of 1.6Hz can only be set if high performance operating mode is disabled. Otherwise the effect will be 12.6Hz ODR. It is the responsibility of the caller to set disable the high performance operating mode before or after this function is called. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">odr</td><td>The ODR to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a842674ec4d135fcef9bd560fa25b879d" name="a842674ec4d135fcef9bd560fa25b879d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a842674ec4d135fcef9bd560fa25b879d">&#9670;&nbsp;</a></span>lsm6dso32_set_gyro_fsr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_set_gyro_fsr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a>&#160;</td>
+          <td class="paramname"><em>fsr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Sets the gyroscope full scale range. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">fsr</td><td>The FSR to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful, EINVAL if bad fsr. </dd></dl>
+
+</div>
+</div>
+<a id="a3a8872e347cbca93aca1803ef432e398" name="a3a8872e347cbca93aca1803ef432e398"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a8872e347cbca93aca1803ef432e398">&#9670;&nbsp;</a></span>lsm6dso32_set_gyro_odr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_set_gyro_odr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a">gyro_odr_e</a>&#160;</td>
+          <td class="paramname"><em>odr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Sets the gyroscope output data rate. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">odr</td><td>The ODR to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ab73d1934530dc24f951068b94d11bd1d" name="ab73d1934530dc24f951068b94d11bd1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab73d1934530dc24f951068b94d11bd1d">&#9670;&nbsp;</a></span>lsm6dso32_whoami()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_whoami </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>val</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads the "who am I" value from the sensor. Should always be equal to 0x6C. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the sensor on the I2C bus. </td></tr>
+    <tr><td class="paramname">val</td><td>The value returned by the WHOAMI command. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
 
 </div>
 </div>

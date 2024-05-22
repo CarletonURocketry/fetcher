@@ -1,8 +1,6 @@
 var lsm6dso32_8c =
 [
-    [ "LSM6DSO32Context", "structLSM6DSO32Context.html", "structLSM6DSO32Context" ],
     [ "GRAVIT_ACC", "lsm6dso32_8c.html#ae93eef7df99ce96ee99ff06b5bd78ac3", null ],
-    [ "MILLI_UNIT_PER_LSB_TO_UNIT", "lsm6dso32_8c.html#a4dbe1dd4c45f7e6b23fa6f8b88f9c52c", null ],
     [ "return_err", "lsm6dso32_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c", null ],
     [ "imu_reg", "lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677", [
       [ "WHO_AM_I", "lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677a14f735baeb4ba7d558ac9caf5439fbeb", null ],
@@ -37,5 +35,19 @@ var lsm6dso32_8c =
       [ "Y_OFS_USR", "lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677ac3b829b6b6d3a3c58fe7a98dfec668ab", null ],
       [ "Z_OFS_USR", "lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677a9312fe256880881adc9947eb558e0f2b", null ]
     ] ],
-    [ "lsm6dso32_init", "lsm6dso32_8c.html#a3071833f9d2ab2cea07a4d9e3d7827aa", null ]
+    [ "lsm6dso32_convert_accel", "lsm6dso32_8c.html#acc6299688f0953554a33596dcb2564cd", null ],
+    [ "lsm6dso32_convert_angular_vel", "lsm6dso32_8c.html#a7e0852a5d594e29e426e2df84ca4ff01", null ],
+    [ "lsm6dso32_disable_accel", "lsm6dso32_8c.html#ac3f83f32a2d18b4867ded355fc872e28", null ],
+    [ "lsm6dso32_disable_gyro", "lsm6dso32_8c.html#a40a9df9d13a004c794b0bf23e43ac916", null ],
+    [ "lsm6dso32_get_accel", "lsm6dso32_8c.html#adcab9c3450b62c779dbb175af35136eb", null ],
+    [ "lsm6dso32_get_angular_vel", "lsm6dso32_8c.html#ab31e576c085b8a6c7257b5a880da3697", null ],
+    [ "lsm6dso32_get_temp", "lsm6dso32_8c.html#ae3672b7848902f96c35e213c5044b16c", null ],
+    [ "lsm6dso32_high_performance", "lsm6dso32_8c.html#ad4704f8833eeb05f5b9b054e6aea1295", null ],
+    [ "lsm6dso32_mem_reboot", "lsm6dso32_8c.html#a0c94692d3a22c7bc3fdbc33c5c3b7831", null ],
+    [ "lsm6dso32_reset", "lsm6dso32_8c.html#ab57edd8be62d2301636663736d039a76", null ],
+    [ "lsm6dso32_set_acc_fsr", "lsm6dso32_8c.html#a8af99fbfb61236351c4f207014b0da2c", null ],
+    [ "lsm6dso32_set_acc_odr", "lsm6dso32_8c.html#abe7579c4901c54aba4c6f6b4d358c532", null ],
+    [ "lsm6dso32_set_gyro_fsr", "lsm6dso32_8c.html#a842674ec4d135fcef9bd560fa25b879d", null ],
+    [ "lsm6dso32_set_gyro_odr", "lsm6dso32_8c.html#a3a8872e347cbca93aca1803ef432e398", null ],
+    [ "lsm6dso32_whoami", "lsm6dso32_8c.html#ab73d1934530dc24f951068b94d11bd1d", null ]
 ];

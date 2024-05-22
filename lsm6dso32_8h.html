@@ -88,6 +88,8 @@ $(document).ready(function(){initNavTree('lsm6dso32_8h.html',''); initResizable(
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">lsm6dso32.h File Reference</div></div>
 </div><!--header-->
@@ -96,48 +98,277 @@ $(document).ready(function(){initNavTree('lsm6dso32_8h.html',''); initResizable(
 <p>Header file containing the necessary types and function prototypes for controlling the LSM6DSO32 inertial module.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="sensor__api_8h_source.html">../sensor_api.h</a>&quot;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 </div>
 <p><a href="lsm6dso32_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a17146fce7489e5430732d301e247e929"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a17146fce7489e5430732d301e247e929">WHOAMI_VALUE</a>&#160;&#160;&#160;0x6C</td></tr>
+<tr class="separator:a17146fce7489e5430732d301e247e929"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:aec8501b935143099e5f729dee221a81e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a> { <a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81eaf7ba92fec484b31a0c46b4f9e8592664">LA_FS_4G</a> = 4
+, <a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81ea839a1fe561e6613b0a092db8cc841bf0">LA_FS_8G</a> = 8
+, <a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81ea24ae9469292f3af85bfaf599781cbd17">LA_FS_16G</a> = 16
+, <a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81eac0be1c7ec7e1abdf1cadd48333ca56ec">LA_FS_32G</a> = 32
+ }</td></tr>
+<tr class="separator:aec8501b935143099e5f729dee221a81e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83acdc0eb37e8bfe0c2ae2348ded0a90"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a> { <br />
+&#160;&#160;<a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90a688dd4342f8ac935019a37a10383d623">G_FS_125</a> = 125
+, <a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90a6e3f817d7ec21424e2185897011fd173">G_FS_250</a> = 250
+, <a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90a53c6d6f9f0f6675ff186ec1fafd19be9">G_FS_500</a> = 500
+, <a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90a46909825f5c8e35878f09f9fb3f7a345">G_FS_1000</a> = 1000
+, <br />
+&#160;&#160;<a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90a935669f35ebaa9b67420012bfd767263">G_FS_2000</a> = 2000
+<br />
+ }</td></tr>
+<tr class="separator:a83acdc0eb37e8bfe0c2ae2348ded0a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51182b854acfdb10a5c2e0e3f64111ed"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111ed">accel_odr_e</a> { <br />
+&#160;&#160;<a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda1fb3aacb69ac6a30ee2b60cfb86e0f8a">LA_ODR_1_6</a> = 0xB0
+, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda890aa2bb96e765b2b2a80477246272de">LA_ODR_12_5</a> = 0x10
+, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda2b1ae763520f1039ea771a6d62d50de4">LA_ODR_26</a> = 0x20
+, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda7762d0f759ea8eea5e7eac55637653eb">LA_ODR_52</a> = 0x30
+, <br />
+&#160;&#160;<a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111edaf22bf73e23fffadad02c697eff942cbb">LA_ODR_104</a> = 0x40
+, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111edadd0e20404b01e96dcbd4022a82c3ca59">LA_ODR_208</a> = 0x50
+, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda8ad92472baad1f07437b9ae88232db5f">LA_ODR_416</a> = 0x60
+, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111edabfa162443246ea210a4765ea0770d2a6">LA_ODR_833</a> = 0x70
+, <br />
+&#160;&#160;<a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda49dd28ceee7d59dcaa14ec6ebbc7d93d">LA_ODR_1666</a> = 0x80
+, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111edaeb31eaea3754e688d6ab51b3a6dd3204">LA_ODR_3332</a> = 0x90
+, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda18c1053c13e685a544b782343c6e8cc9">LA_ODR_6664</a> = 0xA0
+<br />
+ }</td></tr>
+<tr class="separator:a51182b854acfdb10a5c2e0e3f64111ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26c87097ac3c2dcd9598373cca75599a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a">gyro_odr_e</a> { <br />
+&#160;&#160;<a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aad4168e86380ded81245c3c9a00a76ab4">G_ODR_12_5</a> = 0x10
+, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aad3850f5d623fe95f08f247f4f484dc81">G_ODR_26</a> = 0x20
+, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa732c5e8a9396d72d37aadde0bc08a285">G_ODR_52</a> = 0x30
+, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa440168138f893ed1c0046a27c3e68fac">G_ODR_104</a> = 0x40
+, <br />
+&#160;&#160;<a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aaf5bfca10c8a45cf0833eb9122c0ed76d">G_ODR_208</a> = 0x50
+, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aab3aca95d49fa8fb0ef03e5d41d74eabe">G_ODR_416</a> = 0x60
+, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa899c732ef0caea0ce747856b91d32a39">G_ODR_833</a> = 0x70
+, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa9b204740b4116e59b0aabcfacc1481ca">G_ODR_1666</a> = 0x80
+, <br />
+&#160;&#160;<a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa6924b47b24d79d19a18283d4d73a24bc">G_ODR_3332</a> = 0x90
+, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa3a07357b5e55c76d79a02ec8ba744ddf">G_ODR_6664</a> = 0xA0
+<br />
+ }</td></tr>
+<tr class="separator:a26c87097ac3c2dcd9598373cca75599a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3071833f9d2ab2cea07a4d9e3d7827aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a3071833f9d2ab2cea07a4d9e3d7827aa">lsm6dso32_init</a> (<a class="el" href="structSensor.html">Sensor</a> *sensor, const int bus, const uint8_t addr, const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision)</td></tr>
-<tr class="separator:a3071833f9d2ab2cea07a4d9e3d7827aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab57edd8be62d2301636663736d039a76"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#ab57edd8be62d2301636663736d039a76">lsm6dso32_reset</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:ab57edd8be62d2301636663736d039a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c94692d3a22c7bc3fdbc33c5c3b7831"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a0c94692d3a22c7bc3fdbc33c5c3b7831">lsm6dso32_mem_reboot</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:a0c94692d3a22c7bc3fdbc33c5c3b7831"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3f83f32a2d18b4867ded355fc872e28"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#ac3f83f32a2d18b4867ded355fc872e28">lsm6dso32_disable_accel</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:ac3f83f32a2d18b4867ded355fc872e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40a9df9d13a004c794b0bf23e43ac916"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a40a9df9d13a004c794b0bf23e43ac916">lsm6dso32_disable_gyro</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc)</td></tr>
+<tr class="separator:a40a9df9d13a004c794b0bf23e43ac916"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8af99fbfb61236351c4f207014b0da2c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a8af99fbfb61236351c4f207014b0da2c">lsm6dso32_set_acc_fsr</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a> fsr)</td></tr>
+<tr class="separator:a8af99fbfb61236351c4f207014b0da2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a842674ec4d135fcef9bd560fa25b879d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a842674ec4d135fcef9bd560fa25b879d">lsm6dso32_set_gyro_fsr</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a> fsr)</td></tr>
+<tr class="separator:a842674ec4d135fcef9bd560fa25b879d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe7579c4901c54aba4c6f6b4d358c532"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#abe7579c4901c54aba4c6f6b4d358c532">lsm6dso32_set_acc_odr</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111ed">accel_odr_e</a> odr)</td></tr>
+<tr class="separator:abe7579c4901c54aba4c6f6b4d358c532"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a8872e347cbca93aca1803ef432e398"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a3a8872e347cbca93aca1803ef432e398">lsm6dso32_set_gyro_odr</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a">gyro_odr_e</a> odr)</td></tr>
+<tr class="separator:a3a8872e347cbca93aca1803ef432e398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4704f8833eeb05f5b9b054e6aea1295"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#ad4704f8833eeb05f5b9b054e6aea1295">lsm6dso32_high_performance</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, bool on)</td></tr>
+<tr class="separator:ad4704f8833eeb05f5b9b054e6aea1295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3672b7848902f96c35e213c5044b16c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#ae3672b7848902f96c35e213c5044b16c">lsm6dso32_get_temp</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, int16_t *temperature)</td></tr>
+<tr class="separator:ae3672b7848902f96c35e213c5044b16c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcab9c3450b62c779dbb175af35136eb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#adcab9c3450b62c779dbb175af35136eb">lsm6dso32_get_accel</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, int16_t *x, int16_t *y, int16_t *z)</td></tr>
+<tr class="separator:adcab9c3450b62c779dbb175af35136eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab31e576c085b8a6c7257b5a880da3697"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#ab31e576c085b8a6c7257b5a880da3697">lsm6dso32_get_angular_vel</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, int16_t *x, int16_t *y, int16_t *z)</td></tr>
+<tr class="separator:ab31e576c085b8a6c7257b5a880da3697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab73d1934530dc24f951068b94d11bd1d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#ab73d1934530dc24f951068b94d11bd1d">lsm6dso32_whoami</a> (<a class="el" href="structSensorLocation.html">SensorLocation</a> const *loc, uint8_t *val)</td></tr>
+<tr class="separator:ab73d1934530dc24f951068b94d11bd1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc6299688f0953554a33596dcb2564cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#acc6299688f0953554a33596dcb2564cd">lsm6dso32_convert_accel</a> (<a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a> acc_fsr, int16_t *x, int16_t *y, int16_t *z)</td></tr>
+<tr class="separator:acc6299688f0953554a33596dcb2564cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e0852a5d594e29e426e2df84ca4ff01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lsm6dso32_8h.html#a7e0852a5d594e29e426e2df84ca4ff01">lsm6dso32_convert_angular_vel</a> (<a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a> gyro_fsr, int16_t *x, int16_t *y, int16_t *z)</td></tr>
+<tr class="separator:a7e0852a5d594e29e426e2df84ca4ff01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Header file containing the necessary types and function prototypes for controlling the LSM6DSO32 inertial module. </p>
 <p >Header file containing the necessary types and function prototypes for controlling the LSM6DSO32 inertial module. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a3071833f9d2ab2cea07a4d9e3d7827aa" name="a3071833f9d2ab2cea07a4d9e3d7827aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3071833f9d2ab2cea07a4d9e3d7827aa">&#9670;&nbsp;</a></span>lsm6dso32_init()</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a17146fce7489e5430732d301e247e929" name="a17146fce7489e5430732d301e247e929"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17146fce7489e5430732d301e247e929">&#9670;&nbsp;</a></span>WHOAMI_VALUE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void lsm6dso32_init </td>
+          <td class="memname">#define WHOAMI_VALUE&#160;&#160;&#160;0x6C</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The value that should be returned from the WHOAMI register. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="aec8501b935143099e5f729dee221a81e" name="aec8501b935143099e5f729dee221a81e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec8501b935143099e5f729dee221a81e">&#9670;&nbsp;</a></span>accel_fsr_e</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Represents the possible full scale range settings for linear acceleration in Gs (gravitational acceleration). </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aec8501b935143099e5f729dee221a81eaf7ba92fec484b31a0c46b4f9e8592664" name="aec8501b935143099e5f729dee221a81eaf7ba92fec484b31a0c46b4f9e8592664"></a>LA_FS_4G&#160;</td><td class="fielddoc"><p >Full scale range of +/- 4Gs </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aec8501b935143099e5f729dee221a81ea839a1fe561e6613b0a092db8cc841bf0" name="aec8501b935143099e5f729dee221a81ea839a1fe561e6613b0a092db8cc841bf0"></a>LA_FS_8G&#160;</td><td class="fielddoc"><p >Full scale range of +/- 8Gs </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aec8501b935143099e5f729dee221a81ea24ae9469292f3af85bfaf599781cbd17" name="aec8501b935143099e5f729dee221a81ea24ae9469292f3af85bfaf599781cbd17"></a>LA_FS_16G&#160;</td><td class="fielddoc"><p >Full scale range of +/- 16Gs </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aec8501b935143099e5f729dee221a81eac0be1c7ec7e1abdf1cadd48333ca56ec" name="aec8501b935143099e5f729dee221a81eac0be1c7ec7e1abdf1cadd48333ca56ec"></a>LA_FS_32G&#160;</td><td class="fielddoc"><p >Full scale range of +/- 32Gs </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a51182b854acfdb10a5c2e0e3f64111ed" name="a51182b854acfdb10a5c2e0e3f64111ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51182b854acfdb10a5c2e0e3f64111ed">&#9670;&nbsp;</a></span>accel_odr_e</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111ed">accel_odr_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Possible output data rates for linear acceleration in Hz. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111eda1fb3aacb69ac6a30ee2b60cfb86e0f8a" name="a51182b854acfdb10a5c2e0e3f64111eda1fb3aacb69ac6a30ee2b60cfb86e0f8a"></a>LA_ODR_1_6&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111eda890aa2bb96e765b2b2a80477246272de" name="a51182b854acfdb10a5c2e0e3f64111eda890aa2bb96e765b2b2a80477246272de"></a>LA_ODR_12_5&#160;</td><td class="fielddoc"><p >1.6 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111eda2b1ae763520f1039ea771a6d62d50de4" name="a51182b854acfdb10a5c2e0e3f64111eda2b1ae763520f1039ea771a6d62d50de4"></a>LA_ODR_26&#160;</td><td class="fielddoc"><p >12.5 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111eda7762d0f759ea8eea5e7eac55637653eb" name="a51182b854acfdb10a5c2e0e3f64111eda7762d0f759ea8eea5e7eac55637653eb"></a>LA_ODR_52&#160;</td><td class="fielddoc"><p >26 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111edaf22bf73e23fffadad02c697eff942cbb" name="a51182b854acfdb10a5c2e0e3f64111edaf22bf73e23fffadad02c697eff942cbb"></a>LA_ODR_104&#160;</td><td class="fielddoc"><p >52 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111edadd0e20404b01e96dcbd4022a82c3ca59" name="a51182b854acfdb10a5c2e0e3f64111edadd0e20404b01e96dcbd4022a82c3ca59"></a>LA_ODR_208&#160;</td><td class="fielddoc"><p >104 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111eda8ad92472baad1f07437b9ae88232db5f" name="a51182b854acfdb10a5c2e0e3f64111eda8ad92472baad1f07437b9ae88232db5f"></a>LA_ODR_416&#160;</td><td class="fielddoc"><p >208 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111edabfa162443246ea210a4765ea0770d2a6" name="a51182b854acfdb10a5c2e0e3f64111edabfa162443246ea210a4765ea0770d2a6"></a>LA_ODR_833&#160;</td><td class="fielddoc"><p >416 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111eda49dd28ceee7d59dcaa14ec6ebbc7d93d" name="a51182b854acfdb10a5c2e0e3f64111eda49dd28ceee7d59dcaa14ec6ebbc7d93d"></a>LA_ODR_1666&#160;</td><td class="fielddoc"><p >833 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111edaeb31eaea3754e688d6ab51b3a6dd3204" name="a51182b854acfdb10a5c2e0e3f64111edaeb31eaea3754e688d6ab51b3a6dd3204"></a>LA_ODR_3332&#160;</td><td class="fielddoc"><p >1666 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a51182b854acfdb10a5c2e0e3f64111eda18c1053c13e685a544b782343c6e8cc9" name="a51182b854acfdb10a5c2e0e3f64111eda18c1053c13e685a544b782343c6e8cc9"></a>LA_ODR_6664&#160;</td><td class="fielddoc"><p >3332 Hz </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a83acdc0eb37e8bfe0c2ae2348ded0a90" name="a83acdc0eb37e8bfe0c2ae2348ded0a90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83acdc0eb37e8bfe0c2ae2348ded0a90">&#9670;&nbsp;</a></span>gyro_fsr_e</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Represents the possible full scale range settings for the gyroscope in degrees per second. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a83acdc0eb37e8bfe0c2ae2348ded0a90a688dd4342f8ac935019a37a10383d623" name="a83acdc0eb37e8bfe0c2ae2348ded0a90a688dd4342f8ac935019a37a10383d623"></a>G_FS_125&#160;</td><td class="fielddoc"><p >Full scale range of +/-125 degrees per second. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a83acdc0eb37e8bfe0c2ae2348ded0a90a6e3f817d7ec21424e2185897011fd173" name="a83acdc0eb37e8bfe0c2ae2348ded0a90a6e3f817d7ec21424e2185897011fd173"></a>G_FS_250&#160;</td><td class="fielddoc"><p >Full scale range of +/-250 degrees per second. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a83acdc0eb37e8bfe0c2ae2348ded0a90a53c6d6f9f0f6675ff186ec1fafd19be9" name="a83acdc0eb37e8bfe0c2ae2348ded0a90a53c6d6f9f0f6675ff186ec1fafd19be9"></a>G_FS_500&#160;</td><td class="fielddoc"><p >Full scale range of +/-500 degrees per second. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a83acdc0eb37e8bfe0c2ae2348ded0a90a46909825f5c8e35878f09f9fb3f7a345" name="a83acdc0eb37e8bfe0c2ae2348ded0a90a46909825f5c8e35878f09f9fb3f7a345"></a>G_FS_1000&#160;</td><td class="fielddoc"><p >Full scale range of +/-1000 degrees per second. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a83acdc0eb37e8bfe0c2ae2348ded0a90a935669f35ebaa9b67420012bfd767263" name="a83acdc0eb37e8bfe0c2ae2348ded0a90a935669f35ebaa9b67420012bfd767263"></a>G_FS_2000&#160;</td><td class="fielddoc"><p >Full scale range of +/-2000 degrees per second. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a26c87097ac3c2dcd9598373cca75599a" name="a26c87097ac3c2dcd9598373cca75599a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26c87097ac3c2dcd9598373cca75599a">&#9670;&nbsp;</a></span>gyro_odr_e</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a">gyro_odr_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Possible output data rates for the gyroscope in Hz. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aad4168e86380ded81245c3c9a00a76ab4" name="a26c87097ac3c2dcd9598373cca75599aad4168e86380ded81245c3c9a00a76ab4"></a>G_ODR_12_5&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aad3850f5d623fe95f08f247f4f484dc81" name="a26c87097ac3c2dcd9598373cca75599aad3850f5d623fe95f08f247f4f484dc81"></a>G_ODR_26&#160;</td><td class="fielddoc"><p >12.5 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aa732c5e8a9396d72d37aadde0bc08a285" name="a26c87097ac3c2dcd9598373cca75599aa732c5e8a9396d72d37aadde0bc08a285"></a>G_ODR_52&#160;</td><td class="fielddoc"><p >26 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aa440168138f893ed1c0046a27c3e68fac" name="a26c87097ac3c2dcd9598373cca75599aa440168138f893ed1c0046a27c3e68fac"></a>G_ODR_104&#160;</td><td class="fielddoc"><p >52 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aaf5bfca10c8a45cf0833eb9122c0ed76d" name="a26c87097ac3c2dcd9598373cca75599aaf5bfca10c8a45cf0833eb9122c0ed76d"></a>G_ODR_208&#160;</td><td class="fielddoc"><p >104 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aab3aca95d49fa8fb0ef03e5d41d74eabe" name="a26c87097ac3c2dcd9598373cca75599aab3aca95d49fa8fb0ef03e5d41d74eabe"></a>G_ODR_416&#160;</td><td class="fielddoc"><p >208 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aa899c732ef0caea0ce747856b91d32a39" name="a26c87097ac3c2dcd9598373cca75599aa899c732ef0caea0ce747856b91d32a39"></a>G_ODR_833&#160;</td><td class="fielddoc"><p >416 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aa9b204740b4116e59b0aabcfacc1481ca" name="a26c87097ac3c2dcd9598373cca75599aa9b204740b4116e59b0aabcfacc1481ca"></a>G_ODR_1666&#160;</td><td class="fielddoc"><p >833 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aa6924b47b24d79d19a18283d4d73a24bc" name="a26c87097ac3c2dcd9598373cca75599aa6924b47b24d79d19a18283d4d73a24bc"></a>G_ODR_3332&#160;</td><td class="fielddoc"><p >1666 Hz </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a26c87097ac3c2dcd9598373cca75599aa3a07357b5e55c76d79a02ec8ba744ddf" name="a26c87097ac3c2dcd9598373cca75599aa3a07357b5e55c76d79a02ec8ba744ddf"></a>G_ODR_6664&#160;</td><td class="fielddoc"><p >3332 Hz </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="acc6299688f0953554a33596dcb2564cd" name="acc6299688f0953554a33596dcb2564cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc6299688f0953554a33596dcb2564cd">&#9670;&nbsp;</a></span>lsm6dso32_convert_accel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void lsm6dso32_convert_accel </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structSensor.html">Sensor</a> *&#160;</td>
-          <td class="paramname"><em>sensor</em>, </td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a>&#160;</td>
+          <td class="paramname"><em>acc_fsr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>bus</em>, </td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint8_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a>&#160;</td>
-          <td class="paramname"><em>precision</em>&#160;</td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -146,15 +377,513 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Initializes a sensor struct with the interface to interact with the LSM6DSO32. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Converts acceleration in milli-Gs per LSB to meters per second squared. Results are stored back in the pointers themselves. Passing NULL as any of the pointers will result in the calculation being skipped. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sensor</td><td>The sensor interface to be initialized. </td></tr>
-    <tr><td class="paramname">bus</td><td>The file descriptor of the I2C bus. </td></tr>
-    <tr><td class="paramname">addr</td><td>The address of the sensor on the I2C bus. </td></tr>
-    <tr><td class="paramname">precision</td><td>The precision to read measurements with. </td></tr>
+    <tr><td class="paramname">acc_fsr</td><td>The full scale range of the accelerometer. </td></tr>
+    <tr><td class="paramname">x</td><td>A pointer to the X component of the acceleration in milli-Gs per LSB. </td></tr>
+    <tr><td class="paramname">y</td><td>A pointer to the Y component of the acceleration in milli-Gs per LSB. </td></tr>
+    <tr><td class="paramname">z</td><td>A pointer to the Z component of the acceleration in milli-Gs per LSB. </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a7e0852a5d594e29e426e2df84ca4ff01" name="a7e0852a5d594e29e426e2df84ca4ff01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e0852a5d594e29e426e2df84ca4ff01">&#9670;&nbsp;</a></span>lsm6dso32_convert_angular_vel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void lsm6dso32_convert_angular_vel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a>&#160;</td>
+          <td class="paramname"><em>gyro_fsr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Converts angular velocity in millidegrees per LSB to degrees per second. Results are stored back in the pointers themselves. Passing NULL as any of the pointers will result in the calculation being skipped. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gyro_fsr</td><td>The full scale range of the gyroscope. </td></tr>
+    <tr><td class="paramname">x</td><td>A pointer to the X component of the angular velocity in millidegrees per LSB. </td></tr>
+    <tr><td class="paramname">y</td><td>A pointer to the Y component of the angular velocity in millidegrees per LSB. </td></tr>
+    <tr><td class="paramname">z</td><td>A pointer to the Z component of the angular velocity in millidegrees per LSB. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac3f83f32a2d18b4867ded355fc872e28" name="ac3f83f32a2d18b4867ded355fc872e28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3f83f32a2d18b4867ded355fc872e28">&#9670;&nbsp;</a></span>lsm6dso32_disable_accel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_disable_accel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Powers down the accelerometer. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a40a9df9d13a004c794b0bf23e43ac916" name="a40a9df9d13a004c794b0bf23e43ac916"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40a9df9d13a004c794b0bf23e43ac916">&#9670;&nbsp;</a></span>lsm6dso32_disable_gyro()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_disable_gyro </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Powers down the gyroscope. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="adcab9c3450b62c779dbb175af35136eb" name="adcab9c3450b62c779dbb175af35136eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcab9c3450b62c779dbb175af35136eb">&#9670;&nbsp;</a></span>lsm6dso32_get_accel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_get_accel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Read the linear acceleration data from the IMU. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>A pointer to where to store the X component of the acceleration in milli-Gs per LSB. </td></tr>
+    <tr><td class="paramname">y</td><td>A pointer to where to store the Y component of the acceleration in milli-Gs per LSB. </td></tr>
+    <tr><td class="paramname">z</td><td>A pointer to where to store the Z component of the acceleration in milli-Gs per LSB. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error that occurred while reading the sensor, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ab31e576c085b8a6c7257b5a880da3697" name="ab31e576c085b8a6c7257b5a880da3697"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab31e576c085b8a6c7257b5a880da3697">&#9670;&nbsp;</a></span>lsm6dso32_get_angular_vel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_get_angular_vel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Read the linear angular velocity data from the IMU. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>A pointer to where to store the X component of the angular velocity in millidegrees per LSB. </td></tr>
+    <tr><td class="paramname">y</td><td>A pointer to where to store the Y component of the angular velocity in millidegrees per LSB. </td></tr>
+    <tr><td class="paramname">z</td><td>A pointer to where to store the Z component of the angular velocity in millidegrees per LSB. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error that occurred while reading the sensor, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ae3672b7848902f96c35e213c5044b16c" name="ae3672b7848902f96c35e213c5044b16c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3672b7848902f96c35e213c5044b16c">&#9670;&nbsp;</a></span>lsm6dso32_get_temp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_get_temp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t *&#160;</td>
+          <td class="paramname"><em>temperature</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads temperature from the IMU. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The sensor location. @temperature A pointer to where to store the temperature in degrees Celsius. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The error status of reading from the sensor. EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ad4704f8833eeb05f5b9b054e6aea1295" name="ad4704f8833eeb05f5b9b054e6aea1295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4704f8833eeb05f5b9b054e6aea1295">&#9670;&nbsp;</a></span>lsm6dso32_high_performance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_high_performance </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>on</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Allows high performance operating mode to be enabled/disabled. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">on</td><td>True to turn on high performance, false to turn it off. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a0c94692d3a22c7bc3fdbc33c5c3b7831" name="a0c94692d3a22c7bc3fdbc33c5c3b7831"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c94692d3a22c7bc3fdbc33c5c3b7831">&#9670;&nbsp;</a></span>lsm6dso32_mem_reboot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_mem_reboot </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reboots the memory content of the LSM6DSO32. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred while rebooting the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ab57edd8be62d2301636663736d039a76" name="ab57edd8be62d2301636663736d039a76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab57edd8be62d2301636663736d039a76">&#9670;&nbsp;</a></span>lsm6dso32_reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_reset </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Performs a software reset of the LSM6DSO32. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred while resetting the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a8af99fbfb61236351c4f207014b0da2c" name="a8af99fbfb61236351c4f207014b0da2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8af99fbfb61236351c4f207014b0da2c">&#9670;&nbsp;</a></span>lsm6dso32_set_acc_fsr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_set_acc_fsr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">accel_fsr_e</a>&#160;</td>
+          <td class="paramname"><em>fsr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Sets the accelerometer full scale range. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">fsr</td><td>The FSR to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful, EINVAL if bad fsr. </dd></dl>
+
+</div>
+</div>
+<a id="abe7579c4901c54aba4c6f6b4d358c532" name="abe7579c4901c54aba4c6f6b4d358c532"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe7579c4901c54aba4c6f6b4d358c532">&#9670;&nbsp;</a></span>lsm6dso32_set_acc_odr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_set_acc_odr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111ed">accel_odr_e</a>&#160;</td>
+          <td class="paramname"><em>odr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Sets the accelerometer output data rate. NOTE: An ODR of 1.6Hz can only be set if high performance operating mode is disabled. Otherwise the effect will be 12.6Hz ODR. It is the responsibility of the caller to set disable the high performance operating mode before or after this function is called. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">odr</td><td>The ODR to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a842674ec4d135fcef9bd560fa25b879d" name="a842674ec4d135fcef9bd560fa25b879d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a842674ec4d135fcef9bd560fa25b879d">&#9670;&nbsp;</a></span>lsm6dso32_set_gyro_fsr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_set_gyro_fsr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">gyro_fsr_e</a>&#160;</td>
+          <td class="paramname"><em>fsr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Sets the gyroscope full scale range. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">fsr</td><td>The FSR to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful, EINVAL if bad fsr. </dd></dl>
+
+</div>
+</div>
+<a id="a3a8872e347cbca93aca1803ef432e398" name="a3a8872e347cbca93aca1803ef432e398"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a8872e347cbca93aca1803ef432e398">&#9670;&nbsp;</a></span>lsm6dso32_set_gyro_odr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_set_gyro_odr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a">gyro_odr_e</a>&#160;</td>
+          <td class="paramname"><em>odr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Sets the gyroscope output data rate. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the IMU on the I2C bus. </td></tr>
+    <tr><td class="paramname">odr</td><td>The ODR to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ab73d1934530dc24f951068b94d11bd1d" name="ab73d1934530dc24f951068b94d11bd1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab73d1934530dc24f951068b94d11bd1d">&#9670;&nbsp;</a></span>lsm6dso32_whoami()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int lsm6dso32_whoami </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSensorLocation.html">SensorLocation</a> const *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>val</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads the "who am I" value from the sensor. Should always be equal to 0x6C. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The location of the sensor on the I2C bus. </td></tr>
+    <tr><td class="paramname">val</td><td>The value returned by the WHOAMI command. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any error which occurred communicating with the IMU, EOK if successful. </dd></dl>
 
 </div>
 </div>
