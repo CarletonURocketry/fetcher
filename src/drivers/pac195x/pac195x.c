@@ -65,11 +65,27 @@ typedef enum {
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
  */
 static int pac195x_send_byte(SensorLocation const *loc, uint8_t addr) {
-
     i2c_send_t hdr = {.len = 1, .stop = 1, .slave = loc->addr};
     uint8_t cmd[sizeof(hdr) + 1];
     memcpy(cmd, &hdr, sizeof(cmd));
     cmd[sizeof(hdr)] = addr;
+
+    return devctl(loc->bus, DCMD_I2C_SEND, cmd, sizeof(cmd), NULL);
+}
+
+/**
+ * Writes the byte to the specified register of the PAC195X.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param addr The register address to write to.
+ * @param data The data to write.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+static int pac195x_write_byte(SensorLocation const *loc, uint8_t addr, uint8_t data) {
+    i2c_send_t hdr = {.len = 1, .stop = 1, .slave = loc->addr};
+    uint8_t cmd[sizeof(hdr) + 2];
+    memcpy(cmd, &hdr, sizeof(cmd));
+    cmd[sizeof(hdr)] = addr;
+    cmd[sizeof(hdr) + 1] = data;
 
     return devctl(loc->bus, DCMD_I2C_SEND, cmd, sizeof(cmd), NULL);
 }
