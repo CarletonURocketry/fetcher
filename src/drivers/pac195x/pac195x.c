@@ -80,8 +80,7 @@ static int pac195x_send_byte(SensorLocation const *loc, uint8_t addr) {
  * @param data A pointer to where to store the byte just read.
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
  */
-static int pac195x_read_byte(SensorLocation const *loc, uint8_t *data) {
-
+static int pac195x_receive_byte(SensorLocation const *loc, uint8_t *data) {
     i2c_recv_t hdr = {.len = 1, .stop = 1, .slave = loc->addr};
     uint8_t cmd[sizeof(hdr) + 1];
     memcpy(cmd, &hdr, sizeof(cmd));
@@ -93,17 +92,31 @@ static int pac195x_read_byte(SensorLocation const *loc, uint8_t *data) {
 }
 
 /**
+ * Read a byte from a specific register address.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param addr The register address to read from.
+ * @param data A pointer to where to store the byte just read.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+static int pac195x_read_byte(SensorLocation const *loc, uint8_t addr, uint8_t *data) {
+    i2c_sendrecv_t hdr = {.send_len = 1, .recv_len = 1, .stop = 1, .slave = loc->addr};
+    uint8_t cmd[sizeof(hdr) + 1];
+    memcpy(cmd, &hdr, sizeof(cmd));
+    cmd[sizeof(hdr)] = addr;
+
+    int err = devctl(loc->bus, DCMD_I2C_SENDRECV, cmd, sizeof(cmd), NULL);
+    return_err(err);
+    *data = cmd[sizeof(hdr)];
+    return err;
+}
+
+/**
  * Reads the manufacturer ID from the PAC195X into `id`. Should always be 0x54.
  * @param loc The location of the sensor on the I2C bus.
  * @param id A pointer to where the ID returned by the sensor will be stored.
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
  */
-int pac195x_get_manu_id(SensorLocation const *loc, uint8_t *id) {
-    int err = pac195x_send_byte(loc, MANUFACTURER_ID);
-    return_err(err);
-    err = pac195x_read_byte(loc, id);
-    return err;
-}
+int pac195x_get_manu_id(SensorLocation const *loc, uint8_t *id) { return pac195x_read_byte(loc, MANUFACTURER_ID, id); }
 
 /**
  * Reads the product ID from the PAC195X into `id`. The value is chip model dependent.
@@ -111,12 +124,7 @@ int pac195x_get_manu_id(SensorLocation const *loc, uint8_t *id) {
  * @param id A pointer to where the ID returned by the sensor will be stored.
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
  */
-int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id) {
-    int err = pac195x_send_byte(loc, PRODUCT_ID);
-    return_err(err);
-    err = pac195x_read_byte(loc, id);
-    return err;
-}
+int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id) { return pac195x_read_byte(loc, PRODUCT_ID, id); }
 
 /**
  * Reads the revision ID from the PAC195X into `id`.
@@ -124,9 +132,11 @@ int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id) {
  * @param id A pointer to where the ID returned by the sensor will be stored.
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
  */
-int pac195x_get_rev_id(SensorLocation const *loc, uint8_t *id) {
-    int err = pac195x_send_byte(loc, REVISION_ID);
-    return_err(err);
-    err = pac195x_read_byte(loc, id);
-    return err;
-}
+int pac195x_get_rev_id(SensorLocation const *loc, uint8_t *id) { return pac195x_read_byte(loc, REVISION_ID, id); }
+
+/**
+ * Sends the refresh command to the PAC195X sensor.
+ * @param loc The location of the sensor on the I2C bus.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+int pac195x_refresh(SensorLocation const *loc) { return pac195x_send_byte(loc, REFRESH); }
