@@ -217,6 +217,12 @@ int main(int argc, char **argv) {
     /* Add sysclock sensor because it won't be specified in board ID. */
     collector_t sysclock = collector_search("sysclock");
     err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, NULL);
+    num_sensors++;
+
+    /* Add PAC1952 sensor because it won't be specified in board ID. */
+    collector_t pac1952 = collector_search("pac1952");
+    collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = 0x17};
+    err = pthread_create(&collector_threads[num_sensors], NULL, pac1952, &collector_args[num_sensors]);
 
     /* Constantly receive from sensors on message queue and print data. */
     while (print_output) {

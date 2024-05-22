@@ -5,6 +5,7 @@ static const clctr_entry_t COLLECTORS[] = {
     {.name = "SHT41", .collector = sht41_collector},    {.name = "SYSCLOCK", .collector = sysclock_collector},
     {.name = "MS5611", .collector = ms5611_collector},  {.name = "LSM6DSO32", .collector = lsm6dso32_collector},
     {.name = "MAXM10S", .collector = m10spg_collector},
+    {.name = "PAC1952", .collector = pac195x_collector},
 };
 
 /**
