@@ -22,6 +22,10 @@ void *pac195x_collector(void *args) {
         uint8_t id;
         pac195x_get_manu_id(&loc, &id);
         fprintf(stderr, "MANUID: %02x\n", id);
+        pac195x_get_prod_id(&loc, &id);
+        fprintf(stderr, "PRODID: %02x\n", id);
+        pac195x_get_rev_id(&loc, &id);
+        fprintf(stderr, "REVID: %02x\n", id);
     }
 
     return_err(EOK);

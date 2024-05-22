@@ -18,6 +18,8 @@
 /** All the different registers available in the PAC195X. */
 typedef enum {
     MANUFACTURER_ID = 0xFE, /** The register containing the manufacturer ID of 0x54. */
+    PRODUCT_ID = 0xFD,      /** The register containing the product ID. */
+    REVISION_ID = 0xFE,     /** The register containing the revision ID. Initial release is 0x02. */
 } pac195x_reg_t;
 
 /**
@@ -62,6 +64,32 @@ static int pac195x_read_byte(SensorLocation const *loc, uint8_t *data) {
  */
 int pac195x_get_manu_id(SensorLocation const *loc, uint8_t *id) {
     int err = pac195x_send_byte(loc, MANUFACTURER_ID);
+    return_err(err);
+    err = pac195x_read_byte(loc, id);
+    return err;
+}
+
+/**
+ * Reads the product ID from the PAC195X into `id`. The value is chip model dependent.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param id A pointer to where the ID returned by the sensor will be stored.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id) {
+    int err = pac195x_send_byte(loc, PRODUCT_ID);
+    return_err(err);
+    err = pac195x_read_byte(loc, id);
+    return err;
+}
+
+/**
+ * Reads the revision ID from the PAC195X into `id`.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param id A pointer to where the ID returned by the sensor will be stored.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+int pac195x_get_rev_id(SensorLocation const *loc, uint8_t *id) {
+    int err = pac195x_send_byte(loc, REVISION_ID);
     return_err(err);
     err = pac195x_read_byte(loc, id);
     return err;
