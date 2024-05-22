@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sensor_5ftag_5fdata_0',['SENSOR_TAG_DATA',['../sensor__api_8c.html#a67fcb881ec33516e2a6b60c5439bdd6f',1,'sensor_api.c']]],
-  ['size_1',['size',['../structSensorContext.html#a5610f1972bc480fe549e0564bca9f47c',1,'SensorContext']]]
+  ['read_0',['read',['../structSensor.html#a4da68ca9d4124f2ca84c9cf35de589ad',1,'Sensor']]],
+  ['reserved_1',['reserved',['../structUBXValsetPayload.html#a791312ad947020c4ec3013ad76106ed8',1,'UBXValsetPayload::reserved()'],['../structUBXUniqIDPayload.html#a0e6d2f49bcbd61ae6ae3efcdbe93c68b',1,'UBXUniqIDPayload::reserved()']]]
 ];

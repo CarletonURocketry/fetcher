@@ -1,5 +1,6 @@
 var annotated_dup =
 [
+    [ "__attribute__", "struct____attribute____.html", "struct____attribute____" ],
     [ "clctr_entry_t", "structclctr__entry__t.html", "structclctr__entry__t" ],
     [ "collector_args_t", "structcollector__args__t.html", "structcollector__args__t" ],
     [ "CRC8LookupTable", "structCRC8LookupTable.html", "structCRC8LookupTable" ],
@@ -7,6 +8,7 @@ var annotated_dup =
     [ "LSM6DSO32Context", "structLSM6DSO32Context.html", "structLSM6DSO32Context" ],
     [ "ms5611_message", "structms5611__message.html", "structms5611__message" ],
     [ "MS5611Context", "structMS5611Context.html", "structMS5611Context" ],
+    [ "read_buffer", "unionread__buffer.html", "unionread__buffer" ],
     [ "Sensor", "structSensor.html", "structSensor" ],
     [ "SensorContext", "structSensorContext.html", "structSensorContext" ],
     [ "SensorLocation", "structSensorLocation.html", "structSensorLocation" ],
@@ -14,5 +16,14 @@ var annotated_dup =
     [ "SensorTagList", "structSensorTagList.html", "structSensorTagList" ],
     [ "sht41_msg_t", "structsht41__msg__t.html", "structsht41__msg__t" ],
     [ "sysclock_msg_t", "structsysclock__msg__t.html", "structsysclock__msg__t" ],
+    [ "UBXAckPayload", "structUBXAckPayload.html", "structUBXAckPayload" ],
+    [ "UBXFrame", "structUBXFrame.html", "structUBXFrame" ],
+    [ "UBXHeader", "structUBXHeader.html", "structUBXHeader" ],
+    [ "UBXNavPositionPayload", "structUBXNavPositionPayload.html", "structUBXNavPositionPayload" ],
+    [ "UBXNavStatusPayload", "structUBXNavStatusPayload.html", "structUBXNavStatusPayload" ],
+    [ "UBXNavVelocityPayload", "structUBXNavVelocityPayload.html", "structUBXNavVelocityPayload" ],
+    [ "UBXUniqIDPayload", "structUBXUniqIDPayload.html", "structUBXUniqIDPayload" ],
+    [ "UBXUTCPayload", "structUBXUTCPayload.html", "structUBXUTCPayload" ],
+    [ "UBXValsetPayload", "structUBXValsetPayload.html", "structUBXValsetPayload" ],
     [ "vec3d_t", "structvec3d__t.html", "structvec3d__t" ]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['fifo_5fctrl4_0',['FIFO_CTRL4',['../lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677a4aada3b126fe5a9fc5c5340b2ecf0611',1,'lsm6dso32.c']]]
+  ['d1_0',['D1',['../ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18a29b8ecb29049f38cbf752d95f479bff7',1,'ms5611.c']]],
+  ['d2_1',['D2',['../ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18a86c69dc8849d17673b52b9a8d94d8b9f',1,'ms5611.c']]]
 ];

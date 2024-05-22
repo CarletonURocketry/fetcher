@@ -133,6 +133,13 @@ Enumerations</h2></td></tr>
 , <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191">TAG_LINEAR_ACCEL_REL</a> = 7
 , <br />
 &#160;&#160;<a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2">TAG_LINEAR_ACCEL_ABS</a> = 8
+, <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a962dc7c40351a60ff924a4c43895585e">TAG_LATITUDE</a> = 9
+, <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abda7fa4cfb434da938ae62e28218417f">TAG_LONGITUDE</a> = 10
+, <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a968a770dcce3adc2c04b620780d990ef">TAG_ALTITUDE_MSL</a> = 11
+, <br />
+&#160;&#160;<a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a7a32e63df0c9eecc0dcb91ab14a2a1e4">TAG_SPEED</a> = 12
+, <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ae67740f056f9adb4a5587b0f91e0b181">TAG_COURSE</a> = 13
+, <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2">TAG_FIX</a> = 14
 <br />
  }</td></tr>
 <tr class="separator:af3e5add5316f07be5e3f2f32afe68627"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,7 +230,7 @@ Functions</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba" name="af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba"></a>TAG_TIME&#160;</td><td class="fielddoc"><p >Time in milliseconds </p>
 </td></tr>
-<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0" name="af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0"></a>TAG_ALTITUDE_SEA&#160;</td><td class="fielddoc"><p >Altitude above sea level in meters </p>
+<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0" name="af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0"></a>TAG_ALTITUDE_SEA&#160;</td><td class="fielddoc"><p >Altitude above sea level in milimeters </p>
 </td></tr>
 <tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627aa48af8706c919611056f8f453b200431" name="af3e5add5316f07be5e3f2f32afe68627aa48af8706c919611056f8f453b200431"></a>TAG_ALTITUDE_REL&#160;</td><td class="fielddoc"><p >Altitude above launch height in meters </p>
 </td></tr>
@@ -232,6 +239,18 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191" name="af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191"></a>TAG_LINEAR_ACCEL_REL&#160;</td><td class="fielddoc"><p >Relative linear acceleration in meters per second squared </p>
 </td></tr>
 <tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2" name="af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2"></a>TAG_LINEAR_ACCEL_ABS&#160;</td><td class="fielddoc"><p >Absolute linear acceleration in meters per second squared </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a962dc7c40351a60ff924a4c43895585e" name="af3e5add5316f07be5e3f2f32afe68627a962dc7c40351a60ff924a4c43895585e"></a>TAG_LATITUDE&#160;</td><td class="fielddoc"><p >Latitude in units of 0.1 microdegrees </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627abda7fa4cfb434da938ae62e28218417f" name="af3e5add5316f07be5e3f2f32afe68627abda7fa4cfb434da938ae62e28218417f"></a>TAG_LONGITUDE&#160;</td><td class="fielddoc"><p >Longitude in units of 0.1 microdegrees </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a968a770dcce3adc2c04b620780d990ef" name="af3e5add5316f07be5e3f2f32afe68627a968a770dcce3adc2c04b620780d990ef"></a>TAG_ALTITUDE_MSL&#160;</td><td class="fielddoc"><p >The height above mean sea level in millimeters </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a7a32e63df0c9eecc0dcb91ab14a2a1e4" name="af3e5add5316f07be5e3f2f32afe68627a7a32e63df0c9eecc0dcb91ab14a2a1e4"></a>TAG_SPEED&#160;</td><td class="fielddoc"><p >Speed over the ground in cm/s </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627ae67740f056f9adb4a5587b0f91e0b181" name="af3e5add5316f07be5e3f2f32afe68627ae67740f056f9adb4a5587b0f91e0b181"></a>TAG_COURSE&#160;</td><td class="fielddoc"><p >Course over ground (heading) in units of 10 microdegrees </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2" name="af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2"></a>TAG_FIX&#160;</td><td class="fielddoc"><p >The type of GPS fix that is currently held, as a combination of flags </p>
 </td></tr>
 </table>
 

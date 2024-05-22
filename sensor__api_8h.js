@@ -20,7 +20,13 @@ var sensor__api_8h =
       [ "TAG_ALTITUDE_REL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627aa48af8706c919611056f8f453b200431", null ],
       [ "TAG_ANGULAR_VEL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9e65523ce44fc3e7de9689d2d589cdc9", null ],
       [ "TAG_LINEAR_ACCEL_REL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191", null ],
-      [ "TAG_LINEAR_ACCEL_ABS", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2", null ]
+      [ "TAG_LINEAR_ACCEL_ABS", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2", null ],
+      [ "TAG_LATITUDE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a962dc7c40351a60ff924a4c43895585e", null ],
+      [ "TAG_LONGITUDE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abda7fa4cfb434da938ae62e28218417f", null ],
+      [ "TAG_ALTITUDE_MSL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a968a770dcce3adc2c04b620780d990ef", null ],
+      [ "TAG_SPEED", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a7a32e63df0c9eecc0dcb91ab14a2a1e4", null ],
+      [ "TAG_COURSE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ae67740f056f9adb4a5587b0f91e0b181", null ],
+      [ "TAG_FIX", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2", null ]
     ] ],
     [ "SensorTagDType", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84", [
       [ "TYPE_FLOAT", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f", null ],
