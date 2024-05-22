@@ -22,8 +22,8 @@
 /** Size of the buffer to read input data. */
 #define BUFFER_SIZE 100
 
-/** The speed of the I2C bus in kilobits per second. */
-#define BUS_SPEED 400000
+/* The speed of the I2C bus in kilobits per second. */
+#define BUS_SPEED 100000
 
 /** The maximum number of addresses per sensor type. */
 #define MAX_ADDR_PER_SENSOR 5
@@ -225,7 +225,6 @@ int main(int argc, char **argv) {
             fprintf(stderr, "Failed to receive message on queue '%s': %s\n", SENSOR_QUEUE, strerror(errno));
             continue;
         }
-
         // Successfully received data, print it to output stream
         sensor_write_data(stdout, buffer[0], &buffer[1]);
     }

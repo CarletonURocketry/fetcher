@@ -23,7 +23,7 @@ const SensorTagData SENSOR_TAG_DATA[] = {
     [TAG_ALTITUDE_REL] =
         {.name = "Altitude rel", .unit = "m", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
     [TAG_ALTITUDE_SEA] =
-        {.name = "Altitude sea level", .unit = "m", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
+        {.name = "Altitude sea level", .unit = "mm", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32},
     [TAG_LINEAR_ACCEL_ABS] = {.name = "Absolute linear acceleration",
                               .unit = "m/s^2",
                               .fmt_str = "%.2fX, %.2fY, %.2fZ",
@@ -39,6 +39,14 @@ const SensorTagData SENSOR_TAG_DATA[] = {
                          .fmt_str = "%.2fX, %.2fY, %.2fZ",
                          .dsize = sizeof(vec3d_t),
                          .dtype = TYPE_VEC3D},
+    [TAG_LONGITUDE] =
+        {.name = "Longitude", .unit = "0.1udeg", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32},
+    [TAG_LATITUDE] =
+        {.name = "Latitude", .unit = "0.1udeg", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32},
+    [TAG_SPEED] =
+        {.name = "Ground speed", .unit = "cm/s", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype = TYPE_U32},
+    [TAG_COURSE] = {.name = "Course", .unit = "10udeg", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype = TYPE_U32},
+    [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8},
 };
 
 /**
