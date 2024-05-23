@@ -220,7 +220,7 @@ int main(int argc, char **argv) {
     num_sensors++;
 
     /* Add PAC1952 sensor because it won't be specified in board ID. */
-    collector_t pac1952 = collector_search("pac1952");
+    collector_t pac1952 = collector_search("pac1952-2");
     collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = 0x17};
     err = pthread_create(&collector_threads[num_sensors], NULL, pac1952, &collector_args[num_sensors]);
 

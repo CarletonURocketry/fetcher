@@ -2,6 +2,7 @@
 #define _PAC195X_H_
 
 #include "../sensor_api.h"
+#include <stdbool.h>
 #include <stdint.h>
 
 /** The manufacturer ID for any PAC195X chip. */
@@ -23,6 +24,7 @@
 /** Revision ID of the initial release. */
 #define PAC195X_INIT_REL 0x02
 
+/** The different sampling modes for the PAC195X. */
 typedef enum {
     SAMPLE_1024_SPS_AD = 0x00,   /**< 1024 SPS adaptive accumulation (default). */
     SAMPLE_256_SPS_AD = 0x10,    /**< 256 SPS adaptive accumulation. */
@@ -39,11 +41,21 @@ typedef enum {
     SAMPLE_SLEEP = 0xF0,         /**< Sleep. */
 } pac195x_sm_e;
 
+/** The different channels that can be enabled/disabled on the PAC195X. */
+typedef enum {
+    CHANNEL1 = 0x8, /**< Channel 1 */
+    CHANNEL2 = 0x4, /**< Channel 2 */
+    CHANNEL3 = 0x2, /**< Channel 3 */
+    CHANNEL4 = 0x1, /**< Channel 4 */
+} pac195x_channel_e;
+
 int pac195x_get_manu_id(SensorLocation const *loc, uint8_t *id);
 int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id);
 int pac195x_get_rev_id(SensorLocation const *loc, uint8_t *id);
+int pac195x_get_vsensen(SensorLocation const *loc, uint8_t n, uint16_t *val);
 
 int pac195x_set_sample_mode(SensorLocation const *loc, pac195x_sm_e mode);
+int pac195x_toggle_channel(SensorLocation const *loc, pac195x_channel_e channel, bool enable);
 
 int pac195x_refresh(SensorLocation const *loc);
 int pac195x_refresh_v(SensorLocation const *loc);

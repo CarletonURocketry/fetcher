@@ -6,11 +6,9 @@
  */
 
 #include "pac195x.h"
-#include "collectors.h"
 #include "sensor_api.h"
 #include <errno.h>
 #include <hw/i2c.h>
-#include <stdio.h>
 #include <string.h>
 
 /** Macro to early return error statuses. */
@@ -164,7 +162,7 @@ static int pac195x_block_write(SensorLocation const *loc, uint8_t addr, size_t n
     memcpy(buf, &hdr, sizeof(hdr));
     buf[sizeof(hdr)] = addr; // Immediately after this addr is where the caller should have put their data.
 
-    return devctl(loc->bus, DCMD_I2C_SENDRECV, buf, nbytes + sizeof(hdr) + 1, NULL);
+    return devctl(loc->bus, DCMD_I2C_SEND, buf, nbytes + sizeof(hdr) + 1, NULL);
 }
 
 /**
@@ -235,5 +233,50 @@ int pac195x_set_sample_mode(SensorLocation const *loc, pac195x_sm_e mode) {
     ctrl_reg &= ~(0xF0); // Clear upper 4 bits
     ctrl_reg |= mode;    // Set the mode
     err = pac195x_write_byte(loc, CTRL, ctrl_reg);
+    return err;
+}
+
+/**
+ * Enable/disable channels for sampling on the PAC195X.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param channel A channel or multiple channels to enable/disable. Multiple channels can be given by ORing the channels
+ * together.
+ * @param enable True to enable the channel(s), false to disable the channel(s).
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+int pac195x_toggle_channel(SensorLocation const *loc, pac195x_channel_e channel, bool enable) {
+
+    uint8_t buf[sizeof(i2c_sendrecv_t) + 2];
+    int err = pac195x_block_read(loc, CTRL, 2, buf);
+    return_err(err);
+    if (enable) {
+        buf[sizeof(i2c_sendrecv_t) + 1] &= ~(channel << 4); // Set the channels on (0 enables)
+    } else {
+        buf[sizeof(i2c_sendrecv_t) + 1] |= (channel << 4); // Set the channels off (1 disables)
+    }
+    buf[sizeof(i2c_send_t) + 1] = buf[sizeof(i2c_sendrecv_t)]; // Move back because write header takes less space
+    buf[sizeof(i2c_send_t) + 2] = buf[sizeof(i2c_sendrecv_t) + 1];
+    err = pac195x_block_write(loc, CTRL, 2, buf);
+    return err;
+}
+
+/**
+ * Get the V_SENSE measurements for channels 1-4.
+ * NOTE: If SKIP is enabled and the caller attempts to read from a channel that is disabled, an I/O error will be
+ * returned.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param val A pointer to where to store the value.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful. EINVAL if `n` is an invalid
+ * channel number.
+ */
+int pac195x_get_vsensen(SensorLocation const *loc, uint8_t n, uint16_t *val) {
+
+    if (n > 4 || n < 1) return EINVAL; // Invalid channel number
+    uint8_t addr = VSENSEN + (n - 1);
+
+    uint8_t buf[sizeof(i2c_sendrecv_t) + 2]; // Space for header and 16 bit response.
+    int err = pac195x_block_read(loc, addr, 2, buf);
+    return_err(err);
+    *val = *(uint16_t *)(&buf[sizeof(i2c_sendrecv_t)]);
     return err;
 }

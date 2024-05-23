@@ -35,6 +35,6 @@ void *ms5611_collector(void *args);
 void *sht41_collector(void *args);
 void *lsm6dso32_collector(void *args);
 void *m10spg_collector(void *args);
-void *pac195x_collector(void *args);
+void *pac1952_2_collector(void *args);
 
 #endif // _COLLECTORS_H_
