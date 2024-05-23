@@ -147,6 +147,25 @@ static int pac195x_block_read(SensorLocation const *loc, uint8_t addr, size_t nb
 }
 
 /**
+ * Write several bytes to the PAC195X starting at a specific address.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param addr The register address to write to.
+ * @param nbytes The number of bytes to write. Cannot be 0.
+ * @param buf A pointer to where the data to be written is located. Data must be preceded with 17 bytes of empty space.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful, EINVAL if nbytes is 0.
+ */
+static int pac195x_block_write(SensorLocation const *loc, uint8_t addr, size_t nbytes, uint8_t *buf) {
+
+    if (nbytes == 0) return EINVAL;
+
+    i2c_send_t hdr = {.len = nbytes + 1, .stop = 1, .slave = loc->addr};
+    memcpy(buf, &hdr, sizeof(hdr));
+    buf[sizeof(hdr)] = addr; // Immediately after this addr is where the caller should have put their data.
+
+    return devctl(loc->bus, DCMD_I2C_SENDRECV, buf, nbytes + sizeof(hdr) + 1, NULL);
+}
+
+/**
  * Reads the manufacturer ID from the PAC195X into `id`. Should always be 0x54.
  * @param loc The location of the sensor on the I2C bus.
  * @param id A pointer to where the ID returned by the sensor will be stored.
