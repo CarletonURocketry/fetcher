@@ -39,6 +39,7 @@ void *pac1952_2_collector(void *args) {
 
     for (;;) {
         uint16_t values[2];
+        uint32_t bigvalues[2];
 
         for (int i = 0; i < 2; i++) {
 
@@ -62,8 +63,41 @@ void *pac1952_2_collector(void *args) {
             }
         }
 
+        for (int i = 0; i < 2; i++) {
+
+            err = pac195x_get_vsensenavg(&loc, i + 1, &values[i]);
+            if (err != EOK) {
+                fprintf(stderr, "PAC195X could not read VBUS_%d: %s\n", i - 1, strerror(err));
+                break;
+            } else {
+                printf("VSENSE AVG %d - %04x\n", i + 1, values[i]);
+            }
+        }
+
+        for (int i = 0; i < 2; i++) {
+
+            err = pac195x_get_vbusnavg(&loc, i + 1, &values[i]);
+            if (err != EOK) {
+                fprintf(stderr, "PAC195X could not read VBUS_%d: %s\n", i - 1, strerror(err));
+                break;
+            } else {
+                printf("VBUS AVG %d - %04x\n", i + 1, values[i]);
+            }
+        }
+
+        for (int i = 0; i < 2; i++) {
+
+            err = pac195x_get_powern(&loc, i + 1, &bigvalues[i]);
+            if (err != EOK) {
+                fprintf(stderr, "PAC195X could not read POWER_%d: %s\n", i - 1, strerror(err));
+                break;
+            } else {
+                printf("POWER %d - %08x\n", i + 1, bigvalues[i]);
+            }
+        }
+
         pac195x_refresh_v(&loc);
-        usleep(10000);
+        usleep(100000);
     }
 
     return_err(EOK);

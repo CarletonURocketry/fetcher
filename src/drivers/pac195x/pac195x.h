@@ -54,6 +54,9 @@ int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id);
 int pac195x_get_rev_id(SensorLocation const *loc, uint8_t *id);
 int pac195x_get_vsensen(SensorLocation const *loc, uint8_t n, uint16_t *val);
 int pac195x_get_vbusn(SensorLocation const *loc, uint8_t n, uint16_t *val);
+int pac195x_get_vbusnavg(SensorLocation const *loc, uint8_t n, uint16_t *val);
+int pac195x_get_vsensenavg(SensorLocation const *loc, uint8_t n, uint16_t *val);
+int pac195x_get_powern(SensorLocation const *loc, uint8_t n, uint32_t *val);
 
 int pac195x_set_sample_mode(SensorLocation const *loc, pac195x_sm_e mode);
 int pac195x_toggle_channel(SensorLocation const *loc, pac195x_channel_e channel, bool enable);
