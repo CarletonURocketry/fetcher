@@ -27,4 +27,8 @@ int pac195x_get_manu_id(SensorLocation const *loc, uint8_t *id);
 int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id);
 int pac195x_get_rev_id(SensorLocation const *loc, uint8_t *id);
 
+int pac195x_refresh(SensorLocation const *loc);
+int pac195x_refresh_v(SensorLocation const *loc);
+int pac195x_refresh_g(SensorLocation const *loc);
+
 #endif // _PAC195X_H_

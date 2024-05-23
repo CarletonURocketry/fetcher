@@ -195,3 +195,26 @@ int pac195x_get_rev_id(SensorLocation const *loc, uint8_t *id) { return pac195x_
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
  */
 int pac195x_refresh(SensorLocation const *loc) { return pac195x_send_byte(loc, REFRESH); }
+
+/**
+ * Sends the refresh general call command to the PAC195X sensor.
+ * WARNING: This command is received by all I2C slave devices. They will interpret this as a software reset if
+ * implemented. This command may have unintended consequences.
+ * @param loc The location of the sensor on the I2C bus.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+int pac195x_refresh_g(SensorLocation const *loc) {
+    SensorLocation general_loc = {
+        .bus = loc->bus,
+        .addr = loc->addr,
+    };
+    general_loc.addr.addr = 0x0;
+    return pac195x_send_byte(&general_loc, REFRESH_G);
+}
+
+/**
+ * Sends the refresh v command to the PAC195X. Same as refresh except accumulators and accumulator count are not reset.
+ * @param loc The location of the sensor on the I2C bus.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+int pac195x_refresh_v(SensorLocation const *loc) { return pac195x_send_byte(loc, REFRESH_V); }
