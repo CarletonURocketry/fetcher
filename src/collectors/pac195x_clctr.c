@@ -19,6 +19,7 @@ void *pac195x_collector(void *args) {
     };
 
     int err = pac195x_refresh(&loc);
+    usleep(1000); // 1ms after refresh until accumulator data can be read again.
     if (err != EOK) {
         fprintf(stderr, "Failed to refresh PAC195X: %s\n", strerror(err));
         return_err(err);
