@@ -55,7 +55,7 @@ typedef enum {
     ACCUM_CONFIG_LAT = 0x51,    /**< Currently latched value of ACCUM_CONFIG register. */
     PRODUCT_ID = 0xFD,          /**< The register containing the product ID. */
     MANUFACTURER_ID = 0xFE,     /**< The register containing the manufacturer ID of 0x54. */
-    REVISION_ID = 0xFE,         /**< The register containing the revision ID. Initial release is 0x02. */
+    REVISION_ID = 0xFF,         /**< The register containing the revision ID. Initial release is 0x02. */
 } pac195x_reg_t;
 
 /**
@@ -67,7 +67,7 @@ typedef enum {
 static int pac195x_send_byte(SensorLocation const *loc, uint8_t addr) {
     i2c_send_t hdr = {.len = 1, .stop = 1, .slave = loc->addr};
     uint8_t cmd[sizeof(hdr) + 1];
-    memcpy(cmd, &hdr, sizeof(cmd));
+    memcpy(cmd, &hdr, sizeof(hdr));
     cmd[sizeof(hdr)] = addr;
 
     return devctl(loc->bus, DCMD_I2C_SEND, cmd, sizeof(cmd), NULL);
@@ -83,7 +83,7 @@ static int pac195x_send_byte(SensorLocation const *loc, uint8_t addr) {
 static int pac195x_write_byte(SensorLocation const *loc, uint8_t addr, uint8_t data) {
     i2c_send_t hdr = {.len = 1, .stop = 1, .slave = loc->addr};
     uint8_t cmd[sizeof(hdr) + 2];
-    memcpy(cmd, &hdr, sizeof(cmd));
+    memcpy(cmd, &hdr, sizeof(hdr));
     cmd[sizeof(hdr)] = addr;
     cmd[sizeof(hdr) + 1] = data;
 
@@ -99,7 +99,7 @@ static int pac195x_write_byte(SensorLocation const *loc, uint8_t addr, uint8_t d
 static int pac195x_receive_byte(SensorLocation const *loc, uint8_t *data) {
     i2c_recv_t hdr = {.len = 1, .stop = 1, .slave = loc->addr};
     uint8_t cmd[sizeof(hdr) + 1];
-    memcpy(cmd, &hdr, sizeof(cmd));
+    memcpy(cmd, &hdr, sizeof(hdr));
 
     int err = devctl(loc->bus, DCMD_I2C_RECV, cmd, sizeof(cmd), NULL);
     return_err(err);
@@ -117,13 +117,33 @@ static int pac195x_receive_byte(SensorLocation const *loc, uint8_t *data) {
 static int pac195x_read_byte(SensorLocation const *loc, uint8_t addr, uint8_t *data) {
     i2c_sendrecv_t hdr = {.send_len = 1, .recv_len = 1, .stop = 1, .slave = loc->addr};
     uint8_t cmd[sizeof(hdr) + 1];
-    memcpy(cmd, &hdr, sizeof(cmd));
+    memcpy(cmd, &hdr, sizeof(hdr));
     cmd[sizeof(hdr)] = addr;
 
     int err = devctl(loc->bus, DCMD_I2C_SENDRECV, cmd, sizeof(cmd), NULL);
     return_err(err);
     *data = cmd[sizeof(hdr)];
     return err;
+}
+
+/**
+ * Read several bytes from the PAC195X starting at a specific address. After the call, data will be stored in buf[20]
+ * and onward (inclusive).
+ * @param loc The location of the sensor on the I2C bus.
+ * @param addr The register address to read from.
+ * @param nbytes The number of bytes to read. Cannot be 0.
+ * @param buf A pointer to where to store the bytes just read. Must have room for `nbytes` + 20.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful, EINVAL if nbytes is 0.
+ */
+static int pac195x_block_read(SensorLocation const *loc, uint8_t addr, size_t nbytes, uint8_t *buf) {
+
+    if (nbytes == 0) return EINVAL;
+
+    i2c_sendrecv_t hdr = {.send_len = 1, .recv_len = nbytes, .stop = 1, .slave = loc->addr};
+    memcpy(buf, &hdr, sizeof(hdr));
+    buf[sizeof(hdr)] = addr;
+
+    return devctl(loc->bus, DCMD_I2C_SENDRECV, buf, nbytes + sizeof(hdr), NULL);
 }
 
 /**
@@ -143,7 +163,7 @@ int pac195x_get_manu_id(SensorLocation const *loc, uint8_t *id) { return pac195x
 int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id) { return pac195x_read_byte(loc, PRODUCT_ID, id); }
 
 /**
- * Reads the revision ID from the PAC195X into `id`.
+ * Reads the revision ID from the PAC195X into `id`. Should be 0x02.
  * @param loc The location of the sensor on the I2C bus.
  * @param id A pointer to where the ID returned by the sensor will be stored.
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
