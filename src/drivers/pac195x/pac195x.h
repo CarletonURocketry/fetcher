@@ -23,9 +23,27 @@
 /** Revision ID of the initial release. */
 #define PAC195X_INIT_REL 0x02
 
+typedef enum {
+    SAMPLE_1024_SPS_AD = 0x00,   /**< 1024 SPS adaptive accumulation (default). */
+    SAMPLE_256_SPS_AD = 0x10,    /**< 256 SPS adaptive accumulation. */
+    SAMPLE_64_SPS_AD = 0x20,     /**< 64 SPS adaptive accumulation. */
+    SAMPLE_8_SPS_AD = 0x30,      /**< 8 SPS adaptive accumulation. */
+    SAMPLE_1024_SPS = 0x40,      /**< 1024 SPS. */
+    SAMPLE_256_SPS = 0x50,       /**< 256 SPS. */
+    SAMPLE_64_SPS = 0x60,        /**< 64 SPS. */
+    SAMPLE_8_SPS = 0x70,         /**< 8 SPS. */
+    SAMPLE_SINGLE_SHOT = 0x80,   /**< Single shot mode. */
+    SAMPLE_SINGLE_SHOT8X = 0x90, /**< Single shot 8X. */
+    SAMPLE_FAST = 0xA0,          /**< Fast mode. */
+    SAMPLE_BURST = 0xB0,         /**< Burst mode. */
+    SAMPLE_SLEEP = 0xF0,         /**< Sleep. */
+} pac195x_sm_e;
+
 int pac195x_get_manu_id(SensorLocation const *loc, uint8_t *id);
 int pac195x_get_prod_id(SensorLocation const *loc, uint8_t *id);
 int pac195x_get_rev_id(SensorLocation const *loc, uint8_t *id);
+
+int pac195x_set_sample_mode(SensorLocation const *loc, pac195x_sm_e mode);
 
 int pac195x_refresh(SensorLocation const *loc);
 int pac195x_refresh_v(SensorLocation const *loc);

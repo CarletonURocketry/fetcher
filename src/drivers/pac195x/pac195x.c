@@ -6,9 +6,11 @@
  */
 
 #include "pac195x.h"
+#include "collectors.h"
 #include "sensor_api.h"
 #include <errno.h>
 #include <hw/i2c.h>
+#include <stdio.h>
 #include <string.h>
 
 /** Macro to early return error statuses. */
@@ -81,7 +83,7 @@ static int pac195x_send_byte(SensorLocation const *loc, uint8_t addr) {
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
  */
 static int pac195x_write_byte(SensorLocation const *loc, uint8_t addr, uint8_t data) {
-    i2c_send_t hdr = {.len = 1, .stop = 1, .slave = loc->addr};
+    i2c_send_t hdr = {.len = 2, .stop = 1, .slave = loc->addr};
     uint8_t cmd[sizeof(hdr) + 2];
     memcpy(cmd, &hdr, sizeof(hdr));
     cmd[sizeof(hdr)] = addr;
@@ -127,12 +129,12 @@ static int pac195x_read_byte(SensorLocation const *loc, uint8_t addr, uint8_t *d
 }
 
 /**
- * Read several bytes from the PAC195X starting at a specific address. After the call, data will be stored in buf[20]
+ * Read several bytes from the PAC195X starting at a specific address. After the call, data will be stored in `buf[20]`
  * and onward (inclusive).
  * @param loc The location of the sensor on the I2C bus.
  * @param addr The register address to read from.
  * @param nbytes The number of bytes to read. Cannot be 0.
- * @param buf A pointer to where to store the bytes just read. Must have room for `nbytes` + 20.
+ * @param buf A pointer to where to store the bytes just read. Must have room for `nbytes + 20`.
  * @return Any error which occurred while communicating with the sensor. EOK if successful, EINVAL if nbytes is 0.
  */
 static int pac195x_block_read(SensorLocation const *loc, uint8_t addr, size_t nbytes, uint8_t *buf) {
@@ -218,3 +220,20 @@ int pac195x_refresh_g(SensorLocation const *loc) {
  * @return Any error which occurred while communicating with the sensor. EOK if successful.
  */
 int pac195x_refresh_v(SensorLocation const *loc) { return pac195x_send_byte(loc, REFRESH_V); }
+
+/**
+ * Set the sampling mode for the PAC195x.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param mode The sampling mode to set.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful.
+ */
+int pac195x_set_sample_mode(SensorLocation const *loc, pac195x_sm_e mode) {
+    uint8_t ctrl_reg;
+    int err = pac195x_read_byte(loc, CTRL, &ctrl_reg);
+    return_err(err);
+
+    ctrl_reg &= ~(0xF0); // Clear upper 4 bits
+    ctrl_reg |= mode;    // Set the mode
+    err = pac195x_write_byte(loc, CTRL, ctrl_reg);
+    return err;
+}

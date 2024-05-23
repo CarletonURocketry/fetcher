@@ -18,8 +18,14 @@ void *pac195x_collector(void *args) {
         .bus = clctr_args(args)->bus,
     };
 
-    int err = pac195x_refresh(&loc);
-    usleep(1000); // 1ms after refresh until accumulator data can be read again.
+    int err = pac195x_set_sample_mode(&loc, SAMPLE_1024_SPS_AD);
+    if (err != EOK) {
+        fprintf(stderr, "Failed to set sampling mode on PAC195X: %s\n", strerror(err));
+        return_err(err);
+    }
+
+    err = pac195x_refresh(&loc); // Refresh after all configuration to force changes into effect
+    usleep(1000);                // 1ms after refresh until accumulator data can be read again.
     if (err != EOK) {
         fprintf(stderr, "Failed to refresh PAC195X: %s\n", strerror(err));
         return_err(err);
