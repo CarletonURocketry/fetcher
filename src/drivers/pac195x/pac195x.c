@@ -399,18 +399,17 @@ uint32_t pac195x_calc_bus_voltage(uint8_t fsr, uint16_t vbus, bool bipolar) {
 
 /**
  * Calculate the bus current.
- * @param rsense The value of the R_SENSE resistor connected to the SENSE line in ohms.
+ * @param rsense The value of the R_SENSE resistor connected to the SENSE line in milliohms.
  * @param vsense The measured VSENSE channel value corresponding to the SENSE line.
  * @param bipolar Whether the measurement is bipolar or not (PAC195X uses unipolar by default).
- * @return The bus current in microamps.
+ * @return The bus current in milliamps.
  */
-uint32_t pac195x_calc_bus_current(uint16_t rsense, uint16_t vsense, bool bipolar) {
+uint32_t pac195x_calc_bus_current(uint32_t rsense, uint16_t vsense, bool bipolar) {
     uint16_t denominator;
     if (bipolar) {
         denominator = 32768;
     } else {
         denominator = 65535; // Actual calculation says to use 65536, but this approximation saves 2 bytes
     }
-    uint16_t fsc = 100 / rsense;
-    return (fsc * vsense * 1000) / denominator;
+    return (100 * vsense * 1000) / (denominator * rsense);
 }
