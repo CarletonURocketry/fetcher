@@ -277,7 +277,9 @@ static int pac195x_get_16b_channel(SensorLocation const *loc, uint8_t addr, uint
     uint8_t buf[sizeof(i2c_sendrecv_t) + 2]; // Space for header and 16 bit response.
     int err = pac195x_block_read(loc, addr + (n - 1), 2, buf);
     return_err(err);
-    *val = *(uint16_t *)(&buf[sizeof(i2c_sendrecv_t)]);
+    *val = 0;
+    *val |= (uint32_t)(buf[sizeof(i2c_sendrecv_t)] << 8);
+    *val |= (uint32_t)buf[sizeof(i2c_sendrecv_t) + 1];
     return err;
 }
 

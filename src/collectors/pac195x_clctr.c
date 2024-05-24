@@ -64,6 +64,13 @@ void *pac1952_2_collector(void *args) {
             }
         }
 
+        // Calculate voltage on SENSE1+
+        uint32_t vsource1 = (32 * vbus[0]) / 65536;
+        printf("SENSE1+ VOLTAGE: %uV\n", vsource1);
+
+        uint32_t vsource2 = (32 * vbus[1]) / 65536;
+        printf("SENSE2+ VOLTAGE: %uV\n", vsource2);
+
         for (int i = 0; i < 2; i++) {
 
             err = pac195x_get_powern(&loc, i + 1, &vpower[i]);
@@ -77,7 +84,7 @@ void *pac1952_2_collector(void *args) {
         }
 
         pac195x_refresh_v(&loc);
-        usleep(100000);
+        usleep(1000);
     }
 
     return_err(EOK);
