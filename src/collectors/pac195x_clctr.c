@@ -67,7 +67,6 @@ void *pac1952_2_collector(void *args) {
         printf("VSENSE2: %u\n", vsense[1]);
 
         printf("SENSE1+ CURRENT: %umA\n", pac195x_calc_bus_current(18, vsense[0], false));
-        printf("SENSE1+ CURRENT: %fmA\n", (5555.5555555556 * vsense[0]) / 65536);
         printf("SENSE2+ CURRENT: %umA\n", pac195x_calc_bus_current(18, vsense[1], false));
 
         for (int i = 0; i < 2; i++) {
