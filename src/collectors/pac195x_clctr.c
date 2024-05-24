@@ -43,40 +43,37 @@ void *pac1952_2_collector(void *args) {
         uint32_t vpower[2];
 
         for (int i = 0; i < 2; i++) {
-
             err = pac195x_get_vsensen(&loc, i + 1, &vsense[i]);
             if (err != EOK) {
                 fprintf(stderr, "PAC195X could not read VSENSE%d: %s\n", i - 1, strerror(err));
                 break;
-            } else {
-                printf("VSENSE %d - %04x\n", i + 1, vsense[i]);
             }
         }
 
         for (int i = 0; i < 2; i++) {
-
             err = pac195x_get_vbusn(&loc, i + 1, &vbus[i]);
             if (err != EOK) {
                 fprintf(stderr, "PAC195X could not read VBUS_%d: %s\n", i - 1, strerror(err));
                 break;
-            } else {
-                printf("VBUS %d - %04x\n", i + 1, vbus[i]);
             }
         }
 
-        // Calculate voltage on SENSE1+
-        printf("SENSE1+ VOLTAGE: %umV\n", pac195x_calc_voltage(32, vbus[0], false));
-        printf("SENSE2+ VOLTAGE: %umV\n", pac195x_calc_voltage(32, vbus[1], false));
+        // Calculate voltage on SENSE
+        printf("SENSE1+ VOLTAGE: %umV\n", pac195x_calc_bus_voltage(32, vbus[0], false));
+        printf("SENSE2+ VOLTAGE: %umV\n", pac195x_calc_bus_voltage(32, vbus[1], false));
+
+        // Calculate current on SENSE
+        printf("VSENSE1: %u\n", vsense[0]);
+        printf("VSENSE2: %u\n", vsense[1]);
+
+        printf("SENSE1+ CURRENT: %uuA\n", pac195x_calc_bus_current(1, vsense[0], false));
+        printf("SENSE2+ CURRENT: %uuA\n", pac195x_calc_bus_current(1, vsense[1], false));
 
         for (int i = 0; i < 2; i++) {
-
             err = pac195x_get_powern(&loc, i + 1, &vpower[i]);
             if (err != EOK) {
                 fprintf(stderr, "PAC195X could not read POWER_%d: %s\n", i - 1, strerror(err));
                 break;
-            } else {
-                printf("POWER %d - %08x\n", i + 1, vpower[i]);
-                printf("CALCULATED POWER %d - %08x\n", i + 1, (uint32_t)(vsense[i] * vbus[i]));
             }
         }
 

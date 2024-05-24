@@ -356,7 +356,7 @@ int pac195x_get_powern(SensorLocation const *loc, uint8_t n, uint32_t *val) {
     uint8_t buf[sizeof(i2c_sendrecv_t) + 4]; // Space for header and 32 bit response.
     int err = pac195x_block_read(loc, VPOWERN + (n - 1), 4, buf);
     return_err(err);
-    *val = *(uint32_t *)(&buf[sizeof(i2c_sendrecv_t)]);
+    *val = *(uint32_t *)(&buf[sizeof(i2c_sendrecv_t)]); // TODO: fix byte ordering
     return err;
 }
 
@@ -376,7 +376,7 @@ int pac195x_get_vaccn(SensorLocation const *loc, uint8_t n, uintptr64_t *val) {
     uint8_t buf[sizeof(i2c_sendrecv_t) + 8] = {0};              // Space for header and 64 bit response.
     int err = pac195x_block_read(loc, VACCN + (n - 1), 7, buf); // Only as the 7 bytes within the VACCN register
     return_err(err);
-    *val = *(uint32_t *)(&buf[sizeof(i2c_sendrecv_t)]);
+    *val = *(uint32_t *)(&buf[sizeof(i2c_sendrecv_t)]); // TODO: fix byte ordering
     return err;
 }
 
@@ -387,7 +387,7 @@ int pac195x_get_vaccn(SensorLocation const *loc, uint8_t n, uintptr64_t *val) {
  * @param bipolar Whether the measurement is bipolar or not (PAC195X uses unipolar by default).
  * @return The voltage measurement on the line in millivolts.
  */
-uint32_t pac195x_calc_voltage(uint8_t fsr, uint16_t vbus, bool bipolar) {
+uint32_t pac195x_calc_bus_voltage(uint8_t fsr, uint16_t vbus, bool bipolar) {
     uint16_t denominator;
     if (bipolar) {
         denominator = 32768;
@@ -395,4 +395,22 @@ uint32_t pac195x_calc_voltage(uint8_t fsr, uint16_t vbus, bool bipolar) {
         denominator = 65535; // Actual calculation says to use 65536, but this approximation saves 2 bytes
     }
     return (fsr * vbus * 1000) / denominator;
+}
+
+/**
+ * Calculate the bus current.
+ * @param rsense The value of the R_SENSE resistor connected to the SENSE line in ohms.
+ * @param vsense The measured VSENSE channel value corresponding to the SENSE line.
+ * @param bipolar Whether the measurement is bipolar or not (PAC195X uses unipolar by default).
+ * @return The bus current in microamps.
+ */
+uint32_t pac195x_calc_bus_current(uint16_t rsense, uint16_t vsense, bool bipolar) {
+    uint16_t denominator;
+    if (bipolar) {
+        denominator = 32768;
+    } else {
+        denominator = 65535; // Actual calculation says to use 65536, but this approximation saves 2 bytes
+    }
+    uint16_t fsc = 100 / rsense;
+    return (fsc * vsense * 1000) / denominator;
 }
