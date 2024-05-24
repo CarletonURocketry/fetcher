@@ -38,61 +38,41 @@ void *pac1952_2_collector(void *args) {
     }
 
     for (;;) {
-        uint16_t values[2];
-        uint32_t bigvalues[2];
+        uint16_t vsense[2];
+        uint16_t vbus[2];
+        uint32_t vpower[2];
 
         for (int i = 0; i < 2; i++) {
 
-            err = pac195x_get_vsensen(&loc, i + 1, &values[i]);
+            err = pac195x_get_vsensen(&loc, i + 1, &vsense[i]);
             if (err != EOK) {
                 fprintf(stderr, "PAC195X could not read VSENSE%d: %s\n", i - 1, strerror(err));
                 break;
             } else {
-                printf("VSENSE %d - %04x\n", i + 1, values[i]);
+                printf("VSENSE %d - %04x\n", i + 1, vsense[i]);
             }
         }
 
         for (int i = 0; i < 2; i++) {
 
-            err = pac195x_get_vbusn(&loc, i + 1, &values[i]);
+            err = pac195x_get_vbusn(&loc, i + 1, &vbus[i]);
             if (err != EOK) {
                 fprintf(stderr, "PAC195X could not read VBUS_%d: %s\n", i - 1, strerror(err));
                 break;
             } else {
-                printf("VBUS %d - %04x\n", i + 1, values[i]);
+                printf("VBUS %d - %04x\n", i + 1, vbus[i]);
             }
         }
 
         for (int i = 0; i < 2; i++) {
 
-            err = pac195x_get_vsensenavg(&loc, i + 1, &values[i]);
-            if (err != EOK) {
-                fprintf(stderr, "PAC195X could not read VBUS_%d: %s\n", i - 1, strerror(err));
-                break;
-            } else {
-                printf("VSENSE AVG %d - %04x\n", i + 1, values[i]);
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-
-            err = pac195x_get_vbusnavg(&loc, i + 1, &values[i]);
-            if (err != EOK) {
-                fprintf(stderr, "PAC195X could not read VBUS_%d: %s\n", i - 1, strerror(err));
-                break;
-            } else {
-                printf("VBUS AVG %d - %04x\n", i + 1, values[i]);
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-
-            err = pac195x_get_powern(&loc, i + 1, &bigvalues[i]);
+            err = pac195x_get_powern(&loc, i + 1, &vpower[i]);
             if (err != EOK) {
                 fprintf(stderr, "PAC195X could not read POWER_%d: %s\n", i - 1, strerror(err));
                 break;
             } else {
-                printf("POWER %d - %08x\n", i + 1, bigvalues[i]);
+                printf("POWER %d - %08x\n", i + 1, vpower[i]);
+                printf("CALCULATED POWER %d - %08x\n", i + 1, (uint32_t)(vsense[i] * vbus[i]));
             }
         }
 

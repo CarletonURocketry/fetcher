@@ -356,3 +356,23 @@ int pac195x_get_powern(SensorLocation const *loc, uint8_t n, uint32_t *val) {
     *val = *(uint32_t *)(&buf[sizeof(i2c_sendrecv_t)]);
     return err;
 }
+
+/**
+ * Get the V_ACCN measurements for channels 1-4.
+ * NOTE: If SKIP is enabled and the caller attempts to read from a channel that is disabled, an I/O error will be
+ * returned.
+ * @param loc The location of the sensor on the I2C bus.
+ * @param n The channel number (1-4, inclusive) to get the measurement from.
+ * @param val A pointer to where to store the value.
+ * @return Any error which occurred while communicating with the sensor. EOK if successful. EINVAL if `n` is an invalid
+ * channel number.
+ */
+int pac195x_get_vaccn(SensorLocation const *loc, uint8_t n, uintptr64_t *val) {
+    if (n > 4 || n < 1) return EINVAL; // Invalid channel number
+
+    uint8_t buf[sizeof(i2c_sendrecv_t) + 8] = {0};              // Space for header and 64 bit response.
+    int err = pac195x_block_read(loc, VACCN + (n - 1), 7, buf); // Only as the 7 bytes within the VACCN register
+    return_err(err);
+    *val = *(uint32_t *)(&buf[sizeof(i2c_sendrecv_t)]);
+    return err;
+}
