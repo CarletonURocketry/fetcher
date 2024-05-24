@@ -9,6 +9,7 @@
 #include "sensor_api.h"
 #include <errno.h>
 #include <hw/i2c.h>
+#include <stdint.h>
 #include <string.h>
 
 /** Macro to early return error statuses. */
@@ -377,4 +378,21 @@ int pac195x_get_vaccn(SensorLocation const *loc, uint8_t n, uintptr64_t *val) {
     return_err(err);
     *val = *(uint32_t *)(&buf[sizeof(i2c_sendrecv_t)]);
     return err;
+}
+
+/**
+ * Calculates the voltage on the SENSE line from the VBUS measurement.
+ * @param fsr The full scale range to use for the calculation (PAC195X uses a default of 32).
+ * @param vbus The measured VBUS channel value corresponding to the SENSE line.
+ * @param bipolar Whether the measurement is bipolar or not (PAC195X uses unipolar by default).
+ * @return The voltage measurement on the line in millivolts.
+ */
+uint32_t pac195x_calc_voltage(uint8_t fsr, uint16_t vbus, bool bipolar) {
+    uint16_t denominator;
+    if (bipolar) {
+        denominator = 32768;
+    } else {
+        denominator = 65535; // Actual calculation says to use 65536, but this approximation saves 2 bytes
+    }
+    return (fsr * vbus * 1000) / denominator;
 }

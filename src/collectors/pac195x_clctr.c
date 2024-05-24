@@ -65,11 +65,8 @@ void *pac1952_2_collector(void *args) {
         }
 
         // Calculate voltage on SENSE1+
-        uint32_t vsource1 = (32 * vbus[0]) / 65536;
-        printf("SENSE1+ VOLTAGE: %uV\n", vsource1);
-
-        uint32_t vsource2 = (32 * vbus[1]) / 65536;
-        printf("SENSE2+ VOLTAGE: %uV\n", vsource2);
+        printf("SENSE1+ VOLTAGE: %umV\n", pac195x_calc_voltage(32, vbus[0], false));
+        printf("SENSE2+ VOLTAGE: %umV\n", pac195x_calc_voltage(32, vbus[1], false));
 
         for (int i = 0; i < 2; i++) {
 

@@ -66,4 +66,6 @@ int pac195x_refresh(SensorLocation const *loc);
 int pac195x_refresh_v(SensorLocation const *loc);
 int pac195x_refresh_g(SensorLocation const *loc);
 
+uint32_t pac195x_calc_voltage(uint8_t fsr, uint16_t vbus, bool bipolar);
+
 #endif // _PAC195X_H_
