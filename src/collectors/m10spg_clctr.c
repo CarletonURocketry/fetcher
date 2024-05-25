@@ -52,8 +52,8 @@ void *m10spg_collector(void *args) {
         /*         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
         /*             fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
         /*         } */
-        /*         // The else here is commented out so you can see the data processing is working even while an invalid */
-        /*         // fix is held */
+        // The else here is commented out so you can see the data processing is working even while an invalid
+        // fix is held
         /*     } // else { */
         /*     //    // Instead of doing a continue, should sleep until the next epoch */
         /*     //    printf("Bad GPS fix, skipping\n"); */
