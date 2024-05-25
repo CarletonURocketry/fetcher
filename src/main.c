@@ -138,8 +138,6 @@ int main(int argc, char **argv) {
         .mq_flags = 0,
         .mq_maxmsg = 30,
         .mq_msgsize = 50,
-        .mq_recvwait = 1,
-        .mq_sendwait = 1,
     };
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, &q_attr);
     if (sensor_q == -1) {
