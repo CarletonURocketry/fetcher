@@ -38,7 +38,7 @@ typedef enum {
     TAG_PRESSURE = 1,         /**< Pressure in kilo Pascals */
     TAG_HUMIDITY = 2,         /**< Humidity in % relative humidity */
     TAG_TIME = 3,             /**< Time in milliseconds */
-    TAG_ALTITUDE_SEA = 4,     /**< Altitude above sea level in milimeters */
+    TAG_ALTITUDE_SEA = 4,     /**< Altitude above sea level in meters */
     TAG_ALTITUDE_REL = 5,     /**< Altitude above launch height in meters */
     TAG_ANGULAR_VEL = 6,      /**< Angular velocity in degrees per second */
     TAG_LINEAR_ACCEL_REL = 7, /**< Relative linear acceleration in meters per second squared */

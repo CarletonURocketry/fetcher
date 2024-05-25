@@ -11,10 +11,13 @@
 #include <errno.h>
 #include <hw/i2c.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+
+#ifdef __M10SPG_DEBUG__
+#include <stdio.h>
+#endif // __M10SPG_DEBUG__
 
 /** Macro to early return an error. */
 #define return_err(err)                                                                                                \
@@ -37,10 +40,8 @@ static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_POSLLH] = {.header = {.class = 0x01, .id = 0x02, .length = 0x00}, .checksum_a = 0x03, .checksum_b = 0x0a},
     [UBX_NAV_VELNED] = {.header = {.class = 0x01, .id = 0x12, .length = 0x00}, .checksum_a = 0x13, .checksum_b = 0x3a},
     [UBX_NAV_STAT] = {.header = {.class = 0x01, .id = 0x03, .length = 0x00}, .checksum_a = 0x04, .checksum_b = 0x0d},
+    [UBX_MON_VER] = {.header = {.class = 0x0A, .id = 0x04, .length = 0x00}, .checksum_a = 0x0E, .checksum_b = 0x34},
 };
-
-// Extra pre-built messages, may be used in the future or for debugging
-// [UBX_MON_VER] = {.header = {.class = 0x0A, .id = 0x04, .length = 0x00}, .checksum_a = 0x0E, .checksum_b = 0x34},
 
 /**
  * Gets the total length of a message, including checksums and sync characters
@@ -139,14 +140,14 @@ static int add_valset_item(UBXFrame *msg, uint32_t key, const void *value, UBXVa
  */
 static int m10spg_available_bytes(const SensorLocation *loc, uint16_t *result) {
     // Send the address of the first register, then the second byte read will be the next register (0xFE)
-    static i2c_send_t write_header = {.stop = 0, .len = 1};
+    i2c_send_t write_header = {.stop = 0, .len = 1};
     write_header.slave = loc->addr;
 
     uint8_t address_cmd[sizeof(write_header) + 1];
     memcpy(address_cmd, &write_header, sizeof(write_header));
     address_cmd[sizeof(write_header)] = 0xFD;
 
-    static i2c_recv_t read_header = {.stop = 1, .len = 2};
+    i2c_recv_t read_header = {.stop = 1, .len = 2};
     read_header.slave = loc->addr;
     uint8_t read_cmd[sizeof(read_header) + 2];
     memcpy(read_cmd, &read_header, sizeof(read_header));
@@ -168,8 +169,8 @@ static int m10spg_available_bytes(const SensorLocation *loc, uint16_t *result) {
  * @param nbytes The number of bytes to read into the buffer
  * @return int The error status of the call. EOK if successful.
  */
-static int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
-    static i2c_recv_t header = {.stop = 1};
+int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
+    i2c_recv_t header = {.stop = 1};
     header.slave = loc->addr;
     header.len = nbytes;
     uint8_t read_cmd[sizeof(header) + nbytes];
@@ -208,7 +209,7 @@ static int write_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
  * @return int Status of writing to the sensor, EOK if successful
  */
 static int send_message(const SensorLocation *loc, const UBXFrame *msg) {
-    static i2c_send_t header = {.stop = 1};
+    i2c_send_t header = {.stop = 1};
     header.slave = loc->addr;
     header.len = ubx_message_length(msg);
     uint8_t data[sizeof(header) + ubx_message_length(msg)];
@@ -328,7 +329,7 @@ int m10spg_open(const SensorLocation *loc) {
     return EINTR;
 }
 
-// DEBUG FUNCTIONS
+#ifdef __M10SPG_DEBUG__
 
 /**
  * Prints a populated message structure to standard output, which is useful when creating a pre-built message
@@ -385,3 +386,5 @@ static int debug_dump_buffer(const SensorLocation *loc, size_t bytes) {
     putchar('\n');
     return EOK;
 }
+
+#endif // __M10SPG_DEBUG__
