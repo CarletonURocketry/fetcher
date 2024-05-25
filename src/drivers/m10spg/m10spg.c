@@ -280,7 +280,7 @@ static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_p
  * @param size The maximum number of bytes to read into the response buffer
  * @return int The error status of the call. EOK if successful.
  */
-int m10spg_read(const SensorLocation *loc, M10spgCmd command, void *response, size_t size) {
+int m10spg_send_command(const SensorLocation *loc, M10SPG_cmd_t command, void *response, size_t size) {
     int err = send_message(loc, &PREMADE_MESSAGES[command]);
     return_err(err);
     UBXFrame recv;

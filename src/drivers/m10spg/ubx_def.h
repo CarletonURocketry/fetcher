@@ -74,43 +74,43 @@ typedef struct {
 
 /** A struct representing the UBX-NAV-STAT (navigation status) payload */
 typedef struct {
-    uint32_t iTOW;   /** The GPS time of week of the navigation epoch that created this payload */
-    uint8_t gpsFix;  /** The type of fix */
-    uint8_t flags;   /** Navigation status flags */
-    uint8_t fixStat; /** The fix status */
-    uint8_t flags2;  /** More flags about navigation output */
-    uint32_t ttff;   /** The time to first fix, in milliseconds */
-    uint32_t msss;   /** Milliseconds since startup */
+    uint32_t iTOW;   /**< The GPS time of week of the navigation epoch that created this payload */
+    uint8_t gpsFix;  /**< The type of fix */
+    uint8_t flags;   /**< Navigation status flags */
+    uint8_t fixStat; /**< The fix status */
+    uint8_t flags2;  /**< More flags about navigation output */
+    uint32_t ttff;   /**< The time to first fix, in milliseconds */
+    uint32_t msss;   /**< Milliseconds since startup */
 } UBXNavStatusPayload;
 
 /** A struct representing the UBX-NAV-POSLLH (position and height) payload */
 typedef struct {
-    uint32_t iTOW;  /** The GPS time of week of the navigation epoch that created this payload */
-    int32_t lon;    /** Longitude, in 0.0000001 * degrees */
-    int32_t lat;    /** Latitude, in 0.0000001 * degrees */
-    int32_t height; /** Height above ellipsoid in millimeters */
-    int32_t hMSL;   /** Height above mean sea level in millimeters */
-    uint32_t hAcc;  /** Horizontal accuracy measurement in millimeters */
-    uint32_t vAcc;  /** Vertical accuracy measurement in millimeters */
+    uint32_t iTOW;  /**< The GPS time of week of the navigation epoch that created this payload */
+    int32_t lon;    /**< Longitude, in 0.0000001 * degrees */
+    int32_t lat;    /**< Latitude, in 0.0000001 * degrees */
+    int32_t height; /**< Height above ellipsoid in millimeters */
+    int32_t hMSL;   /**< Height above mean sea level in millimeters */
+    uint32_t hAcc;  /**< Horizontal accuracy measurement in millimeters */
+    uint32_t vAcc;  /**< Vertical accuracy measurement in millimeters */
 } UBXNavPositionPayload;
 
 /** A struct representing the UBX-NAV-VELNED (velocity) payload */
 typedef struct {
-    uint32_t iTOW;   /** The GPS time of week of the navigation epoch that created this payload */
-    int32_t velN;    /** North velocity component, in cm/s */
-    int32_t velE;    /** East velocity component, in cm/s */
-    int32_t velD;    /** Down velocity component, in cm/s */
-    uint32_t speed;  /** Speed (3-D), in cm/s */
-    uint32_t gSpeed; /** Ground speed (2-D), in cm/s */
-    int32_t heading; /** Heading of motion (2-D), in 0.00001 * degrees */
-    uint32_t sAcc;   /** Speed accuracy estimate, in cm/s */
-    uint32_t cAcc;   /** Course/heading accuracy estimate, in 0.00001 * degrees */
+    uint32_t iTOW;   /**< The GPS time of week of the navigation epoch that created this payload */
+    int32_t velN;    /**< North velocity component, in cm/s */
+    int32_t velE;    /**< East velocity component, in cm/s */
+    int32_t velD;    /**< Down velocity component, in cm/s */
+    uint32_t speed;  /**< Speed (3-D), in cm/s */
+    uint32_t gSpeed; /**< Ground speed (2-D), in cm/s */
+    int32_t heading; /**< Heading of motion (2-D), in 0.00001 * degrees */
+    uint32_t sAcc;   /**< Speed accuracy estimate, in cm/s */
+    uint32_t cAcc;   /**< Course/heading accuracy estimate, in 0.00001 * degrees */
 } UBXNavVelocityPayload;
 
 /** A struct representing the UBX-ACK-ACK/UBX-ACK-NACK (acknowledgement) payload */
 typedef struct {
-    uint8_t clsId; /** The class ID of the acknowledged or not acknowledged message */
-    uint8_t msgId; /** The message ID of the acknowledged or not acknowledged message */
+    uint8_t clsId; /**< The class ID of the acknowledged or not acknowledged message */
+    uint8_t msgId; /**< The message ID of the acknowledged or not acknowledged message */
 } UBXAckPayload;
 
 #endif // _UBX_DEF_
