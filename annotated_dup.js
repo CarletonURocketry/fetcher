@@ -24,5 +24,6 @@ var annotated_dup =
     [ "UBXUniqIDPayload", "structUBXUniqIDPayload.html", "structUBXUniqIDPayload" ],
     [ "UBXUTCPayload", "structUBXUTCPayload.html", "structUBXUTCPayload" ],
     [ "UBXValsetPayload", "structUBXValsetPayload.html", "structUBXValsetPayload" ],
+    [ "vec2d_t", "structvec2d__t.html", "structvec2d__t" ],
     [ "vec3d_t", "structvec3d__t.html", "structvec3d__t" ]
 ];

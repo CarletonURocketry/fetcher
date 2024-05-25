@@ -99,7 +99,6 @@ $(document).ready(function(){initNavTree('m10spg_8c.html',''); initResizable(); 
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;hw/i2c.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
@@ -119,8 +118,10 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a35f251d10b359a5550c4344086f3a9eb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="m10spg_8c.html#a35f251d10b359a5550c4344086f3a9eb">m10spg_read</a> (const <a class="el" href="structSensorLocation.html">SensorLocation</a> *loc, <a class="el" href="m10spg_8h.html#ac2b813bc43cf0ab1640aef43099a4c08">M10spgCmd</a> command, void *response, size_t size)</td></tr>
-<tr class="separator:a35f251d10b359a5550c4344086f3a9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5616ee977b6b019aa6c159579b462f7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="m10spg_8c.html#aa5616ee977b6b019aa6c159579b462f7">read_bytes</a> (const <a class="el" href="structSensorLocation.html">SensorLocation</a> *loc, void *buf, size_t nbytes)</td></tr>
+<tr class="separator:aa5616ee977b6b019aa6c159579b462f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0d183c68402e71a67a88d966af7607"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="m10spg_8c.html#a9f0d183c68402e71a67a88d966af7607">m10spg_send_command</a> (const <a class="el" href="structSensorLocation.html">SensorLocation</a> *loc, <a class="el" href="m10spg_8h.html#a22d84dde5089d12b98fd352b213a663a">M10SPG_cmd_t</a> command, void *response, size_t size)</td></tr>
+<tr class="separator:a9f0d183c68402e71a67a88d966af7607"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afda032ddc1a03265e51ae87e59ac5001"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="m10spg_8c.html#afda032ddc1a03265e51ae87e59ac5001">m10spg_open</a> (const <a class="el" href="structSensorLocation.html">SensorLocation</a> *loc)</td></tr>
 <tr class="separator:afda032ddc1a03265e51ae87e59ac5001"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -230,14 +231,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a35f251d10b359a5550c4344086f3a9eb" name="a35f251d10b359a5550c4344086f3a9eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35f251d10b359a5550c4344086f3a9eb">&#9670;&nbsp;</a></span>m10spg_read()</h2>
+<a id="a9f0d183c68402e71a67a88d966af7607" name="a9f0d183c68402e71a67a88d966af7607"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f0d183c68402e71a67a88d966af7607">&#9670;&nbsp;</a></span>m10spg_send_command()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int m10spg_read </td>
+          <td class="memname">int m10spg_send_command </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structSensorLocation.html">SensorLocation</a> *&#160;</td>
           <td class="paramname"><em>loc</em>, </td>
@@ -245,7 +246,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="m10spg_8h.html#ac2b813bc43cf0ab1640aef43099a4c08">M10spgCmd</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="m10spg_8h.html#a22d84dde5089d12b98fd352b213a663a">M10SPG_cmd_t</a>&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
@@ -272,6 +273,49 @@ Functions</h2></td></tr>
     <tr><td class="paramname">loc</td><td>The m10spg's location on the I2C bus </td></tr>
     <tr><td class="paramname">response</td><td>A buffer to place the payload of the response (use a structure with the same format as the message's pre-defined payload) </td></tr>
     <tr><td class="paramname">size</td><td>The maximum number of bytes to read into the response buffer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int The error status of the call. EOK if successful. </dd></dl>
+
+</div>
+</div>
+<a id="aa5616ee977b6b019aa6c159579b462f7" name="aa5616ee977b6b019aa6c159579b462f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5616ee977b6b019aa6c159579b462f7">&#9670;&nbsp;</a></span>read_bytes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int read_bytes </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSensorLocation.html">SensorLocation</a> *&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nbytes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads a certain number of bytes into the specified buffer </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>The m10spg's location on the I2C bus </td></tr>
+    <tr><td class="paramname">buf</td><td>A pointer to the memory location to store the data. </td></tr>
+    <tr><td class="paramname">nbytes</td><td>The number of bytes to read into the buffer </td></tr>
   </table>
   </dd>
 </dl>

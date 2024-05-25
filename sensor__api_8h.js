@@ -1,5 +1,6 @@
 var sensor__api_8h =
 [
+    [ "vec2d_t", "structvec2d__t.html", "structvec2d__t" ],
     [ "vec3d_t", "structvec3d__t.html", "structvec3d__t" ],
     [ "SensorTagData", "structSensorTagData.html", "structSensorTagData" ],
     [ "SensorTagList", "structSensorTagList.html", "structSensorTagList" ],
@@ -21,12 +22,7 @@ var sensor__api_8h =
       [ "TAG_ANGULAR_VEL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9e65523ce44fc3e7de9689d2d589cdc9", null ],
       [ "TAG_LINEAR_ACCEL_REL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191", null ],
       [ "TAG_LINEAR_ACCEL_ABS", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2", null ],
-      [ "TAG_LATITUDE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a962dc7c40351a60ff924a4c43895585e", null ],
-      [ "TAG_LONGITUDE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627abda7fa4cfb434da938ae62e28218417f", null ],
-      [ "TAG_ALTITUDE_MSL", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a968a770dcce3adc2c04b620780d990ef", null ],
-      [ "TAG_SPEED", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a7a32e63df0c9eecc0dcb91ab14a2a1e4", null ],
-      [ "TAG_COURSE", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627ae67740f056f9adb4a5587b0f91e0b181", null ],
-      [ "TAG_FIX", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2", null ]
+      [ "TAG_COORDS", "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627aa54c2ba8d0bfb82522594ef5eed90ccb", null ]
     ] ],
     [ "SensorTagDType", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84", [
       [ "TYPE_FLOAT", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a19a0a402d33a2e049e91ea9e37e90c2f", null ],
@@ -36,7 +32,8 @@ var sensor__api_8h =
       [ "TYPE_I32", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84ac7934ca10ab7b05c96f1eea440e28793", null ],
       [ "TYPE_I16", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84a53aad119b5a256579dfa5290485de039", null ],
       [ "TYPE_I8", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84acfa7098bd7a6ae77e35dc74e7ce7413b", null ],
-      [ "TYPE_VEC3D", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84afc93694d5fe644e0153ee3056e2c6a3c", null ]
+      [ "TYPE_VEC3D", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84afc93694d5fe644e0153ee3056e2c6a3c", null ],
+      [ "TYPE_VEC2D", "sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84ab4a015f4c41b5e3a80b9e81380aec5e2", null ]
     ] ],
     [ "memcpy_be", "sensor__api_8h.html#a75eceb540ea61058f80f337782cd64e7", null ],
     [ "sensor_get_ctx_size", "sensor__api_8h.html#a55a8f00834e207eb93484dcdfa4b3c26", null ],

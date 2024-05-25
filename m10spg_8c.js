@@ -6,5 +6,6 @@ var m10spg_8c =
     [ "SYNC_ONE", "m10spg_8c.html#ad70d33b01aa24cadbb95ac4b4b11926e", null ],
     [ "SYNC_TWO", "m10spg_8c.html#a2c44fb6848e62eb38a2c0c7d9b95cf96", null ],
     [ "m10spg_open", "m10spg_8c.html#afda032ddc1a03265e51ae87e59ac5001", null ],
-    [ "m10spg_read", "m10spg_8c.html#a35f251d10b359a5550c4344086f3a9eb", null ]
+    [ "m10spg_send_command", "m10spg_8c.html#a9f0d183c68402e71a67a88d966af7607", null ],
+    [ "read_bytes", "m10spg_8c.html#aa5616ee977b6b019aa6c159579b462f7", null ]
 ];
