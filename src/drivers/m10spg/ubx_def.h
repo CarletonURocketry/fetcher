@@ -94,6 +94,10 @@ typedef struct {
     uint32_t vAcc;  /**< Vertical accuracy measurement in millimeters */
 } UBXNavPositionPayload;
 
+/** A conversion constant to go from the scale of the UBX lat/lon (1E-7deg) to regular degrees */
+#define LAT_SCALE_TO_DEGREES 10000000
+#define LON_SCALE_TO_DEGREES 10000000
+
 /** A struct representing the UBX-NAV-VELNED (velocity) payload */
 typedef struct {
     uint32_t iTOW;   /**< The GPS time of week of the navigation epoch that created this payload */

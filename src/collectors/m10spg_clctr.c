@@ -12,9 +12,10 @@ union read_buffer {
 typedef struct {
     uint8_t type; /**< Measurement type */
     union {
-        uint32_t U32;
-        int32_t I32;
-        uint8_t U8;
+        uint32_t U32;  /**< The message payload, interpreted as a uin32_t */
+        int32_t I32;   /**< The message payload, interpreted as a int32_t */
+        uint8_t U8;    /**< The message payload, interpreted as a uint8_t */
+        vec2d_t VEC2D; /**< The message payload, interpreted as a vec2d_t */
     };
 } __attribute__((packed)) message_t;
 
@@ -67,16 +68,13 @@ void *m10spg_collector(void *args) {
         // Read position
         err = m10spg_send_command(&loc, UBX_NAV_POSLLH, &buf, sizeof(UBXNavPositionPayload));
         if (err == EOK) {
+            msg.type = TAG_COORDS;
+            msg.VEC2D.x = ((float)buf.pos.lat / LAT_SCALE_TO_DEGREES);
+            msg.VEC2D.y = ((float)buf.pos.lon / LON_SCALE_TO_DEGREES);
 
-            uint8_t coordinates[sizeof(vec2d_t) + 1];
-            coordinates[0] = TAG_COORDS;
-            memcpy(&coordinates[1], &buf.pos.lat, sizeof(buf.pos.lat));
-            memcpy(&coordinates[1 + sizeof(buf.pos.lat)], &buf.pos.lon, sizeof(buf.pos.lon));
-
-            if (mq_send(sensor_q, (char *)coordinates, sizeof(coordinates), 0) == -1) {
+            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
             }
-
             msg.type = TAG_ALTITUDE_SEA;
             msg.I32 = buf.pos.hMSL;
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
@@ -105,7 +103,6 @@ void *m10spg_collector(void *args) {
         /*     continue; */
         /* } */
     }
-
     fprintf(stderr, "%s\n", strerror(err));
     return (void *)((uint64_t)err);
 }
