@@ -7,15 +7,19 @@ license for more details: https://www.gnu.org/licenses/
 
 DESCRIPTION:
     A command line utility for reading sensor data over I2C and providing it
-    over stdout.
+    over stdout or a message queue.
 
 SYNTAX:
-    fetcher
+    fetcher [-p -s <sensor>] /dev/i2c1
+
+ARGUMENTS:
+    device       The device descriptor of the I2C bus to use for reading sensor
+                 data.
 
 OPTIONS:
     -p           If this flag is passed, fetcher will print its sensor data to
                  stdout. Enabling this flag will take messages off the output
                  message queue.
 
-    -s           If this flag is passed, fetcher will only open and read 
+    -s <sensor>  If this flag is passed, fetcher will only open and read 
                  sensor data from the sensor whose name follows.
