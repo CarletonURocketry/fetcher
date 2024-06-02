@@ -350,7 +350,7 @@ int pac195x_get_vsensenavg(SensorLocation const *loc, uint8_t n, uint16_t *val) 
  * @return Any error which occurred while communicating with the sensor. EOK if successful. EINVAL if `n` is an invalid
  * channel number.
  */
-int pac195x_get_powern(SensorLocation const *loc, uint8_t n, uint32_t *val) {
+int pac195x_get_vpowern(SensorLocation const *loc, uint8_t n, uint32_t *val) {
     if (n > 4 || n < 1) return EINVAL; // Invalid channel number
 
     uint8_t buf[sizeof(i2c_sendrecv_t) + 4]; // Space for header and 32 bit response.
@@ -412,4 +412,23 @@ uint32_t pac195x_calc_bus_current(uint32_t rsense, uint16_t vsense, bool bipolar
         denominator = 65535; // Actual calculation says to use 65536, but this approximation saves 2 bytes
     }
     return (100 * vsense * 1000) / (denominator * rsense);
+}
+
+/**
+ * Calculate the actual power.
+ * @param rsense The value of the R_SENSE resistor connected to the SENSE line in milliohms.
+ * @param vsense The measured VSENSE channel value corresponding to the SENSE line.
+ * @param bipolar Whether the measurement is bipolar or not (PAC195X uses unipolar by default).
+ * @return The bus current in milliamps.
+ */
+uint32_t pac195x_calc_power(uint32_t rsense, uint32_t vpower, bool bipolar) {
+    uint32_t denominator;
+    if (bipolar) {
+        denominator = 536870912; // 2^29
+    } else {
+        denominator = 1073741824; // 2^30
+    }
+    // FSR = 32 * (100mV / rsense_ohms)
+    // Power = FSR * vpower / denominator
+    return (32 * 100 * 1000 * vpower) / (rsense * denominator);
 }

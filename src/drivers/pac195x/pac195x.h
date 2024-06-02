@@ -56,7 +56,7 @@ int pac195x_get_vsensen(SensorLocation const *loc, uint8_t n, uint16_t *val);
 int pac195x_get_vbusn(SensorLocation const *loc, uint8_t n, uint16_t *val);
 int pac195x_get_vbusnavg(SensorLocation const *loc, uint8_t n, uint16_t *val);
 int pac195x_get_vsensenavg(SensorLocation const *loc, uint8_t n, uint16_t *val);
-int pac195x_get_powern(SensorLocation const *loc, uint8_t n, uint32_t *val);
+int pac195x_get_vpowern(SensorLocation const *loc, uint8_t n, uint32_t *val);
 int pac195x_get_vaccn(SensorLocation const *loc, uint8_t n, uintptr64_t *val);
 
 int pac195x_set_sample_mode(SensorLocation const *loc, pac195x_sm_e mode);
@@ -68,5 +68,6 @@ int pac195x_refresh_g(SensorLocation const *loc);
 
 uint32_t pac195x_calc_bus_voltage(uint8_t fsr, uint16_t vbus, bool bipolar);
 uint32_t pac195x_calc_bus_current(uint32_t rsense, uint16_t vsense, bool bipolar);
+uint32_t pac195x_calc_power(uint32_t rsense, uint32_t vpower, bool bipolar);
 
 #endif // _PAC195X_H_

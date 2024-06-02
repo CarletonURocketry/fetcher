@@ -2,7 +2,11 @@
 #include "drivers/pac195x/pac195x.h"
 #include <stdio.h>
 
+/** Macro to early return errors. */
 #define return_err(err) return (void *)((uint64_t)errno)
+
+/** The RSENSE value connected to the PAC1952-2 in milliohms. */
+#define RSENSE 18
 
 void *pac1952_2_collector(void *args) {
 
@@ -66,11 +70,11 @@ void *pac1952_2_collector(void *args) {
         printf("VSENSE1: %u\n", vsense[0]);
         printf("VSENSE2: %u\n", vsense[1]);
 
-        printf("SENSE1+ CURRENT: %umA\n", pac195x_calc_bus_current(18, vsense[0], false));
-        printf("SENSE2+ CURRENT: %umA\n", pac195x_calc_bus_current(18, vsense[1], false));
+        printf("SENSE1+ CURRENT: %umA\n", pac195x_calc_bus_current(RSENSE, vsense[0], false));
+        printf("SENSE2+ CURRENT: %umA\n", pac195x_calc_bus_current(RSENSE, vsense[1], false));
 
         for (int i = 0; i < 2; i++) {
-            err = pac195x_get_powern(&loc, i + 1, &vpower[i]);
+            err = pac195x_get_vpowern(&loc, i + 1, &vpower[i]);
             if (err != EOK) {
                 fprintf(stderr, "PAC195X could not read POWER_%d: %s\n", i - 1, strerror(err));
                 break;
