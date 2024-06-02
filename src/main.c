@@ -34,6 +34,7 @@
 /** The maximum number of sensors that fetcher can support. */
 #define MAX_SENSORS 8
 
+/** The name of the system clock collector. */
 #define SYSCLOCK_NAME "sysclock"
 
 /** Whether or not to print data to stdout. */
