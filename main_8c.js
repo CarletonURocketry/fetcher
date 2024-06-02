@@ -10,6 +10,7 @@ var main_8c =
     [ "read_sensor_addresses", "main_8c.html#ab0a7c62a4dea52bfde2183ef30bbb7e5", null ],
     [ "read_sensor_name", "main_8c.html#ab1a5d7af04dab3154414440255c7929d", null ],
     [ "buffer", "main_8c.html#a97eaba5b61706891a4da114bde40da4d", null ],
+    [ "i2c_bus", "main_8c.html#a6cdb3596e1570cb461f3def70adf8ea7", null ],
     [ "print_output", "main_8c.html#a8242881422ac2b44e5c917658a45ed1a", null ],
     [ "select_sensor", "main_8c.html#a44264b12e93caada1afc6bed8b1d283b", null ]
 ];
