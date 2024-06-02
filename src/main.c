@@ -233,6 +233,7 @@ int main(int argc, char **argv) {
         /* Add sysclock sensor because it won't be specified in board ID. */
         collector_t sysclock = collector_search(SYSCLOCK_NAME);
         err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, NULL);
+        num_sensors++;
     }
 
     /* Constantly receive from sensors on message queue and print data. */
