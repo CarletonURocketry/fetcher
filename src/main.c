@@ -51,6 +51,9 @@ static collector_args_t collector_args[MAX_SENSORS];
 /** Buffer for reading sensor messages when print option is selected. */
 uint8_t buffer[BUFFER_SIZE];
 
+/** Device descriptor of the I2C bus. */
+char *i2c_bus = NULL;
+
 /**
  * Reads the sensor name from the board ID into a new buffer.
  * @param board_id The contents of the board ID.
@@ -137,6 +140,13 @@ int main(int argc, char **argv) {
         }
     }
 
+    /* Positional argument for device descriptor. */
+    if (optind >= argc) {
+        fprintf(stderr, "I2C bus device descriptor is required.\n");
+        exit(EXIT_FAILURE);
+    }
+    i2c_bus = argv[optind];
+
     /*
      * Open/create the message queue.
      * Main thread can only read incoming messages from sensors.
@@ -161,7 +171,7 @@ int main(int argc, char **argv) {
     }
 
     /* Open I2C. */
-    int bus = open("/dev/i2c1", O_RDWR);
+    int bus = open(i2c_bus, O_RDWR);
     if (bus < 0) {
         fprintf(stderr, "Could not open I2C bus with error %s.\n", strerror(errno));
         exit(EXIT_FAILURE);
