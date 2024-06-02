@@ -16,3 +16,6 @@ OPTIONS:
     -p           If this flag is passed, fetcher will print its sensor data to
                  stdout. Enabling this flag will take messages off the output
                  message queue.
+
+    -s           If this flag is passed, fetcher will only open and read 
+                 sensor data from the sensor whose name follows.

@@ -14,6 +14,14 @@
 #include <stdint.h>
 #include <stdio.h>
 
+/** Type for a 2 dimensional vector with x, y components. */
+typedef struct {
+    /** X component. */
+    float x;
+    /** Y component. */
+    float y;
+} vec2d_t;
+
 /** Type for a 3 dimensional vector with x, y, z components. */
 typedef struct {
     /** X component. */
@@ -30,17 +38,12 @@ typedef enum {
     TAG_PRESSURE = 1,         /**< Pressure in kilo Pascals */
     TAG_HUMIDITY = 2,         /**< Humidity in % relative humidity */
     TAG_TIME = 3,             /**< Time in milliseconds */
-    TAG_ALTITUDE_SEA = 4,     /**< Altitude above sea level in milimeters */
+    TAG_ALTITUDE_SEA = 4,     /**< Altitude above sea level in meters */
     TAG_ALTITUDE_REL = 5,     /**< Altitude above launch height in meters */
     TAG_ANGULAR_VEL = 6,      /**< Angular velocity in degrees per second */
     TAG_LINEAR_ACCEL_REL = 7, /**< Relative linear acceleration in meters per second squared */
     TAG_LINEAR_ACCEL_ABS = 8, /**< Absolute linear acceleration in meters per second squared */
-    TAG_LATITUDE = 9,         /**< Latitude in units of 0.1 microdegrees */
-    TAG_LONGITUDE = 10,       /**< Longitude in units of 0.1 microdegrees */
-    TAG_ALTITUDE_MSL = 11,    /**< The height above mean sea level in millimeters*/
-    TAG_SPEED = 12,           /**< Speed over the ground in cm/s */
-    TAG_COURSE = 13,          /**< Course over ground (heading) in units of 10 microdegrees */
-    TAG_FIX = 14,             /**< The type of GPS fix that is currently held, as a combination of flags */
+    TAG_COORDS = 9,           /**< Latitude and longitude in degrees */
 } SensorTag;
 
 /** Describes the data type of the data associated with a tag. */
@@ -53,6 +56,7 @@ typedef enum {
     TYPE_I16,   /**< int16_t */
     TYPE_I8,    /**< int8_t */
     TYPE_VEC3D, /**< vec3d_t */
+    TYPE_VEC2D, /**< vec2d_t */
 } SensorTagDType;
 
 /** Stores information about each tag. */

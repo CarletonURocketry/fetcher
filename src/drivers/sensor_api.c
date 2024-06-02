@@ -23,7 +23,7 @@ const SensorTagData SENSOR_TAG_DATA[] = {
     [TAG_ALTITUDE_REL] =
         {.name = "Altitude rel", .unit = "m", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
     [TAG_ALTITUDE_SEA] =
-        {.name = "Altitude sea level", .unit = "mm", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32},
+        {.name = "Altitude sea level", .unit = "m", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
     [TAG_LINEAR_ACCEL_ABS] = {.name = "Absolute linear acceleration",
                               .unit = "m/s^2",
                               .fmt_str = "%.2fX, %.2fY, %.2fZ",
@@ -39,14 +39,15 @@ const SensorTagData SENSOR_TAG_DATA[] = {
                          .fmt_str = "%.2fX, %.2fY, %.2fZ",
                          .dsize = sizeof(vec3d_t),
                          .dtype = TYPE_VEC3D},
-    [TAG_LONGITUDE] =
-        {.name = "Longitude", .unit = "0.1udeg", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32},
-    [TAG_LATITUDE] =
-        {.name = "Latitude", .unit = "0.1udeg", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32},
-    [TAG_SPEED] =
-        {.name = "Ground speed", .unit = "cm/s", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype = TYPE_U32},
-    [TAG_COURSE] = {.name = "Course", .unit = "10udeg", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype = TYPE_U32},
-    [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8},
+    [TAG_COORDS] =
+        {.name = "Lat/Long", .unit = "deg", .fmt_str = "%.2fX, %.2fY", .dsize = sizeof(vec2d_t), .dtype = TYPE_VEC2D},
+    /* [TAG_LATITUDE] = */
+    /*     {.name = "Latitude", .unit = "0.1udeg", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32}, */
+    /* [TAG_SPEED] = */
+    /*     {.name = "Ground speed", .unit = "cm/s", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype = TYPE_U32}, */
+    /* [TAG_COURSE] = {.name = "Course", .unit = "10udeg", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype =
+       TYPE_U32}, */
+    /* [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8}, */
 };
 
 /**
@@ -175,6 +176,10 @@ void sensor_write_data(FILE *stream, const SensorTag tag, const void *data) {
     case TYPE_VEC3D:
         fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const vec3d_t, data).x,
                 drefcast(const vec3d_t, data).y, drefcast(const vec3d_t, data).z, SENSOR_TAG_DATA[tag].unit);
+        break;
+    case TYPE_VEC2D:
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const vec2d_t, data).x,
+                drefcast(const vec2d_t, data).y, SENSOR_TAG_DATA[tag].unit);
         break;
     }
 }

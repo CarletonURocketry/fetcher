@@ -34,8 +34,13 @@
 /** The maximum number of sensors that fetcher can support. */
 #define MAX_SENSORS 8
 
+#define SYSCLOCK_NAME "sysclock"
+
 /** Whether or not to print data to stdout. */
 bool print_output = false;
+
+/** The name of a single sensor to enable, or null if no sensor was selected */
+char *select_sensor = NULL;
 
 /** Stores the thread IDs of all the collector threads. */
 static pthread_t collector_threads[MAX_SENSORS];
@@ -112,10 +117,13 @@ int main(int argc, char **argv) {
     opterr = 0;
 
     /* Get command line options. */
-    while ((c = getopt(argc, argv, ":p")) != -1) {
+    while ((c = getopt(argc, argv, ":ps:")) != -1) {
         switch (c) {
         case 'p':
             print_output = true;
+            break;
+        case 's':
+            select_sensor = optarg;
             break;
         case ':':
             fprintf(stderr, "Option -%c requires an argument.\n", optopt);
@@ -138,8 +146,6 @@ int main(int argc, char **argv) {
         .mq_flags = 0,
         .mq_maxmsg = 30,
         .mq_msgsize = 50,
-        .mq_recvwait = 1,
-        .mq_sendwait = 1,
     };
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, &q_attr);
     if (sensor_q == -1) {
@@ -196,8 +202,17 @@ int main(int argc, char **argv) {
         uint8_t naddrs = MAX_ADDR_PER_SENSOR;
         cur = read_sensor_addresses(cur, addresses, &naddrs);
 
+        // Check if the sensor that was requested is this sensor (if none match, will do nothing)
+        if (select_sensor != NULL) {
+            if (strncasecmp(select_sensor, sensor_name, MAX_SENSOR_NAME) != 0) {
+                // Skip this sensor, not the right one
+                fprintf(stderr, "Skipping sensor %s\n", sensor_name);
+                continue;
+            } else {
+                fprintf(stderr, "Found sensor %s, starting\n", select_sensor);
+            }
+        }
         for (uint8_t i = 0; i < naddrs; i++) {
-
             /* Create sensor data collection threads. */
             collector_t collector = collector_search(sensor_name);
             if (collector == NULL) {
@@ -213,16 +228,20 @@ int main(int argc, char **argv) {
             num_sensors++; // Record that a new sensor was created
         }
     }
-
-    /* Add sysclock sensor because it won't be specified in board ID. */
-    collector_t sysclock = collector_search("sysclock");
-    err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, NULL);
-    num_sensors++;
+    // Only start the sysclock if we're not debugging a single sensor or if this is the sensor that was selected
+    if (select_sensor == NULL || !strcasecmp(select_sensor, SYSCLOCK_NAME)) {
+        /* Add sysclock sensor because it won't be specified in board ID. */
+        collector_t sysclock = collector_search(SYSCLOCK_NAME);
+        err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, NULL);
+        num_sensors++;
+    }
 
     /* Add PAC1952 sensor because it won't be specified in board ID. */
-    collector_t pac1952 = collector_search("pac1952-2");
-    collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = 0x17};
-    err = pthread_create(&collector_threads[num_sensors], NULL, pac1952, &collector_args[num_sensors]);
+    if (select_sensor == NULL || !strcasecmp(select_sensor, "pac1952-2")) {
+        collector_t pac1952 = collector_search("pac1952-2");
+        collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = 0x17};
+        err = pthread_create(&collector_threads[num_sensors], NULL, pac1952, &collector_args[num_sensors]);
+    }
 
     /* Constantly receive from sensors on message queue and print data. */
     while (print_output) {
