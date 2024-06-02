@@ -10,5 +10,6 @@ var searchData=
   ['sht41_5ft_5fcrc_7',['SHT41_T_CRC',['../sht41_8c.html#a4f92efc9c58c553df179b5c36c9486d1',1,'sht41.c']]],
   ['sht41_5fuse_5fcrc_5flookup_8',['SHT41_USE_CRC_LOOKUP',['../sht41__clctr_8c.html#a8fbe87bdb71d397b6f726f4e1a38404e',1,'sht41_clctr.c']]],
   ['sync_5fone_9',['SYNC_ONE',['../m10spg_8c.html#ad70d33b01aa24cadbb95ac4b4b11926e',1,'m10spg.c']]],
-  ['sync_5ftwo_10',['SYNC_TWO',['../m10spg_8c.html#a2c44fb6848e62eb38a2c0c7d9b95cf96',1,'m10spg.c']]]
+  ['sync_5ftwo_10',['SYNC_TWO',['../m10spg_8c.html#a2c44fb6848e62eb38a2c0c7d9b95cf96',1,'m10spg.c']]],
+  ['sysclock_5fname_11',['SYSCLOCK_NAME',['../main_8c.html#a2bdc24e5276edbb04b12e7319538f2c7',1,'main.c']]]
 ];

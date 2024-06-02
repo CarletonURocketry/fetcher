@@ -124,6 +124,8 @@ Macros</h2></td></tr>
 <tr class="separator:afadb863a7dece64ab5df54bcc753298d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3d1fc2927eec213e6b5f9e854c392d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#aa3d1fc2927eec213e6b5f9e854c392d2">MAX_SENSORS</a>&#160;&#160;&#160;8</td></tr>
 <tr class="separator:aa3d1fc2927eec213e6b5f9e854c392d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bdc24e5276edbb04b12e7319538f2c7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a2bdc24e5276edbb04b12e7319538f2c7">SYSCLOCK_NAME</a>&#160;&#160;&#160;&quot;sysclock&quot;</td></tr>
+<tr class="separator:a2bdc24e5276edbb04b12e7319538f2c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -138,6 +140,8 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a8242881422ac2b44e5c917658a45ed1a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a8242881422ac2b44e5c917658a45ed1a">print_output</a> = false</td></tr>
 <tr class="separator:a8242881422ac2b44e5c917658a45ed1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44264b12e93caada1afc6bed8b1d283b"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a44264b12e93caada1afc6bed8b1d283b">select_sensor</a> = NULL</td></tr>
+<tr class="separator:a44264b12e93caada1afc6bed8b1d283b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97eaba5b61706891a4da114bde40da4d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a97eaba5b61706891a4da114bde40da4d">buffer</a> [<a class="el" href="main_8c.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>]</td></tr>
 <tr class="separator:a97eaba5b61706891a4da114bde40da4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -216,6 +220,20 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >The maximum number of sensors that fetcher can support. </p>
+
+</div>
+</div>
+<a id="a2bdc24e5276edbb04b12e7319538f2c7" name="a2bdc24e5276edbb04b12e7319538f2c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bdc24e5276edbb04b12e7319538f2c7">&#9670;&nbsp;</a></span>SYSCLOCK_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SYSCLOCK_NAME&#160;&#160;&#160;&quot;sysclock&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -362,6 +380,21 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Whether or not to print data to stdout. </p>
+
+</div>
+</div>
+<a id="a44264b12e93caada1afc6bed8b1d283b" name="a44264b12e93caada1afc6bed8b1d283b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44264b12e93caada1afc6bed8b1d283b">&#9670;&nbsp;</a></span>select_sensor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* select_sensor = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The name of a single sensor to enable, or null if no sensor was selected </p>
 
 </div>
 </div>
