@@ -87,9 +87,14 @@ typedef struct {
     uint32_t vAcc;  /**< Vertical accuracy measurement in millimeters */
 } UBXNavPositionPayload;
 
-/** A conversion constant to go from the scale of the UBX lat/lon (1E-7deg) to regular degrees */
-#define LAT_SCALE_TO_DEGREES 10000000
-#define LON_SCALE_TO_DEGREES 10000000
+/** A conversion constant to go from the scale of UBX latitude (1E-7deg) to regular degrees */
+#define LAT_SCALE_TO_DEGREES 1e7f
+
+/** A conversion constant to go from the scale of UBX longitude (1E-7deg) to regular degrees */
+#define LON_SCALE_TO_DEGREES 1e7f
+
+/** A conversion constant to go from the scale of UBX altitude (mm) to meters */
+#define ALT_SCALE_TO_METERS 1e3f
 
 /** A struct representing the UBX-NAV-VELNED (velocity) payload */
 typedef struct {

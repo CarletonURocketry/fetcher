@@ -16,6 +16,7 @@ typedef struct {
         int32_t I32;   /**< The message payload, interpreted as a int32_t */
         uint8_t U8;    /**< The message payload, interpreted as a uint8_t */
         vec2d_t VEC2D; /**< The message payload, interpreted as a vec2d_t */
+        float FLOAT;   /**< The message payload, interpreted as a float */
     };
 } __attribute__((packed)) message_t;
 
@@ -76,7 +77,7 @@ void *m10spg_collector(void *args) {
                 fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
             }
             msg.type = TAG_ALTITUDE_SEA;
-            msg.I32 = buf.pos.hMSL;
+            msg.FLOAT = ((float)buf.pos.hMSL / ALT_SCALE_TO_METERS);
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
             }
