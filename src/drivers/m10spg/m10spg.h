@@ -13,11 +13,11 @@
 
 /** An enum representing the commands that can be used for polling M10SPG data. */
 typedef enum {
-    UBX_NAV_UTC,
-    UBX_NAV_POSLLH,
-    UBX_NAV_VELNED,
-    UBX_NAV_STAT,
-    UBX_MON_VER,
+    UBX_NAV_UTC,    /**< UTC time information, recieved formatted as a human readable date */
+    UBX_NAV_POSLLH, /**< Latitude and longitude information, along with altitude */
+    UBX_NAV_VELNED, /**< Velocity and heading information */
+    UBX_NAV_STAT,   /**< GPS status information about fix, fix type */
+    UBX_MON_VER,    /**< Firmware version information */
 } M10SPG_cmd_t;
 
 int m10spg_open(const SensorLocation *loc);
