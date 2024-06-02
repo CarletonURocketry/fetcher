@@ -44,10 +44,10 @@ bool print_output = false;
 char *select_sensor = NULL;
 
 /** Stores the thread IDs of all the collector threads. */
-static pthread_t collector_threads[MAX_SENSORS];
+pthread_t collector_threads[MAX_SENSORS];
 
 /** Stores the collector arguments of all the collector threads. */
-static collector_args_t collector_args[MAX_SENSORS];
+collector_args_t collector_args[MAX_SENSORS];
 
 /** Buffer for reading sensor messages when print option is selected. */
 uint8_t buffer[BUFFER_SIZE];
