@@ -65,13 +65,6 @@ typedef struct {
     uint8_t config_items[MAX_VALSET_ITEM_BYTES]; /** An array of keys and value pairs */
 } UBXValsetPayload;
 
-/** A struct representing the UBX-SEC-UNIQID (unique chip id) payload */
-typedef struct {
-    uint8_t version;
-    uint8_t reserved[3];
-    uint8_t unique_id[6];
-} UBXUniqIDPayload;
-
 /** A struct representing the UBX-NAV-STAT (navigation status) payload */
 typedef struct {
     uint32_t iTOW;   /**< The GPS time of week of the navigation epoch that created this payload */
