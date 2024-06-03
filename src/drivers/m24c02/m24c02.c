@@ -135,3 +135,18 @@ int m24c02_seq_read_rand(SensorLocation const *loc, uint8_t addr, uint8_t *data,
 
     return devctlv(loc->bus, DCMD_I2C_SENDRECV, 2, 1, siov, &siov[1], NULL);
 }
+
+/**
+ * Write a value of '0' to all the addresses in the EEPROM, thereby erasing it.
+ * @param loc The location of the EEPROM on the I2C bus.
+ * @param size The capacity of the EEPROM in bytes.
+ * @return 0 if successful, the error that occurred otherwise.
+ */
+int m24c02_erase(SensorLocation const *loc, size_t size) {
+    int err;
+    for (uint16_t addr = 0; addr < size; addr++) {
+        err = m24c02_write_byte(loc, addr, 0);
+        return_err(err);
+    }
+    return 0;
+}
