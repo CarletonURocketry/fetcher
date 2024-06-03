@@ -56,7 +56,7 @@ uint8_t buffer[BUFFER_SIZE];
 char *i2c_bus = NULL;
 
 /** A buffer for the contents of the board ID EEPROM. */
-char board_id[M24C02_CAP];
+char board_id[M24C02_CAP + 1] = {0};
 
 int main(int argc, char **argv) {
 
@@ -124,18 +124,19 @@ int main(int argc, char **argv) {
     /* Set I2C bus speed. */
     uint32_t speed = BUS_SPEED;
     int err = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
-    if (err != EOK) {
+    if (err) {
         fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(err));
         exit(EXIT_FAILURE);
     }
 
     /* Parse the board ID EEPROM contents and configure drivers. */
     SensorLocation eeprom_loc = {.bus = bus, .addr = {.addr = BOARD_ID_ADDR, .fmt = I2C_ADDRFMT_7BIT}};
-    err = m24c02_seq_read_rand(&eeprom_loc, 0x00, (uint8_t *)board_id, sizeof(board_id));
+    err = m24c02_seq_read_rand(&eeprom_loc, 0x00, (uint8_t *)board_id, M24C02_CAP);
     if (err) {
-        fprintf(stderr, "Failed to read EEPROM configuration.\n");
+        fprintf(stderr, "Failed to read EEPROM configuration: %s.\n", strerror(err));
         exit(EXIT_FAILURE);
     }
+    board_id[M24C02_CAP] = '\0'; // Make sure the string ends with a null terminator
     const char *cur = board_id;
 
     // Skip the first two lines (board ID and CU InSpace credit)
