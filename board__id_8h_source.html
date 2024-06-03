@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: Globals</title>
+<title>fetcher: src/board-id/board_id.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,7 +68,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('globals_e.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('board__id_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -86,16 +86,25 @@ $(document).ready(function(){initNavTree('globals_e.html',''); initResizable(); 
 </iframe>
 </div>
 
+<div class="header">
+  <div class="headertitle"><div class="title">board_id.h</div></div>
+</div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all functions, variables, defines, enums, and typedefs with links to the files they belong to:</div>
-
-<h3><a id="index_e" name="index_e"></a>- e -</h3><ul>
-<li>EEPROM_ADDR&#160;:&#160;<a class="el" href="eeprom_8c.html#a95a8626764b7fcbf81fddaa0a197def8">eeprom.c</a></li>
-<li>EEPROM_CAP&#160;:&#160;<a class="el" href="eeprom_8h.html#ab752d122e7a8e926ee9adb5db55a78fe">eeprom.h</a></li>
-<li>eeprom_contents()&#160;:&#160;<a class="el" href="eeprom_8c.html#a2ff47353b4b804482f18a04fcdb8ae93">eeprom.c</a>, <a class="el" href="eeprom_8h.html#a2ff47353b4b804482f18a04fcdb8ae93">eeprom.h</a></li>
-<li>eeprom_read()&#160;:&#160;<a class="el" href="eeprom_8c.html#a6940b8f3ee70dbc235c9731b43b846ac">eeprom.c</a>, <a class="el" href="eeprom_8h.html#a6940b8f3ee70dbc235c9731b43b846ac">eeprom.h</a></li>
-</ul>
-</div><!-- contents -->
+<a href="board__id_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _BOARD_ID_H_</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define _BOARD_ID_H_</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="board__id_8h.html#abc8fc813af3f6bc577cbf8022c2e5f98">    7</a></span><span class="preprocessor">#define BOARD_ID_ADDR 0x50</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="board__id_8h.html#ab1a5d7af04dab3154414440255c7929d">read_sensor_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="main_8c.html#ad605583359753fccc7077dee10856af9">board_id</a>, <span class="keywordtype">char</span> *sensor_name, uint8_t nbytes);</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="board__id_8h.html#ab0a7c62a4dea52bfde2183ef30bbb7e5">read_sensor_addresses</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="main_8c.html#ad605583359753fccc7077dee10856af9">board_id</a>, uint8_t *addresses, uint8_t *naddrs);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#endif </span><span class="comment">// _BOARD_ID_H_</span></div>
+<div class="ttc" id="aboard__id_8h_html_ab0a7c62a4dea52bfde2183ef30bbb7e5"><div class="ttname"><a href="board__id_8h.html#ab0a7c62a4dea52bfde2183ef30bbb7e5">read_sensor_addresses</a></div><div class="ttdeci">const char * read_sensor_addresses(const char *board_id, uint8_t *addresses, uint8_t *naddrs)</div><div class="ttdef"><b>Definition:</b> board_id.c:34</div></div>
+<div class="ttc" id="aboard__id_8h_html_ab1a5d7af04dab3154414440255c7929d"><div class="ttname"><a href="board__id_8h.html#ab1a5d7af04dab3154414440255c7929d">read_sensor_name</a></div><div class="ttdeci">const char * read_sensor_name(const char *board_id, char *sensor_name, uint8_t nbytes)</div><div class="ttdef"><b>Definition:</b> board_id.c:11</div></div>
+<div class="ttc" id="amain_8c_html_ad605583359753fccc7077dee10856af9"><div class="ttname"><a href="main_8c.html#ad605583359753fccc7077dee10856af9">board_id</a></div><div class="ttdeci">char board_id[M24C02_CAP+1]</div><div class="ttdef"><b>Definition:</b> main.c:59</div></div>
+</div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!--Not sure if this works, but we shall see-->
 <div id="nav-path" class="navpath">

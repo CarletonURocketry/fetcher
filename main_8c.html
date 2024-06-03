@@ -97,8 +97,9 @@ $(document).ready(function(){initNavTree('main_8c.html',''); initResizable(); })
 
 <p>The main function for the fetcher module, where program logic is used to create a console application.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors/collectors.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="eeprom_8h_source.html">eeprom/eeprom.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="board__id_8h_source.html">board-id/board_id.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors/collectors.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="m24c0x_8h_source.html">drivers/m24c0x/m24c0x.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
 <code>#include &lt;devctl.h&gt;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
@@ -129,10 +130,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab1a5d7af04dab3154414440255c7929d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ab1a5d7af04dab3154414440255c7929d">read_sensor_name</a> (const char *board_id, char *sensor_name, uint8_t nbytes)</td></tr>
-<tr class="separator:ab1a5d7af04dab3154414440255c7929d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0a7c62a4dea52bfde2183ef30bbb7e5"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ab0a7c62a4dea52bfde2183ef30bbb7e5">read_sensor_addresses</a> (const char *board_id, uint8_t *addresses, uint8_t *naddrs)</td></tr>
-<tr class="separator:ab0a7c62a4dea52bfde2183ef30bbb7e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
 <tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -146,6 +143,8 @@ Variables</h2></td></tr>
 <tr class="separator:a97eaba5b61706891a4da114bde40da4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cdb3596e1570cb461f3def70adf8ea7"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a6cdb3596e1570cb461f3def70adf8ea7">i2c_bus</a> = NULL</td></tr>
 <tr class="separator:a6cdb3596e1570cb461f3def70adf8ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad605583359753fccc7077dee10856af9"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ad605583359753fccc7077dee10856af9">board_id</a> [<a class="el" href="m24c0x_8h.html#a8f20f69bda90530c8e16f4d55fdcddde">M24C02_CAP</a>+1] = {0}</td></tr>
+<tr class="separator:ad605583359753fccc7077dee10856af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The main function for the fetcher module, where program logic is used to create a console application. </p>
@@ -268,93 +267,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab0a7c62a4dea52bfde2183ef30bbb7e5" name="ab0a7c62a4dea52bfde2183ef30bbb7e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0a7c62a4dea52bfde2183ef30bbb7e5">&#9670;&nbsp;</a></span>read_sensor_addresses()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char * read_sensor_addresses </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>board_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>addresses</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>naddrs</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Reads up to <code>naddrs</code> addresses from the board ID into an array of <code>addresses</code>. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">board_id</td><td>The current position in the board ID where an address starts. </td></tr>
-    <tr><td class="paramname">addresses</td><td>An array of bytes with enough space to store <code>naddrs</code> bytes. </td></tr>
-    <tr><td class="paramname">naddrs</td><td>A pointer to the maximum number of addresses to read. After the function call, this pointer will contain the actual number of addresses read. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The current position in the board ID after the read, or NULL if <code>naddrs</code> needs to be larger. </dd></dl>
-
-</div>
-</div>
-<a id="ab1a5d7af04dab3154414440255c7929d" name="ab1a5d7af04dab3154414440255c7929d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1a5d7af04dab3154414440255c7929d">&#9670;&nbsp;</a></span>read_sensor_name()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char * read_sensor_name </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>board_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>sensor_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>nbytes</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Reads the sensor name from the board ID into a new buffer. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">board_id</td><td>The contents of the board ID. </td></tr>
-    <tr><td class="paramname">sensor_name</td><td>The buffer to store the sensor name. </td></tr>
-    <tr><td class="paramname">nbytes</td><td>The maximum number of bytes to read. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The current position inside the board ID after reading, or NULL if nbytes needs to be larger. </dd></dl>
-
-</div>
-</div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="ad605583359753fccc7077dee10856af9" name="ad605583359753fccc7077dee10856af9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad605583359753fccc7077dee10856af9">&#9670;&nbsp;</a></span>board_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char board_id[<a class="el" href="m24c0x_8h.html#a8f20f69bda90530c8e16f4d55fdcddde">M24C02_CAP</a>+1] = {0}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A buffer for the contents of the board ID EEPROM. </p>
+
+</div>
+</div>
 <a id="a97eaba5b61706891a4da114bde40da4d" name="a97eaba5b61706891a4da114bde40da4d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a97eaba5b61706891a4da114bde40da4d">&#9670;&nbsp;</a></span>buffer</h2>
 

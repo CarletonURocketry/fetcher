@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: src/eeprom/eeprom.c File Reference</title>
+<title>fetcher: src/board-id/board_id.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,7 +68,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('eeprom_8c.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('board__id_8h.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -88,106 +88,67 @@ $(document).ready(function(){initNavTree('eeprom_8c.html',''); initResizable(); 
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">eeprom.c File Reference</div></div>
+  <div class="headertitle"><div class="title">board_id.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="eeprom_8h_source.html">eeprom.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
-<code>#include &lt;hw/i2c.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;time.h&gt;</code><br />
-</div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdummy__write__t.html">dummy_write_t</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+</div>
+<p><a href="board__id_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a95a8626764b7fcbf81fddaa0a197def8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eeprom_8c.html#a95a8626764b7fcbf81fddaa0a197def8">EEPROM_ADDR</a>&#160;&#160;&#160;0x50</td></tr>
-<tr class="separator:a95a8626764b7fcbf81fddaa0a197def8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc8fc813af3f6bc577cbf8022c2e5f98"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="board__id_8h.html#abc8fc813af3f6bc577cbf8022c2e5f98">BOARD_ID_ADDR</a>&#160;&#160;&#160;0x50</td></tr>
+<tr class="separator:abc8fc813af3f6bc577cbf8022c2e5f98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a6940b8f3ee70dbc235c9731b43b846ac"><td class="memItemLeft" align="right" valign="top">errno_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eeprom_8c.html#a6940b8f3ee70dbc235c9731b43b846ac">eeprom_read</a> (uint8_t addr, int bus, void *buf, size_t n)</td></tr>
-<tr class="separator:a6940b8f3ee70dbc235c9731b43b846ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ff47353b4b804482f18a04fcdb8ae93"><td class="memItemLeft" align="right" valign="top">const uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eeprom_8c.html#a2ff47353b4b804482f18a04fcdb8ae93">eeprom_contents</a> (int bus)</td></tr>
-<tr class="separator:a2ff47353b4b804482f18a04fcdb8ae93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1a5d7af04dab3154414440255c7929d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="board__id_8h.html#ab1a5d7af04dab3154414440255c7929d">read_sensor_name</a> (const char *<a class="el" href="main_8c.html#ad605583359753fccc7077dee10856af9">board_id</a>, char *sensor_name, uint8_t nbytes)</td></tr>
+<tr class="separator:ab1a5d7af04dab3154414440255c7929d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0a7c62a4dea52bfde2183ef30bbb7e5"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="board__id_8h.html#ab0a7c62a4dea52bfde2183ef30bbb7e5">read_sensor_addresses</a> (const char *<a class="el" href="main_8c.html#ad605583359753fccc7077dee10856af9">board_id</a>, uint8_t *addresses, uint8_t *naddrs)</td></tr>
+<tr class="separator:ab0a7c62a4dea52bfde2183ef30bbb7e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a95a8626764b7fcbf81fddaa0a197def8" name="a95a8626764b7fcbf81fddaa0a197def8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95a8626764b7fcbf81fddaa0a197def8">&#9670;&nbsp;</a></span>EEPROM_ADDR</h2>
+<a id="abc8fc813af3f6bc577cbf8022c2e5f98" name="abc8fc813af3f6bc577cbf8022c2e5f98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc8fc813af3f6bc577cbf8022c2e5f98">&#9670;&nbsp;</a></span>BOARD_ID_ADDR</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define EEPROM_ADDR&#160;&#160;&#160;0x50</td>
+          <td class="memname">#define BOARD_ID_ADDR&#160;&#160;&#160;0x50</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The address of the EEPROM on the I2C bus. </p>
+<p >The address of the EEPROM containing the board ID for the sensor board. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a2ff47353b4b804482f18a04fcdb8ae93" name="a2ff47353b4b804482f18a04fcdb8ae93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ff47353b4b804482f18a04fcdb8ae93">&#9670;&nbsp;</a></span>eeprom_contents()</h2>
+<a id="ab0a7c62a4dea52bfde2183ef30bbb7e5" name="ab0a7c62a4dea52bfde2183ef30bbb7e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0a7c62a4dea52bfde2183ef30bbb7e5">&#9670;&nbsp;</a></span>read_sensor_addresses()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const uint8_t * eeprom_contents </td>
+          <td class="memname">const char * read_sensor_addresses </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>bus</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Reads the entire contents of the EEPROM and returns a pointer to them. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">bus</td><td>The I2C bus where the EEPROM is located. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the array of bytes containing the EEPROM contents. NULL if there was an error. </dd></dl>
-
-</div>
-</div>
-<a id="a6940b8f3ee70dbc235c9731b43b846ac" name="a6940b8f3ee70dbc235c9731b43b846ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6940b8f3ee70dbc235c9731b43b846ac">&#9670;&nbsp;</a></span>eeprom_read()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">errno_t eeprom_read </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>board_id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>bus</em>, </td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>addresses</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>buf</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>naddrs</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -196,15 +157,58 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Read <code>n</code> bytes from the EEPROM into a buffer. </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Reads up to <code>naddrs</code> addresses from the board ID into an array of <code>addresses</code>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">addr</td><td>The address to start the read from. </td></tr>
-    <tr><td class="paramname">bus</td><td>The I2C bus where the EEPROM is located. </td></tr>
-    <tr><td class="paramname">buf</td><td>A pointer to the buffer to store the data that will be read. Must have space for <code>n</code> + 20 bytes. </td></tr>
-    <tr><td class="paramname">n</td><td>The number of bytes to read from the EEPROM. </td></tr>
+    <tr><td class="paramname">board_id</td><td>The current position in the board ID where an address starts. </td></tr>
+    <tr><td class="paramname">addresses</td><td>An array of bytes with enough space to store <code>naddrs</code> bytes. </td></tr>
+    <tr><td class="paramname">naddrs</td><td>A pointer to the maximum number of addresses to read. After the function call, this pointer will contain the actual number of addresses read. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The current position in the board ID after the read, or NULL if <code>naddrs</code> needs to be larger. </dd></dl>
+
+</div>
+</div>
+<a id="ab1a5d7af04dab3154414440255c7929d" name="ab1a5d7af04dab3154414440255c7929d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1a5d7af04dab3154414440255c7929d">&#9670;&nbsp;</a></span>read_sensor_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * read_sensor_name </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>board_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>sensor_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>nbytes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads the sensor name from the board ID into a new buffer. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">board_id</td><td>The contents of the board ID. </td></tr>
+    <tr><td class="paramname">sensor_name</td><td>The buffer to store the sensor name. </td></tr>
+    <tr><td class="paramname">nbytes</td><td>The maximum number of bytes to read. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current position inside the board ID after reading, or NULL if nbytes needs to be larger. </dd></dl>
 
 </div>
 </div>

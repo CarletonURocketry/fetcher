@@ -7,6 +7,5 @@ var searchData=
   ['default_5ftimeout_4',['DEFAULT_TIMEOUT',['../m10spg_8c.html#aad2dd72565852b91c809cd4685833b17',1,'m10spg.c']]],
   ['drefcast_5',['drefcast',['../sensor__api_8c.html#a027be96558c283856700fd3531351fa9',1,'sensor_api.c']]],
   ['dsize_6',['dsize',['../structSensorTagData.html#a541ffcea2b96538148f60b29794d5f66',1,'SensorTagData']]],
-  ['dtype_7',['dtype',['../structSensorTagData.html#a33a39a04ccac7d79e70dc57e9d568183',1,'SensorTagData']]],
-  ['dummy_5fwrite_5ft_8',['dummy_write_t',['../structdummy__write__t.html',1,'']]]
+  ['dtype_7',['dtype',['../structSensorTagData.html#a33a39a04ccac7d79e70dc57e9d568183',1,'SensorTagData']]]
 ];

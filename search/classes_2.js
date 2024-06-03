@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['dummy_5fwrite_5ft_0',['dummy_write_t',['../structdummy__write__t.html',1,'']]]
+  ['ms5611_5fmessage_0',['ms5611_message',['../structms5611__message.html',1,'']]],
+  ['ms5611context_1',['MS5611Context',['../structMS5611Context.html',1,'']]]
 ];
