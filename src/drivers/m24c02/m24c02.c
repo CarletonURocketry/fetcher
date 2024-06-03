@@ -13,7 +13,7 @@
  * @param data The byte of data to write.
  * @return 0 if successful, the error that occurred otherwise.
  */
-int m24c02_write_byte(SensorLocation const *loc, uint8_t addr, uint8_t data) {
+int m24c0x_write_byte(SensorLocation const *loc, uint8_t addr, uint8_t data) {
     // Temporary type for single byte payload
     struct {
         i2c_send_t hdr;
@@ -37,7 +37,7 @@ int m24c02_write_byte(SensorLocation const *loc, uint8_t addr, uint8_t data) {
  * @param nbytes The number of bytes in the data buffer to be written to the EEPROM.
  * @return 0 if successful, the error that occurred otherwise.
  */
-int m24c02_write_page(SensorLocation const *loc, uint8_t addr, uint8_t const *data, size_t nbytes) {
+int m24c0x_write_page(SensorLocation const *loc, uint8_t addr, uint8_t const *data, size_t nbytes) {
 
     if (nbytes > 16) return EINVAL; // Only one page at a time
 
@@ -58,7 +58,7 @@ int m24c02_write_page(SensorLocation const *loc, uint8_t addr, uint8_t const *da
  * @param data A buffer to store the byte that was read.
  * @return 0 if successful, the error that occurred otherwise.
  */
-int m24c02_read_cur_byte(SensorLocation const *loc, uint8_t *data) {
+int m24c0x_read_cur_byte(SensorLocation const *loc, uint8_t *data) {
 
     // Temporary type for reading a single byte
     struct {
@@ -79,7 +79,7 @@ int m24c02_read_cur_byte(SensorLocation const *loc, uint8_t *data) {
  * @param data The byte of data to write.
  * @return 0 if successful, the error that occurred otherwise.
  */
-int m24c02_read_rand_byte(SensorLocation const *loc, uint8_t addr, uint8_t *data) {
+int m24c0x_read_rand_byte(SensorLocation const *loc, uint8_t addr, uint8_t *data) {
 
     // Temporary type for single byte payload
     struct {
@@ -103,7 +103,7 @@ int m24c02_read_rand_byte(SensorLocation const *loc, uint8_t addr, uint8_t *data
  * @param nbytes The number of bytes to read from the EEPROM into the data buffer.
  * @return 0 if successful, the error that occurred otherwise.
  */
-int m24c02_seq_read_cur(SensorLocation const *loc, uint8_t *data, size_t nbytes) {
+int m24c0x_seq_read_cur(SensorLocation const *loc, uint8_t *data, size_t nbytes) {
     i2c_recv_t hdr = {.len = nbytes, .stop = 1, .slave = loc->addr};
 
     // IO vector for receiving
@@ -123,7 +123,7 @@ int m24c02_seq_read_cur(SensorLocation const *loc, uint8_t *data, size_t nbytes)
  * @param nbytes The number of bytes to read from the EEPROM into the data buffer.
  * @return 0 if successful, the error that occurred otherwise.
  */
-int m24c02_seq_read_rand(SensorLocation const *loc, uint8_t addr, uint8_t *data, size_t nbytes) {
+int m24c0x_seq_read_rand(SensorLocation const *loc, uint8_t addr, uint8_t *data, size_t nbytes) {
 
     i2c_sendrecv_t hdr = {.send_len = 1, .recv_len = nbytes, .stop = 1, .slave = loc->addr};
     data[0] = addr; // First byte contains address for the send part of the command
@@ -142,10 +142,10 @@ int m24c02_seq_read_rand(SensorLocation const *loc, uint8_t addr, uint8_t *data,
  * @param size The capacity of the EEPROM in bytes.
  * @return 0 if successful, the error that occurred otherwise.
  */
-int m24c02_erase(SensorLocation const *loc, size_t size) {
+int m24c0x_erase(SensorLocation const *loc, size_t size) {
     int err;
     for (uint16_t addr = 0; addr < size; addr++) {
-        err = m24c02_write_byte(loc, addr, 0);
+        err = m24c0x_write_byte(loc, addr, 0);
         return_err(err);
     }
     return 0;
