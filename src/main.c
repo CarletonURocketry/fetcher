@@ -4,8 +4,9 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
+#include "board-id/board_id.h"
 #include "collectors/collectors.h"
-#include "eeprom/eeprom.h"
+#include "drivers/m24c02/m24c02.h"
 #include "sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
@@ -54,65 +55,8 @@ uint8_t buffer[BUFFER_SIZE];
 /** Device descriptor of the I2C bus. */
 char *i2c_bus = NULL;
 
-/**
- * Reads the sensor name from the board ID into a new buffer.
- * @param board_id The contents of the board ID.
- * @param sensor_name The buffer to store the sensor name.
- * @param nbytes The maximum number of bytes to read.
- * @return The current position inside the board ID after reading, or NULL if nbytes needs to be larger.
- */
-const char *read_sensor_name(const char *board_id, char *sensor_name, uint8_t nbytes) {
-    uint8_t pos;
-    for (pos = 0; *board_id != ' ' && *board_id != '\0' && pos < nbytes; pos++, board_id++) {
-        sensor_name[pos] = *board_id;
-    }
-
-    if (pos == nbytes) return NULL; // Could not successfully read the contents
-
-    // We didn't hit end of content, skip newline character
-    if (*board_id != '\0') board_id++;
-
-    sensor_name[pos] = '\0';
-    return board_id;
-}
-
-/**
- * Reads up to `naddrs` addresses from the board ID into an array of `addresses`.
- * @param board_id The current position in the board ID where an address starts.
- * @param addresses An array of bytes with enough space to store `naddrs` bytes.
- * @param naddrs A pointer to the maximum number of addresses to read. After the function call, this pointer will
- * contain the actual number of addresses read.
- * @return The current position in the board ID after the read, or NULL if `naddrs` needs to be larger.
- */
-const char *read_sensor_addresses(const char *board_id, uint8_t *addresses, uint8_t *naddrs) {
-
-    uint8_t num_addrs;
-    for (num_addrs = 0; *board_id != '\n' && *board_id != '\0' && num_addrs < *naddrs; board_id++) {
-        if (*board_id == ' ') {
-            // Address is hex with two digits, so two digits back from space will be address start
-            // Convert this hex into an actual numerical byte
-            addresses[num_addrs] = strtoul(board_id - 2, NULL, 16);
-            num_addrs++;
-        }
-    }
-
-    if (num_addrs == *naddrs) return NULL; // Need to be able to read more addresses
-
-    // We hit end of content
-    if (*board_id == '\0') {
-        *naddrs = num_addrs;
-        return board_id;
-    }
-
-    // Hit a newline, get last address (three positions back because board_id was incremented an extra time exiting the
-    // for loop)
-    addresses[num_addrs] = strtoul(board_id - 3, NULL, 16);
-    num_addrs++;
-    board_id++; // Skip over final newline character
-
-    *naddrs = num_addrs;
-    return board_id;
-}
+/** A buffer for the contents of the board ID EEPROM. */
+char board_id[M24C02_CAP];
 
 int main(int argc, char **argv) {
 
@@ -179,15 +123,16 @@ int main(int argc, char **argv) {
 
     /* Set I2C bus speed. */
     uint32_t speed = BUS_SPEED;
-    errno_t err = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
+    int err = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
     if (err != EOK) {
         fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(err));
         exit(EXIT_FAILURE);
     }
 
     /* Parse the board ID EEPROM contents and configure drivers. */
-    char const *board_id = (const char *)eeprom_contents(bus);
-    if (board_id == NULL) {
+    SensorLocation eeprom_loc = {.bus = bus, .addr = {.addr = BOARD_ID_ADDR, .fmt = I2C_ADDRFMT_7BIT}};
+    err = m24c02_seq_read_rand(&eeprom_loc, 0x00, (uint8_t *)board_id, sizeof(board_id));
+    if (err) {
         fprintf(stderr, "Failed to read EEPROM configuration.\n");
         exit(EXIT_FAILURE);
     }

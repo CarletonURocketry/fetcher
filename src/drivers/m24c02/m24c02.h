@@ -3,6 +3,9 @@
 
 #include "../sensor_api.h"
 
+/** The capacity of the M24C02 EEPROM in bytes. */
+#define M24C02_CAP 256
+
 int m24c02_write_byte(SensorLocation const *loc, uint8_t addr, uint8_t data);
 int m24c02_write_page(SensorLocation const *loc, uint8_t addr, uint8_t const *data, size_t nbytes);
 
