@@ -1,4 +1,9 @@
-#include "m24c02.h"
+/**
+ * @file m24c0x.c
+ * @brief Driver utilities for the M24C0X family of EEPROMS.
+ * Based on the datasheet: https://www.st.com/en/memories/m24c02-r.html
+ */
+#include "m24c0x.h"
 #include <devctl.h>
 #include <unistd.h>
 

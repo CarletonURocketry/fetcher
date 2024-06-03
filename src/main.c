@@ -6,7 +6,7 @@
  */
 #include "board-id/board_id.h"
 #include "collectors/collectors.h"
-#include "drivers/m24c02/m24c02.h"
+#include "drivers/m24c0x/m24c0x.h"
 #include "sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
