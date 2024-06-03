@@ -111,12 +111,12 @@ int m24c0x_read_rand_byte(SensorLocation const *loc, uint8_t addr, uint8_t *data
 int m24c0x_seq_read_cur(SensorLocation const *loc, uint8_t *data, size_t nbytes) {
     i2c_recv_t hdr = {.len = nbytes, .stop = 1, .slave = loc->addr};
 
-    // IO vector for receiving
+    // IO vector for sending and receiving
     iov_t siov[2];
     SETIOV(&siov[0], &hdr, sizeof(hdr));
     SETIOV(&siov[1], data, nbytes);
 
-    return devctlv(loc->bus, DCMD_I2C_RECV, 2, 1, siov, &siov[1], NULL);
+    return devctlv(loc->bus, DCMD_I2C_RECV, 2, 2, siov, siov, NULL);
 }
 
 /**
@@ -133,12 +133,12 @@ int m24c0x_seq_read_rand(SensorLocation const *loc, uint8_t addr, uint8_t *data,
     i2c_sendrecv_t hdr = {.send_len = 1, .recv_len = nbytes, .stop = 1, .slave = loc->addr};
     data[0] = addr; // First byte contains address for the send part of the command
 
-    // IO vector to send header and address
+    // IO vector for sending and receiving
     iov_t siov[2];
     SETIOV(&siov[0], &hdr, sizeof(hdr));
     SETIOV(&siov[1], data, nbytes);
 
-    return devctlv(loc->bus, DCMD_I2C_SENDRECV, 2, 1, siov, &siov[1], NULL);
+    return devctlv(loc->bus, DCMD_I2C_SENDRECV, 2, 2, siov, siov, NULL);
 }
 
 /**
