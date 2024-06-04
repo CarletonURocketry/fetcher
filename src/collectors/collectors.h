@@ -29,6 +29,7 @@ typedef struct {
 
 collector_t collector_search(const char *sensor_name);
 
+
 /* Collector threads */
 void *sysclock_collector(void *args);
 void *ms5611_collector(void *args);

@@ -60,6 +60,22 @@ typedef enum {
     TYPE_VEC2D, /**< vec2d_t */
 } SensorTagDType;
 
+/** Describes a message that can be sent on a message queue and recognized by both fetcher and packager */
+typedef struct {
+    uint8_t type; /**< Measurement type */
+    union {
+        float FLOAT;
+        uint32_t U32;
+        uint16_t U16;
+        uint8_t U8;
+        int32_t I32;
+        int16_t I16;
+        int8_t I8;
+        vec3d_t VEC3D;
+        vec2d_t VEC2D;
+    } data; /**< The way the contents of this struct should be interpreted */
+} common_t;
+
 /** Stores information about each tag. */
 typedef struct {
     /** The name of the data the tag is associated with. */

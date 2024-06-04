@@ -1,6 +1,6 @@
 #include "../drivers/lsm6dso32/lsm6dso32.h"
+#include "../drivers/sensor_api.h"
 #include "collectors.h"
-#include "sensor_api.h"
 #include <stdio.h>
 
 #define return_err(err) return (void *)((uint64_t)errno)
@@ -70,7 +70,7 @@ void *lsm6dso32_collector(void *args) {
         return_err(err);
     }
 
-    uint8_t data[sizeof(vec3d_t) + 1];
+    common_t msg;
     int16_t temperature;
     int16_t x;
     int16_t y;
@@ -83,9 +83,9 @@ void *lsm6dso32_collector(void *args) {
         if (err != EOK) {
             fprintf(stderr, "LSM6DSO32 could not read temperature: %s\n", strerror(errno));
         } else {
-            data[0] = TAG_TEMPERATURE;
-            *((float *)(data + 1)) = (float)temperature;
-            if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+            msg.type = TAG_TEMPERATURE;
+            msg.data.FLOAT = (float)temperature;
+            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
             }
         }
@@ -96,9 +96,9 @@ void *lsm6dso32_collector(void *args) {
             fprintf(stderr, "LSM6DSO32 could not read linear acceleration: %s\n", strerror(errno));
         } else {
             lsm6dso32_convert_accel(LA_FS_32G, &x, &y, &z);
-            data[0] = TAG_LINEAR_ACCEL_REL;
-            *((vec3d_t *)(data + 1)) = (vec3d_t){.x = x, .y = y, .z = z};
-            if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+            msg.type = TAG_LINEAR_ACCEL_REL;
+            msg.data.VEC3D = (vec3d_t){.x = x, .y = y, .z = z};
+            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
             }
         }
@@ -110,9 +110,9 @@ void *lsm6dso32_collector(void *args) {
             fprintf(stderr, "LSM6DSO32 could not read angular velocity: %s\n", strerror(errno));
         } else {
             lsm6dso32_convert_angular_vel(G_FS_500, &x, &y, &z);
-            data[0] = TAG_ANGULAR_VEL;
-            *((vec3d_t *)(data + 1)) = (vec3d_t){.x = x, .y = y, .z = z};
-            if (mq_send(sensor_q, (char *)data, sizeof(data), 0) == -1) {
+            msg.type = TAG_ANGULAR_VEL;
+            msg.data.VEC3D = (vec3d_t){.x = x, .y = y, .z = z};
+            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "LSM6DSO32 couldn't send message: %s\n", strerror(errno));
             }
         }

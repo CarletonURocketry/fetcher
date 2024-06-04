@@ -1,15 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>
 #define SHT41_USE_CRC_LOOKUP
+#include "../drivers/sensor_api.h"
 #include "../drivers/sht41/sht41.h"
 #include "collectors.h"
-#include "sensor_api.h"
-
-/** Type to simplify sending measurements. */
-struct sht41_msg_t {
-    uint8_t type; /**< The measurement type (temperature, humidity). */
-    float data;   /**< The measurement data. */
-} __attribute__((packed));
 
 /** Macro to cast `errno_t` to void pointer before returning. */
 #define return_errno(err) return (void *)((uint64_t)err)
@@ -45,7 +39,7 @@ void *sht41_collector(void *args) {
     // Data storage
     float temperature;
     float humidity;
-    struct sht41_msg_t msg;
+    common_t msg;
 
     for (;;) {
 
@@ -54,14 +48,14 @@ void *sht41_collector(void *args) {
 
         // Send temperature
         msg.type = TAG_TEMPERATURE;
-        msg.data = temperature;
+        msg.data.FLOAT = temperature;
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "SHT41 couldn't send message: %s\n", strerror(errno));
         }
 
         // Send humidity
         msg.type = TAG_HUMIDITY;
-        msg.data = humidity;
+        msg.data.FLOAT = humidity;
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "SHT41 couldn't send message: %s\n", strerror(errno));
         }

@@ -1,15 +1,9 @@
 #include "../drivers/ms5611/ms5611.h"
+#include "../drivers/sensor_api.h"
 #include "collectors.h"
-#include "sensor_api.h"
 #include <stdio.h>
 
 #define return_errno(err) return (void *)((uint64_t)err)
-
-/** Type for easily sending measurements over the message queue. */
-struct ms5611_message {
-    uint8_t type; /**< Measurement type (temperature, pressure or altitude) */
-    float data;   /**< Measurement data (temperature, pressure or altitude) */
-} __attribute__((packed));
 
 /**
  * Collector thread for the MS5611 sensor.
@@ -56,7 +50,7 @@ void *ms5611_collector(void *args) {
     }
 
     // Data storage
-    struct ms5611_message measurement;
+    common_t msg;
     double pressure;
     double altitude;
     double temperature;
@@ -73,23 +67,23 @@ void *ms5611_collector(void *args) {
         }
 
         // Transmit temperature
-        measurement.type = TAG_TEMPERATURE;
-        measurement.data = (float)temperature;
-        if (mq_send(sensor_q, (char *)&measurement, sizeof(measurement), 0) == -1) {
+        msg.type = TAG_TEMPERATURE;
+        msg.data.FLOAT = (float)temperature;
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
         }
 
         // Transmit pressure
-        measurement.type = TAG_PRESSURE;
-        measurement.data = (float)pressure;
-        if (mq_send(sensor_q, (char *)&measurement, sizeof(measurement), 0) == -1) {
+        msg.type = TAG_PRESSURE;
+        msg.data.FLOAT = (float)pressure;
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
         }
 
         // Transmit altitude
-        measurement.type = TAG_ALTITUDE_REL;
-        measurement.data = (float)altitude;
-        if (mq_send(sensor_q, (char *)&measurement, sizeof(measurement), 0) == -1) {
+        msg.type = TAG_ALTITUDE_REL;
+        msg.data.FLOAT = (float)altitude;
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "MS5611 couldn't send message: %s.\n", strerror(errno));
         }
     }
