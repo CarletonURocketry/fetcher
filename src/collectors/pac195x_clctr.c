@@ -55,7 +55,7 @@ void *pac1952_2_collector(void *args) {
         for (int i = 0; i < 2; i++) {
             err = pac195x_get_vbusn(&loc, i + 1, &vbus[i]);
             if (err != EOK) {
-                fprintf(stderr, "PAC195X could not read VBUS_%d: %s\n", i - 1, strerror(err));
+                fprintf(stderr, "PAC195X could not read VBUS_%u: %s\n", i + 1, strerror(err));
                 break;
             }
         }
