@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['precision_5fhigh_0',['PRECISION_HIGH',['../sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587a5adc94c7ce5ca19c92c9ed49aea9c816',1,'sensor_api.h']]],
-  ['precision_5flow_1',['PRECISION_LOW',['../sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587aed867ad9181c2d73d7fae9cb0152fd9c',1,'sensor_api.h']]],
-  ['precision_5fmed_2',['PRECISION_MED',['../sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587ac850bb66bf394dba965c8fe6379ab9a2',1,'sensor_api.h']]]
+  ['neg_5fpwr_5ffsr_0',['NEG_PWR_FSR',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741da21b6ed0c61eb7e8f5e8998a81968d496',1,'pac195x.c']]],
+  ['neg_5fpwr_5ffsr_5fact_1',['NEG_PWR_FSR_ACT',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741da889bdf7933c5229e3611fb17f616f7bb',1,'pac195x.c']]],
+  ['nwg_5fpwr_5ffsr_5flat_2',['NWG_PWR_FSR_LAT',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741da33492df3647fa70590a42e499b3d067b',1,'pac195x.c']]]
 ];

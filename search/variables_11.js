@@ -5,5 +5,6 @@ var searchData=
   ['veld_2',['velD',['../structUBXNavVelocityPayload.html#a6074fddebd406d4b7543ce63390357a4',1,'UBXNavVelocityPayload']]],
   ['vele_3',['velE',['../structUBXNavVelocityPayload.html#a77c8f4d71201775635ab4e123886e865',1,'UBXNavVelocityPayload']]],
   ['veln_4',['velN',['../structUBXNavVelocityPayload.html#a7bbdbcc63f26959b42d8fea114f65409',1,'UBXNavVelocityPayload']]],
-  ['version_5',['version',['../structUBXValsetPayload.html#a5da42ab8e6e9ae6ac44e7b7cd9576909',1,'UBXValsetPayload::version()'],['../structUBXUniqIDPayload.html#a6b45ae9a52fd2b8f86e4dedf3c2ded53',1,'UBXUniqIDPayload::version()']]]
+  ['version_5',['version',['../structUBXValsetPayload.html#a5da42ab8e6e9ae6ac44e7b7cd9576909',1,'UBXValsetPayload::version()'],['../structUBXUniqIDPayload.html#a6b45ae9a52fd2b8f86e4dedf3c2ded53',1,'UBXUniqIDPayload::version()']]],
+  ['voltage_6',['voltage',['../structvoltage__msg__t.html#a913e13979e02ff14fb7f2409621e4766',1,'voltage_msg_t']]]
 ];

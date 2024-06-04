@@ -23,6 +23,10 @@ var searchData=
   ['ubxutcpayload_20',['UBXUTCPayload',['../structUBXUTCPayload.html',1,'']]],
   ['ubxvalsetpayload_21',['UBXValsetPayload',['../structUBXValsetPayload.html',1,'']]],
   ['ubxvaluetype_22',['UBXValueType',['../ubx__def_8h.html#ac59c3c9dfa29a546a7098ada548ae889',1,'ubx_def.h']]],
-  ['unique_5fid_23',['unique_id',['../structUBXUniqIDPayload.html#a14604210077eecce0c3f4d515dac7e9b',1,'UBXUniqIDPayload']]],
-  ['unit_24',['unit',['../structSensorTagData.html#abf98d4502e9e8026504ef49143a7bec9',1,'SensorTagData']]]
+  ['uc_5flimit_5fnsamples_23',['UC_LIMIT_NSAMPLES',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741da464a0f6a68ed84eb628edd82b1b1739e',1,'pac195x.c']]],
+  ['uc_5flimitn_24',['UC_LIMITN',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741da7bc2cd4952489821c4a7d2a23b4fa134',1,'pac195x.c']]],
+  ['unique_5fid_25',['unique_id',['../structUBXUniqIDPayload.html#a14604210077eecce0c3f4d515dac7e9b',1,'UBXUniqIDPayload']]],
+  ['unit_26',['unit',['../structSensorTagData.html#abf98d4502e9e8026504ef49143a7bec9',1,'SensorTagData']]],
+  ['uv_5flimit_5fnsamples_27',['UV_LIMIT_NSAMPLES',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741da35c9d21ecbd398c1bdd40ed1ed8dc64b',1,'pac195x.c']]],
+  ['uv_5flimitn_28',['UV_LIMITN',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741da3ddc3991a4300d0dafb5bc9a3a48aaed',1,'pac195x.c']]]
 ];

@@ -14,5 +14,6 @@ var searchData=
   ['g_5fodr_5f416_11',['G_ODR_416',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aab3aca95d49fa8fb0ef03e5d41d74eabe',1,'lsm6dso32.h']]],
   ['g_5fodr_5f52_12',['G_ODR_52',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa732c5e8a9396d72d37aadde0bc08a285',1,'lsm6dso32.h']]],
   ['g_5fodr_5f6664_13',['G_ODR_6664',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa3a07357b5e55c76d79a02ec8ba744ddf',1,'lsm6dso32.h']]],
-  ['g_5fodr_5f833_14',['G_ODR_833',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa899c732ef0caea0ce747856b91d32a39',1,'lsm6dso32.h']]]
+  ['g_5fodr_5f833_14',['G_ODR_833',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa899c732ef0caea0ce747856b91d32a39',1,'lsm6dso32.h']]],
+  ['gpio_5falert2_15',['GPIO_ALERT2',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741dae6770edbef43b458aff7df54a4c060c1',1,'pac195x.c']]]
 ];

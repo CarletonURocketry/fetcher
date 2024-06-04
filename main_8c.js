@@ -9,6 +9,8 @@ var main_8c =
     [ "main", "main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627", null ],
     [ "board_id", "main_8c.html#ad605583359753fccc7077dee10856af9", null ],
     [ "buffer", "main_8c.html#a97eaba5b61706891a4da114bde40da4d", null ],
+    [ "collector_args", "main_8c.html#a5337d97169efd20d499118676788210c", null ],
+    [ "collector_threads", "main_8c.html#aee602b1e81e37be4b6a8e8609deab9fd", null ],
     [ "i2c_bus", "main_8c.html#a6cdb3596e1570cb461f3def70adf8ea7", null ],
     [ "print_output", "main_8c.html#a8242881422ac2b44e5c917658a45ed1a", null ],
     [ "select_sensor", "main_8c.html#a44264b12e93caada1afc6bed8b1d283b", null ]
