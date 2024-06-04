@@ -8,6 +8,12 @@
 /** The RSENSE value connected to the PAC1952-2 in milliohms. */
 #define RSENSE 18
 
+typedef struct {
+    uint8_t type;
+    uint8_t id;
+    int16_t voltage;
+} voltage_msg_t;
+
 void *pac1952_2_collector(void *args) {
 
     /* Open message queue. */
@@ -41,18 +47,10 @@ void *pac1952_2_collector(void *args) {
         return_err(err);
     }
 
-    for (;;) {
-        uint16_t vsense[2];
-        uint16_t vbus[2];
-        uint32_t vpower[2];
+    uint16_t vbus[2];
+    voltage_msg_t msg;
 
-        for (int i = 0; i < 2; i++) {
-            err = pac195x_get_vsensen(&loc, i + 1, &vsense[i]);
-            if (err != EOK) {
-                fprintf(stderr, "PAC195X could not read VSENSE%d: %s\n", i - 1, strerror(err));
-                break;
-            }
-        }
+    for (;;) {
 
         for (int i = 0; i < 2; i++) {
             err = pac195x_get_vbusn(&loc, i + 1, &vbus[i]);
@@ -62,25 +60,23 @@ void *pac1952_2_collector(void *args) {
             }
         }
 
-        // Calculate voltage on SENSE
-        printf("SENSE1+ VOLTAGE: %umV\n", pac195x_calc_bus_voltage(32, vbus[0], false));
-        printf("SENSE2+ VOLTAGE: %umV\n", pac195x_calc_bus_voltage(32, vbus[1], false));
-
-        // Calculate current on SENSE
-        printf("VSENSE1: %u\n", vsense[0]);
-        printf("VSENSE2: %u\n", vsense[1]);
-
-        printf("SENSE1+ CURRENT: %umA\n", pac195x_calc_bus_current(RSENSE, vsense[0], false));
-        printf("SENSE2+ CURRENT: %umA\n", pac195x_calc_bus_current(RSENSE, vsense[1], false));
-
-        for (int i = 0; i < 2; i++) {
-            err = pac195x_get_vpowern(&loc, i + 1, &vpower[i]);
-            if (err != EOK) {
-                fprintf(stderr, "PAC195X could not read POWER_%d: %s\n", i - 1, strerror(err));
-                break;
-            }
+        // Calculate voltage on SENSE 1
+        msg.type = TAG_VOLTAGE;
+        msg.id = 1;
+        msg.voltage = pac195x_calc_bus_voltage(32, vbus[0], false);
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
+            fprintf(stderr, "Could not send voltage measurement: %s\n", strerror(errno));
         }
 
+        // Calculate voltage on SENSE 2
+        msg.type = TAG_VOLTAGE;
+        msg.id = 2;
+        msg.voltage = pac195x_calc_bus_voltage(32, vbus[1], false);
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
+            fprintf(stderr, "Could not send voltage measurement: %s\n", strerror(errno));
+        }
+
+        // Get new measurements
         pac195x_refresh_v(&loc);
         usleep(1000);
     }

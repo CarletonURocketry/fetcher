@@ -5,6 +5,7 @@
  * This file contains the implementations for the sensor API interface.
  */
 #include "sensor_api.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -13,34 +14,64 @@
 
 /** A list of the possible sensor tags and their metadata. */
 const SensorTagData SENSOR_TAG_DATA[] = {
-    [TAG_PRESSURE] =
-        {.name = "Pressure", .unit = "kPa", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
-    [TAG_TEMPERATURE] =
-        {.name = "Temperature", .unit = "C", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
-    [TAG_HUMIDITY] =
-        {.name = "Humidity", .unit = "%RH", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
-    [TAG_TIME] = {.name = "Time", .unit = "ms", .fmt_str = "%u", .dsize = sizeof(uint32_t), .dtype = TYPE_U32},
-    [TAG_ALTITUDE_REL] =
-        {.name = "Altitude rel", .unit = "m", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
-    [TAG_ALTITUDE_SEA] =
-        {.name = "Altitude sea level", .unit = "m", .fmt_str = "%.2f", .dsize = sizeof(float), .dtype = TYPE_FLOAT},
+    [TAG_PRESSURE] = {.name = "Pressure",
+                      .unit = "kPa",
+                      .fmt_str = "%.2f",
+                      .dsize = sizeof(float),
+                      .dtype = TYPE_FLOAT,
+                      .has_id = 0},
+    [TAG_TEMPERATURE] = {.name = "Temperature",
+                         .unit = "C",
+                         .fmt_str = "%.2f",
+                         .dsize = sizeof(float),
+                         .dtype = TYPE_FLOAT,
+                         .has_id = 0},
+    [TAG_HUMIDITY] = {.name = "Humidity",
+                      .unit = "%RH",
+                      .fmt_str = "%.2f",
+                      .dsize = sizeof(float),
+                      .dtype = TYPE_FLOAT,
+                      .has_id = 0},
+    [TAG_TIME] =
+        {.name = "Time", .unit = "ms", .fmt_str = "%u", .dsize = sizeof(uint32_t), .dtype = TYPE_U32, .has_id = 0},
+    [TAG_ALTITUDE_REL] = {.name = "Altitude rel",
+                          .unit = "m",
+                          .fmt_str = "%.2f",
+                          .dsize = sizeof(float),
+                          .dtype = TYPE_FLOAT,
+                          .has_id = 0},
+    [TAG_ALTITUDE_SEA] = {.name = "Altitude sea level",
+                          .unit = "m",
+                          .fmt_str = "%.2f",
+                          .dsize = sizeof(float),
+                          .dtype = TYPE_FLOAT,
+                          .has_id = 0},
     [TAG_LINEAR_ACCEL_ABS] = {.name = "Absolute linear acceleration",
                               .unit = "m/s^2",
                               .fmt_str = "%.2fX, %.2fY, %.2fZ",
                               .dsize = sizeof(vec3d_t),
-                              .dtype = TYPE_VEC3D},
+                              .dtype = TYPE_VEC3D,
+                              .has_id = 0},
     [TAG_LINEAR_ACCEL_REL] = {.name = "Relative linear acceleration",
                               .unit = "m/s^2",
                               .fmt_str = "%.2fX, %.2fY, %.2fZ",
                               .dsize = sizeof(vec3d_t),
-                              .dtype = TYPE_VEC3D},
+                              .dtype = TYPE_VEC3D,
+                              .has_id = 0},
     [TAG_ANGULAR_VEL] = {.name = "Angular velocity",
                          .unit = "dps",
                          .fmt_str = "%.2fX, %.2fY, %.2fZ",
                          .dsize = sizeof(vec3d_t),
-                         .dtype = TYPE_VEC3D},
-    [TAG_COORDS] =
-        {.name = "Lat/Long", .unit = "deg", .fmt_str = "%.2fX, %.2fY", .dsize = sizeof(vec2d_t), .dtype = TYPE_VEC2D},
+                         .dtype = TYPE_VEC3D,
+                         .has_id = 0},
+    [TAG_COORDS] = {.name = "Lat/Long",
+                    .unit = "deg",
+                    .fmt_str = "%.2fX, %.2fY",
+                    .dsize = sizeof(vec2d_t),
+                    .dtype = TYPE_VEC2D,
+                    .has_id = 0},
+    [TAG_VOLTAGE] =
+        {.name = "Voltage", .unit = "mV", .fmt_str = "%d", .dsize = sizeof(int16_t), .dtype = TYPE_I16, .has_id = 1},
     /* [TAG_LATITUDE] = */
     /*     {.name = "Latitude", .unit = "0.1udeg", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32}, */
     /* [TAG_SPEED] = */
@@ -137,6 +168,12 @@ const char __attribute__((const)) * sensor_strtag(const SensorTag tag) { return 
  * @param data A pointer to the sensor data to be printed.
  */
 void sensor_write_data(FILE *stream, const SensorTag tag, const void *data) {
+
+    if (SENSOR_TAG_DATA[tag].has_id) {
+        fprintf(stream, "ID: %u ", drefcast(const uint8_t, data));
+        data = ((const uint8_t *)(data) + 1); // Skip the ID byte before continuing
+    }
+
     char format_str[40] = "%s: ";                     // Format specifier for data name
     strcat(format_str, SENSOR_TAG_DATA[tag].fmt_str); // Format specifier for data
     strcat(format_str, " %s\n");                      // Format specifier for unit
