@@ -35,6 +35,7 @@
 /** The maximum number of sensors that fetcher can support. */
 #define MAX_SENSORS 8
 
+/** The name of the system clock collector. */
 #define SYSCLOCK_NAME "sysclock"
 
 /** Whether or not to print data to stdout. */
@@ -44,10 +45,10 @@ bool print_output = false;
 char *select_sensor = NULL;
 
 /** Stores the thread IDs of all the collector threads. */
-static pthread_t collector_threads[MAX_SENSORS];
+pthread_t collector_threads[MAX_SENSORS];
 
 /** Stores the collector arguments of all the collector threads. */
-static collector_args_t collector_args[MAX_SENSORS];
+collector_args_t collector_args[MAX_SENSORS];
 
 /** Buffer for reading sensor messages when print option is selected. */
 uint8_t buffer[BUFFER_SIZE];
@@ -185,10 +186,18 @@ int main(int argc, char **argv) {
         }
     }
     // Only start the sysclock if we're not debugging a single sensor or if this is the sensor that was selected
-    if (select_sensor == NULL || !strncasecmp(select_sensor, SYSCLOCK_NAME, sizeof(SYSCLOCK_NAME))) {
+    if (select_sensor == NULL || !strcasecmp(select_sensor, SYSCLOCK_NAME)) {
         /* Add sysclock sensor because it won't be specified in board ID. */
         collector_t sysclock = collector_search(SYSCLOCK_NAME);
         err = pthread_create(&collector_threads[num_sensors], NULL, sysclock, NULL);
+        num_sensors++;
+    }
+
+    /* Add PAC1952 sensor because it won't be specified in board ID. */
+    if (select_sensor == NULL || !strcasecmp(select_sensor, "pac1952-2")) {
+        collector_t pac1952 = collector_search("pac1952-2");
+        collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = 0x17};
+        err = pthread_create(&collector_threads[num_sensors], NULL, pac1952, &collector_args[num_sensors]);
         num_sensors++;
     }
 
