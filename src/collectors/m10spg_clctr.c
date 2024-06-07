@@ -58,9 +58,6 @@ void *m10spg_collector(void *args) {
         err = m10spg_send_command(&loc, UBX_NAV_POSLLH, &buf, sizeof(UBXNavPositionPayload));
         if (err == EOK) {
             msg.type = TAG_COORDS;
-            // Floating point math to conver to degrees
-            // msg.data.VEC2D.x = (((float)buf.pos.lat) / LAT_SCALE_TO_DEGREES);
-            // msg.data.VEC2D.y = (((float)buf.pos.lon) / LON_SCALE_TO_DEGREES);
             msg.data.VEC2D_I32.x = buf.pos.lat;
             msg.data.VEC2D_I32.y = buf.pos.lon;
 
