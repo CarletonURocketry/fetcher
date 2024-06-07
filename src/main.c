@@ -209,7 +209,7 @@ int main(int argc, char **argv) {
             continue;
         }
         // Successfully received data, print it to output stream
-        sensor_write_data(stdout, recv_msg.type, &recv_msg.data);
+        sensor_write_data(stdout, &recv_msg);
     }
 
     /* Wait for collectors to terminate before terminating. */

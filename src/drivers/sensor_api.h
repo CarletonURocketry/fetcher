@@ -73,6 +73,7 @@ typedef enum {
 /** Describes a message that can be sent on a message queue and recognized by both fetcher and packager */
 typedef struct {
     uint8_t type; /**< Measurement type */
+    uint8_t id;   /**< Sensor ID */
     union {
         float FLOAT;
         uint32_t U32;
@@ -164,7 +165,7 @@ typedef struct sensor_t {
 void memcpy_be(void *dest, const void *src, const size_t nbytes);
 size_t sensor_max_dsize(const Sensor *sensor);
 const char *sensor_strtag(const SensorTag tag);
-void sensor_write_data(FILE *stream, const SensorTag tag, const void *data);
+void sensor_write_data(FILE *stream, const common_t *msg);
 
 extern void sensor_set_precision(Sensor sensor, const SensorPrecision precision);
 extern errno_t sensor_open(Sensor sensor);
