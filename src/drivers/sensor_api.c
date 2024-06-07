@@ -65,20 +65,18 @@ const SensorTagData SENSOR_TAG_DATA[] = {
                          .dtype = TYPE_VEC3D,
                          .has_id = 0},
     [TAG_COORDS] = {.name = "Lat/Long",
-                    .unit = "deg",
-                    .fmt_str = "%.2fX, %.2fY",
-                    .dsize = sizeof(vec2d_t),
-                    .dtype = TYPE_VEC2D,
+                    .unit = "0.1udeg",
+                    .fmt_str = "%dX, %dY",
+                    .dsize = sizeof(vec2d_i32_t),
+                    .dtype = TYPE_VEC2D_I32,
                     .has_id = 0},
     [TAG_VOLTAGE] =
         {.name = "Voltage", .unit = "mV", .fmt_str = "%d", .dsize = sizeof(int16_t), .dtype = TYPE_I16, .has_id = 1},
-    /* [TAG_LATITUDE] = */
-    /*     {.name = "Latitude", .unit = "0.1udeg", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32}, */
     /* [TAG_SPEED] = */
     /*     {.name = "Ground speed", .unit = "cm/s", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype = TYPE_U32}, */
     /* [TAG_COURSE] = {.name = "Course", .unit = "10udeg", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype =
        TYPE_U32}, */
-    /* [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8}, */
+    [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8},
 };
 
 /**
@@ -167,56 +165,51 @@ const char __attribute__((const)) * sensor_strtag(const SensorTag tag) { return 
  * @param tag The tag describing the kind of sensor data.
  * @param data A pointer to the sensor data to be printed.
  */
-void sensor_write_data(FILE *stream, const SensorTag tag, const void *data) {
+void sensor_write_data(FILE *stream, const common_t *msg) {
 
-    if (SENSOR_TAG_DATA[tag].has_id) {
-        fprintf(stream, "ID: %u ", drefcast(const uint8_t, data));
-        data = ((const uint8_t *)(data) + 1); // Skip the ID byte before continuing
-    }
+    if (SENSOR_TAG_DATA[msg->type].has_id) fprintf(stream, "ID: %u ", msg->id);
 
-    char format_str[40] = "%s: ";                     // Format specifier for data name
-    strcat(format_str, SENSOR_TAG_DATA[tag].fmt_str); // Format specifier for data
-    strcat(format_str, " %s\n");                      // Format specifier for unit
+    char format_str[40] = "%s: ";                           // Format specifier for data name
+    strcat(format_str, SENSOR_TAG_DATA[msg->type].fmt_str); // Format specifier for data
+    strcat(format_str, " %s\n");                            // Format specifier for unit
 
     // Ignore GCC warning about not using string literal in printf
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
     // Decide how to cast data pointer for printing
-    switch (SENSOR_TAG_DATA[tag].dtype) {
+    switch (SENSOR_TAG_DATA[msg->type].dtype) {
     case TYPE_FLOAT:
         // Ignore warning about promoting float to double since printf doesn't support float printing
 #pragma GCC diagnostic ignored "-Wdouble-promotion"
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const float, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.FLOAT, SENSOR_TAG_DATA[msg->type].unit);
         break;
     case TYPE_U32:
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint32_t, data),
-                SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.U32, SENSOR_TAG_DATA[msg->type].unit);
         break;
     case TYPE_U16:
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint16_t, data),
-                SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.U16, SENSOR_TAG_DATA[msg->type].unit);
         break;
     case TYPE_U8:
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const uint8_t, data),
-                SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.U8, SENSOR_TAG_DATA[msg->type].unit);
         break;
     case TYPE_I32:
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int32_t, data),
-                SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.I32, SENSOR_TAG_DATA[msg->type].unit);
         break;
     case TYPE_I16:
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int16_t, data),
-                SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.I16, SENSOR_TAG_DATA[msg->type].unit);
         break;
     case TYPE_I8:
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const int8_t, data), SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.I8, SENSOR_TAG_DATA[msg->type].unit);
         break;
     case TYPE_VEC3D:
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const vec3d_t, data).x,
-                drefcast(const vec3d_t, data).y, drefcast(const vec3d_t, data).z, SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.VEC3D.x, msg->data.VEC3D.y,
+                msg->data.VEC3D.z, SENSOR_TAG_DATA[msg->type].unit);
         break;
     case TYPE_VEC2D:
-        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const vec2d_t, data).x,
-                drefcast(const vec2d_t, data).y, SENSOR_TAG_DATA[tag].unit);
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.VEC2D.x, msg->data.VEC2D.y,
+                SENSOR_TAG_DATA[msg->type].unit);
         break;
+    case TYPE_VEC2D_I32:
+        fprintf(stream, format_str, SENSOR_TAG_DATA[msg->type].name, msg->data.VEC2D_I32.x, msg->data.VEC2D_I32.y,
+                SENSOR_TAG_DATA[msg->type].unit);
     }
 }

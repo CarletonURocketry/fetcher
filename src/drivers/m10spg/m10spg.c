@@ -35,6 +35,12 @@
 /** How long m10spg_read should wait for a response in seconds */
 #define DEFAULT_TIMEOUT 10
 
+/** A configuration key for enabling or disabling output of NMEA messages on I2C */
+#define NMEA_I2C_OUTPUT_CONFIG_KEY 0x10720002
+
+/** A configuration key for enabling or disabling input of poll requests for NMEA messages on I2C */
+#define NMEA_I2C_INPUT_CONFIG_KEY 0x10710002
+
 static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_UTC] = {.header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67},
     [UBX_NAV_POSLLH] = {.header = {.class = 0x01, .id = 0x02, .length = 0x00}, .checksum_a = 0x03, .checksum_b = 0x0a},
@@ -305,9 +311,9 @@ int m10spg_open(const SensorLocation *loc) {
     init_valset_message(&msg, RAM_LAYER);
     uint8_t config_disabled = 0;
     // Disable NMEA output on I2C
-    add_valset_item(&msg, (uint32_t)0x10720002, &config_disabled, UBX_TYPE_L);
+    add_valset_item(&msg, (uint32_t)NMEA_I2C_OUTPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
     // Disable NMEA input on I2C
-    add_valset_item(&msg, (uint32_t)0x10710002, &config_disabled, UBX_TYPE_L);
+    add_valset_item(&msg, (uint32_t)NMEA_I2C_INPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
     calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
 
     int err = send_message(loc, &msg);

@@ -7,7 +7,7 @@
 #include "board-id/board_id.h"
 #include "collectors/collectors.h"
 #include "drivers/m24c0x/m24c0x.h"
-#include "sensor_api.h"
+#include "drivers/sensor_api.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -50,8 +50,8 @@ pthread_t collector_threads[MAX_SENSORS];
 /** Stores the collector arguments of all the collector threads. */
 collector_args_t collector_args[MAX_SENSORS];
 
-/** Buffer for reading sensor messages when print option is selected. */
-uint8_t buffer[BUFFER_SIZE];
+/** Space for recieving messages from the message queue if print mode is selected. */
+static common_t recv_msg;
 
 /** Device descriptor of the I2C bus. */
 char *i2c_bus = NULL;
@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
     struct mq_attr q_attr = {
         .mq_flags = 0,
         .mq_maxmsg = 30,
-        .mq_msgsize = 50,
+        .mq_msgsize = sizeof(recv_msg),
     };
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, &q_attr);
     if (sensor_q == -1) {
@@ -203,13 +203,13 @@ int main(int argc, char **argv) {
 
     /* Constantly receive from sensors on message queue and print data. */
     while (print_output) {
-        if (mq_receive(sensor_q, (char *)buffer, sensor_q_attr.mq_msgsize, NULL) == -1) {
+        if (mq_receive(sensor_q, (char *)&recv_msg, sensor_q_attr.mq_msgsize, NULL) == -1) {
             // Handle error without exiting
             fprintf(stderr, "Failed to receive message on queue '%s': %s\n", SENSOR_QUEUE, strerror(errno));
             continue;
         }
         // Successfully received data, print it to output stream
-        sensor_write_data(stdout, buffer[0], &buffer[1]);
+        sensor_write_data(stdout, &recv_msg);
     }
 
     /* Wait for collectors to terminate before terminating. */

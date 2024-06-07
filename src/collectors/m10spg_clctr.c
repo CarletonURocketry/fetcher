@@ -8,16 +8,6 @@ union read_buffer {
     UBXNavStatusPayload stat;
 };
 
-/** Type for sending measurements over the message queue. */
-typedef struct {
-    uint8_t type; /**< Measurement type */
-    union {
-        uint32_t U32;
-        int32_t I32;
-        uint8_t U8;
-    };
-} __attribute__((packed)) message_t;
-
 void *m10spg_collector(void *args) {
 
     /* Open message queue. */
@@ -41,44 +31,41 @@ void *m10spg_collector(void *args) {
     for (;;) {
         // TODO - Don't read if the next epoch hasn't happened
         union read_buffer buf;
-        message_t msg;
-        /* err = m10spg_send_command(&loc, UBX_NAV_STAT, &buf, sizeof(UBXNavStatusPayload)); */
-        /* // Check if we have a valid fix, no point logging bad data */
-        /* if (err == EOK) { */
-        /*     // Make sure that the fix is valid (has a reasonable value and is not a no-fix) */
-        /*     if ((buf.stat.flags & 0x01) && buf.stat.gpsFix) { */
-        /*         msg.type = TAG_FIX; */
-        /*         msg.U8 = buf.stat.gpsFix; */
-        /*         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
-        /*             fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
-        /*         } */
-        // The else here is commented out so you can see the data processing is working even while an invalid
-        // fix is held
-        /*     } // else { */
-        /*     //    // Instead of doing a continue, should sleep until the next epoch */
-        /*     //    printf("Bad GPS fix, skipping\n"); */
-        /*     //    continue; */
-        /*     //} */
-        /* } else { */
-        /*     fprintf(stderr, "M10SPG failed to read status: %s\n", strerror(err)); */
-        /*     continue; */
-        /* } */
+        common_t msg;
+        err = m10spg_send_command(&loc, UBX_NAV_STAT, &buf, sizeof(UBXNavStatusPayload));
+        // Check if we have a valid fix, no point logging bad data */
+        if (err == EOK) {
+            // Make sure that the fix is valid (has a reasonable value and is not a no-fix) */
+            // if ((buf.stat.flags & 0x01) && buf.stat.gpsFix) {
+            msg.type = TAG_FIX;
+            msg.data.U8 = buf.stat.gpsFix;
+            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
+                fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
+            }
+            // The else here is commented out so you can see the data processing is working even while an invalid
+            // fix is held
+            //}  else {
+            //    // Instead of doing a continue, should sleep until the next epoch */
+            //    printf("Bad GPS fix, skipping\n"); */
+            //    continue;
+            //}
+        } else {
+            fprintf(stderr, "M10SPG failed to read status: %s\n", strerror(err));
+            continue;
+        }
 
         // Read position
         err = m10spg_send_command(&loc, UBX_NAV_POSLLH, &buf, sizeof(UBXNavPositionPayload));
         if (err == EOK) {
+            msg.type = TAG_COORDS;
+            msg.data.VEC2D_I32.x = buf.pos.lat;
+            msg.data.VEC2D_I32.y = buf.pos.lon;
 
-            uint8_t coordinates[sizeof(vec2d_t) + 1];
-            coordinates[0] = TAG_COORDS;
-            memcpy(&coordinates[1], &buf.pos.lat, sizeof(buf.pos.lat));
-            memcpy(&coordinates[1 + sizeof(buf.pos.lat)], &buf.pos.lon, sizeof(buf.pos.lon));
-
-            if (mq_send(sensor_q, (char *)coordinates, sizeof(coordinates), 0) == -1) {
+            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
             }
-
             msg.type = TAG_ALTITUDE_SEA;
-            msg.I32 = buf.pos.hMSL;
+            msg.data.FLOAT = (((float)buf.pos.hMSL) / ALT_SCALE_TO_METERS);
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
                 fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
             }
@@ -105,7 +92,6 @@ void *m10spg_collector(void *args) {
         /*     continue; */
         /* } */
     }
-
     fprintf(stderr, "%s\n", strerror(err));
     return (void *)((uint64_t)err);
 }

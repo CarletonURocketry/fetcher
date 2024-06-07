@@ -12,46 +12,46 @@
 
 /** UBX header for all UBX protocol messages sent to the reciever */
 typedef struct {
-    uint8_t class;
-    uint8_t id;
-    uint16_t length;
+    uint8_t class;   /**< The class of this message, representing a category of messages, like debug or configuration */
+    uint8_t id;      /**< The id of this message, representing the specific type of message in its class */
+    uint16_t length; /**< The length of the message, including only the payload */
 } UBXHeader;
 
 /** UBX protcol style message, can be sent directly to the reciever */
 typedef struct {
-    UBXHeader header;   /** A UBX protocol header*/
-    void *payload;      /** The payload of the message (length is stored in the header) */
-    uint8_t checksum_a; /** The first checksum byte of the message, including all fields past the synch characters */
-    uint8_t checksum_b; /** The second checksum byte */
+    UBXHeader header;   /**< A UBX protocol header*/
+    void *payload;      /**< The payload of the message (length is stored in the header) */
+    uint8_t checksum_a; /**< The first checksum byte of the message, including all fields past the synch characters */
+    uint8_t checksum_b; /**< The second checksum byte */
 } UBXFrame;
 
 /** A struct representing the configuration layer selected in a configuration message (valset or valget) */
 typedef enum {
-    RAM_LAYER = 0x01,   /** The current configuration - cleared if the reciever enters power saving mode */
-    BBR_LAYER = 0x02,   /** The battery backed memory configuration - not cleared unless the backup battery removed */
-    FLASH_LAYER = 0x04, /** The flash configuration - does not exist on the M10 MAX */
+    RAM_LAYER = 0x01,   /**< The current configuration - cleared if the reciever enters power saving mode */
+    BBR_LAYER = 0x02,   /**< The battery backed memory configuration - not cleared unless the backup battery removed */
+    FLASH_LAYER = 0x04, /**< The flash configuration - does not exist on the M10 MAX */
 } UBXConfigLayer;
 
 /** An enum representing the different sizes of values that a configuration message can contain */
 typedef enum {
-    UBX_TYPE_L = 1,  /** One bit, occupies one byte */
-    UBX_TYPE_U1 = 1, /** One byte */
-    UBX_TYPE_U2 = 2, /** Two bytes, little endian */
-    UBX_TYPE_U4 = 4, /** Four bytes, little endian (excluding U8 because it's not used) */
+    UBX_TYPE_L = 1,  /**< One bit, occupies one byte */
+    UBX_TYPE_U1 = 1, /**< One byte */
+    UBX_TYPE_U2 = 2, /**< Two bytes, little endian */
+    UBX_TYPE_U4 = 4, /**< Four bytes, little endian (excluding U8 because it's not used) */
 } UBXValueType;
 
 /** A struct representing the UBX-NAV-TIMEUTC (UTC Time) payload */
 typedef struct {
-    uint32_t iTOW;
-    uint32_t tAcc;
-    int32_t nano;
-    uint16_t year;
-    uint8_t month;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t min;
-    uint8_t sec;
-    uint8_t flags;
+    uint32_t iTOW; /**< The GPS time of week of the navigation epoch that created this payload */
+    uint32_t tAcc; /**< A time accuracy measurement for the UTC time, in nanoseconds */
+    int32_t nano;  /**< A time correction for the date that follows in this payload, in nanoseconds */
+    uint16_t year; /**< A year from 1999 to 2099 (this can be incorrect if the chip was manufactured 20+ years ago) */
+    uint8_t month; /**< A month from 1 to 12 */
+    uint8_t day;   /**< Day of the month in the range 1 to 31 */
+    uint8_t hour;  /**< Hour of the day in the range 0 to 23 */
+    uint8_t min;   /**< Minute of the hour in the range 0 to 59 */
+    uint8_t sec;   /**< Second of the minute in the range 0 to 60 */
+    uint8_t flags; /**< Flags that describe if this time information is valid (see the interface description) */
 } UBXUTCPayload;
 
 /** Max bytes to be used for valset payload items (limit of 64 items per message) */
@@ -64,13 +64,6 @@ typedef struct {
     uint8_t reserved[2]; /** Reserved bytes */
     uint8_t config_items[MAX_VALSET_ITEM_BYTES]; /** An array of keys and value pairs */
 } UBXValsetPayload;
-
-/** A struct representing the UBX-SEC-UNIQID (unique chip id) payload */
-typedef struct {
-    uint8_t version;
-    uint8_t reserved[3];
-    uint8_t unique_id[6];
-} UBXUniqIDPayload;
 
 /** A struct representing the UBX-NAV-STAT (navigation status) payload */
 typedef struct {
@@ -93,6 +86,15 @@ typedef struct {
     uint32_t hAcc;  /**< Horizontal accuracy measurement in millimeters */
     uint32_t vAcc;  /**< Vertical accuracy measurement in millimeters */
 } UBXNavPositionPayload;
+
+/** A conversion constant to go from the scale of UBX latitude (1E-7deg) to regular degrees */
+#define LAT_SCALE_TO_DEGREES 1e7f
+
+/** A conversion constant to go from the scale of UBX longitude (1E-7deg) to regular degrees */
+#define LON_SCALE_TO_DEGREES 1e7f
+
+/** A conversion constant to go from the scale of UBX altitude (mm) to meters */
+#define ALT_SCALE_TO_METERS 1e3f
 
 /** A struct representing the UBX-NAV-VELNED (velocity) payload */
 typedef struct {

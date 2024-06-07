@@ -1,14 +1,8 @@
+#include "../drivers/sensor_api.h"
 #include "collectors.h"
-#include "sensor_api.h"
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
-
-/** Type to simplify sending time data. */
-struct sysclock_msg_t {
-    uint8_t type;    /**< The type of message (always time). */
-    uint32_t millis; /**< The number of milliseconds since launch. */
-} __attribute__((packed));
 
 /**
  * Collector thread for the system clock.
@@ -34,7 +28,7 @@ void *sysclock_collector(void *args) {
     struct timeval tval;
 
     // Infinitely check the time
-    struct sysclock_msg_t msg;
+    common_t msg;
     msg.type = TAG_TIME;
     for (;;) {
 
@@ -43,7 +37,7 @@ void *sysclock_collector(void *args) {
 
         // Calculate elapsed time from launch
         time_t elapsed_s = tval.tv_sec - start_unix_time;
-        msg.millis = (elapsed_s * 1000) + (tval.tv_usec / 1000);
+        msg.data.U32 = (elapsed_s * 1000) + (tval.tv_usec / 1000);
 
         // Infinitely send the time
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
