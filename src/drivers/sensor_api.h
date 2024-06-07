@@ -22,6 +22,14 @@ typedef struct {
     float y;
 } vec2d_t;
 
+/** Type for a 2 dimensional vector with integer x, y components */
+typedef struct {
+    /** X component */
+    int32_t x;
+    /** Y component */
+    int32_t y;
+} vec2d_i32_t;
+
 /** Type for a 3 dimensional vector with x, y, z components. */
 typedef struct {
     /** X component. */
@@ -50,15 +58,16 @@ typedef enum {
 
 /** Describes the data type of the data associated with a tag. */
 typedef enum {
-    TYPE_FLOAT, /**< float */
-    TYPE_U32,   /**< uint32_t */
-    TYPE_U16,   /**< uint16_t */
-    TYPE_U8,    /**< uint8_t */
-    TYPE_I32,   /**< int32_t */
-    TYPE_I16,   /**< int16_t */
-    TYPE_I8,    /**< int8_t */
-    TYPE_VEC3D, /**< vec3d_t */
-    TYPE_VEC2D, /**< vec2d_t */
+    TYPE_FLOAT,     /**< float */
+    TYPE_U32,       /**< uint32_t */
+    TYPE_U16,       /**< uint16_t */
+    TYPE_U8,        /**< uint8_t */
+    TYPE_I32,       /**< int32_t */
+    TYPE_I16,       /**< int16_t */
+    TYPE_I8,        /**< int8_t */
+    TYPE_VEC3D,     /**< vec3d_t */
+    TYPE_VEC2D_I32, /**< vec2d_u32 */
+    TYPE_VEC2D,     /**< vec2d_t */
 } SensorTagDType;
 
 /** Describes a message that can be sent on a message queue and recognized by both fetcher and packager */
@@ -73,6 +82,7 @@ typedef struct {
         int16_t I16;
         int8_t I8;
         vec3d_t VEC3D;
+        vec2d_i32_t VEC2D_I32;
         vec2d_t VEC2D;
     } data; /**< The way the contents of this struct should be interpreted */
 } common_t;

@@ -65,10 +65,10 @@ const SensorTagData SENSOR_TAG_DATA[] = {
                          .dtype = TYPE_VEC3D,
                          .has_id = 0},
     [TAG_COORDS] = {.name = "Lat/Long",
-                    .unit = "deg",
-                    .fmt_str = "%.2fX, %.2fY",
-                    .dsize = sizeof(vec2d_t),
-                    .dtype = TYPE_VEC2D,
+                    .unit = "0.1udeg",
+                    .fmt_str = "%dX, %dY",
+                    .dsize = sizeof(vec2d_i32_t),
+                    .dtype = TYPE_VEC2D_I32,
                     .has_id = 0},
     [TAG_VOLTAGE] =
         {.name = "Voltage", .unit = "mV", .fmt_str = "%d", .dsize = sizeof(int16_t), .dtype = TYPE_I16, .has_id = 1},
@@ -216,5 +216,8 @@ void sensor_write_data(FILE *stream, const SensorTag tag, const void *data) {
         fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const vec2d_t, data).x,
                 drefcast(const vec2d_t, data).y, SENSOR_TAG_DATA[tag].unit);
         break;
+    case TYPE_VEC2D_I32:
+        fprintf(stream, format_str, SENSOR_TAG_DATA[tag].name, drefcast(const vec2d_i32_t, data).x,
+                drefcast(const vec2d_i32_t, data).y, SENSOR_TAG_DATA[tag].unit);
     }
 }
