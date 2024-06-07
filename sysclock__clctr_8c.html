@@ -88,56 +88,22 @@ $(document).ready(function(){initNavTree('sysclock__clctr_8c.html',''); initResi
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">sysclock_clctr.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="sensor__api_8h_source.html">../drivers/sensor_api.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors.h</a>&quot;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;sys/time.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsysclock__msg__t.html">sysclock_msg_t</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a96af90813d5e2a44b0fbf2969b643de9"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structsysclock__msg__t.html">sysclock_msg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sysclock__clctr_8c.html#a96af90813d5e2a44b0fbf2969b643de9">__attribute__</a> ((packed))</td></tr>
-<tr class="separator:a96af90813d5e2a44b0fbf2969b643de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b264e5669f5548d29995e150f5aa756"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sysclock__clctr_8c.html#a0b264e5669f5548d29995e150f5aa756">sysclock_collector</a> (void *args)</td></tr>
 <tr class="separator:a0b264e5669f5548d29995e150f5aa756"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a1d127017fb298b889f4ba24752d08b8e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sysclock__clctr_8c.html#a1d127017fb298b889f4ba24752d08b8e">type</a></td></tr>
-<tr class="separator:a1d127017fb298b889f4ba24752d08b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b66b314af77147a5b8eb1e44498839e"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sysclock__clctr_8c.html#a5b66b314af77147a5b8eb1e44498839e">millis</a></td></tr>
-<tr class="separator:a5b66b314af77147a5b8eb1e44498839e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a96af90813d5e2a44b0fbf2969b643de9" name="a96af90813d5e2a44b0fbf2969b643de9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96af90813d5e2a44b0fbf2969b643de9">&#9670;&nbsp;</a></span>__attribute__()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct <a class="el" href="structsysclock__msg__t.html">sysclock_msg_t</a> <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
-          <td>(</td>
-          <td class="paramtype">(packed)&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a0b264e5669f5548d29995e150f5aa756" name="a0b264e5669f5548d29995e150f5aa756"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0b264e5669f5548d29995e150f5aa756">&#9670;&nbsp;</a></span>sysclock_collector()</h2>
 
@@ -160,37 +126,6 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The error <code>errno_t</code> which caused the thread to exit, encoded as a pointer. </dd></dl>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a5b66b314af77147a5b8eb1e44498839e" name="a5b66b314af77147a5b8eb1e44498839e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b66b314af77147a5b8eb1e44498839e">&#9670;&nbsp;</a></span>millis</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t millis</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The number of milliseconds since launch. </p>
-
-</div>
-</div>
-<a id="a1d127017fb298b889f4ba24752d08b8e" name="a1d127017fb298b889f4ba24752d08b8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d127017fb298b889f4ba24752d08b8e">&#9670;&nbsp;</a></span>type</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t type</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The type of message (always time). </p>
 
 </div>
 </div>

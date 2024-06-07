@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: sysclock_msg_t Struct Reference</title>
+<title>fetcher: vec2d_i32_t Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,7 +68,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structsysclock__msg__t.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structvec2d__i32__t.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -89,52 +89,54 @@ $(document).ready(function(){initNavTree('structsysclock__msg__t.html',''); init
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
-  <div class="headertitle"><div class="title">sysclock_msg_t Struct Reference</div></div>
+  <div class="headertitle"><div class="title">vec2d_i32_t Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ab3825cd44945e876530e25cb704ca4cc"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsysclock__msg__t.html#ab3825cd44945e876530e25cb704ca4cc">type</a></td></tr>
-<tr class="separator:ab3825cd44945e876530e25cb704ca4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89e3c6c865090554863c7cf00d62af9b"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsysclock__msg__t.html#a89e3c6c865090554863c7cf00d62af9b">millis</a></td></tr>
-<tr class="separator:a89e3c6c865090554863c7cf00d62af9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a912dfcecbddb65567de61b5c851616fc"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvec2d__i32__t.html#a912dfcecbddb65567de61b5c851616fc">x</a></td></tr>
+<tr class="separator:a912dfcecbddb65567de61b5c851616fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4683a1e8b3c2467604333a1f7f2f6321"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvec2d__i32__t.html#a4683a1e8b3c2467604333a1f7f2f6321">y</a></td></tr>
+<tr class="separator:a4683a1e8b3c2467604333a1f7f2f6321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Type to simplify sending time data. </p>
+<div class="textblock"><p >Type for a 2 dimensional vector with integer x, y components </p>
 </div><h2 class="groupheader">Field Documentation</h2>
-<a id="a89e3c6c865090554863c7cf00d62af9b" name="a89e3c6c865090554863c7cf00d62af9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89e3c6c865090554863c7cf00d62af9b">&#9670;&nbsp;</a></span>millis</h2>
+<a id="a912dfcecbddb65567de61b5c851616fc" name="a912dfcecbddb65567de61b5c851616fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a912dfcecbddb65567de61b5c851616fc">&#9670;&nbsp;</a></span>x</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t sysclock_msg_t::millis</td>
+          <td class="memname">int32_t vec2d_i32_t::x</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The number of milliseconds since launch. </p>
+<p >X component </p>
 
 </div>
 </div>
-<a id="ab3825cd44945e876530e25cb704ca4cc" name="ab3825cd44945e876530e25cb704ca4cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3825cd44945e876530e25cb704ca4cc">&#9670;&nbsp;</a></span>type</h2>
+<a id="a4683a1e8b3c2467604333a1f7f2f6321" name="a4683a1e8b3c2467604333a1f7f2f6321"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4683a1e8b3c2467604333a1f7f2f6321">&#9670;&nbsp;</a></span>y</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t sysclock_msg_t::type</td>
+          <td class="memname">int32_t vec2d_i32_t::y</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The type of message (always time). </p>
+<p >Y component </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/collectors/<a class="el" href="sysclock__clctr_8c.html">sysclock_clctr.c</a></li>
+<li>src/drivers/<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -12,7 +12,8 @@ var searchData=
   ['adc_5fres_5f256_9',['ADC_RES_256',['../ms5611_8h.html#aab94c0c8692d1629420105ba506d49eba2f3c9f9af1ebd65944bf69fec900b807',1,'ms5611.h']]],
   ['adc_5fres_5f4096_10',['ADC_RES_4096',['../ms5611_8h.html#aab94c0c8692d1629420105ba506d49eba5140e7bb7b4580efad78625e4bee62d8',1,'ms5611.h']]],
   ['adc_5fres_5f512_11',['ADC_RES_512',['../ms5611_8h.html#aab94c0c8692d1629420105ba506d49eba0db0d71d003bda0a0037f6de98919fa3',1,'ms5611.h']]],
-  ['addr_12',['addr',['../structcollector__args__t.html#a0090760febee9249b31a9d0e45fbc8ae',1,'collector_args_t::addr()'],['../structSensorLocation.html#a19f80f6f28e1df846d58e58a89099b97',1,'SensorLocation::addr()']]],
+  ['addr_12',['addr',['../structSensorLocation.html#a19f80f6f28e1df846d58e58a89099b97',1,'SensorLocation::addr()'],['../structcollector__args__t.html#a0090760febee9249b31a9d0e45fbc8ae',1,'collector_args_t::addr()']]],
   ['alert_5fenable_13',['ALERT_ENABLE',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741daee4a1f911019ab4c0c5ad3e199d6ba81',1,'pac195x.c']]],
-  ['alert_5fstatus_14',['ALERT_STATUS',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741daa0f52d7905a2be34b9788a82c8dd1a18',1,'pac195x.c']]]
+  ['alert_5fstatus_14',['ALERT_STATUS',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741daa0f52d7905a2be34b9788a82c8dd1a18',1,'pac195x.c']]],
+  ['alt_5fscale_5fto_5fmeters_15',['ALT_SCALE_TO_METERS',['../ubx__def_8h.html#a375dfe855d12881cc831aef25cb89d85',1,'ubx_def.h']]]
 ];

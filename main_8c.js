@@ -8,7 +8,6 @@ var main_8c =
     [ "SYSCLOCK_NAME", "main_8c.html#a2bdc24e5276edbb04b12e7319538f2c7", null ],
     [ "main", "main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627", null ],
     [ "board_id", "main_8c.html#ad605583359753fccc7077dee10856af9", null ],
-    [ "buffer", "main_8c.html#a97eaba5b61706891a4da114bde40da4d", null ],
     [ "collector_args", "main_8c.html#a5337d97169efd20d499118676788210c", null ],
     [ "collector_threads", "main_8c.html#aee602b1e81e37be4b6a8e8609deab9fd", null ],
     [ "i2c_bus", "main_8c.html#a6cdb3596e1570cb461f3def70adf8ea7", null ],

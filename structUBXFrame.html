@@ -120,7 +120,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The payload of the message (length is stored in the header) </p>
+<p >The first checksum byte of the message, including all fields past the synch characters </p>
 
 </div>
 </div>
@@ -135,7 +135,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >The first checksum byte of the message, including all fields past the synch characters </p>
+<p >The second checksum byte </p>
 
 </div>
 </div>
@@ -150,6 +150,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >A UBX protocol header </p>
 
 </div>
 </div>
@@ -164,7 +165,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >A UBX protocol header </p>
+<p >The payload of the message (length is stored in the header) </p>
 
 </div>
 </div>

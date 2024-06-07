@@ -108,7 +108,11 @@ $(document).ready(function(){initNavTree('sensor__api_8h.html',''); initResizabl
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvec2d__t.html">vec2d_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvec2d__i32__t.html">vec2d_i32_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvec3d__t.html">vec3d_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcommon__t.html">common_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSensorTagData.html">SensorTagData</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,7 +140,8 @@ Enumerations</h2></td></tr>
 , <br />
 &#160;&#160;<a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2">TAG_LINEAR_ACCEL_ABS</a> = 0x8
 , <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627aa54c2ba8d0bfb82522594ef5eed90ccb">TAG_COORDS</a> = 0x9
-, <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a3ed6481c9c2d6a9ef0a5b38b17be8033">TAG_VOLTAGE</a> = 0x10
+, <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a3ed6481c9c2d6a9ef0a5b38b17be8033">TAG_VOLTAGE</a> = 0xa
+, <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2">TAG_FIX</a> = 0xb
 <br />
  }</td></tr>
 <tr class="separator:af3e5add5316f07be5e3f2f32afe68627"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,7 +156,8 @@ Enumerations</h2></td></tr>
 , <a class="el" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84acfa7098bd7a6ae77e35dc74e7ce7413b">TYPE_I8</a>
 , <a class="el" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84afc93694d5fe644e0153ee3056e2c6a3c">TYPE_VEC3D</a>
 , <br />
-&#160;&#160;<a class="el" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84ab4a015f4c41b5e3a80b9e81380aec5e2">TYPE_VEC2D</a>
+&#160;&#160;<a class="el" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84ae486046f03d5996caaf92aaa5951ff4d">TYPE_VEC2D_I32</a>
+, <a class="el" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84ab4a015f4c41b5e3a80b9e81380aec5e2">TYPE_VEC2D</a>
 <br />
  }</td></tr>
 <tr class="separator:a12c516a9f3375ec72e5b9a1a2eb74b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,8 +175,8 @@ Functions</h2></td></tr>
 <tr class="separator:ab5e2052ce2670e4f1e2e4dd905ad375a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace7895479a67be7201443272719e5172"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#ace7895479a67be7201443272719e5172">sensor_strtag</a> (const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag)</td></tr>
 <tr class="separator:ace7895479a67be7201443272719e5172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2720e3785e692faa32959f9555bc48c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a2720e3785e692faa32959f9555bc48c1">sensor_write_data</a> (FILE *stream, const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a> tag, const void *<a class="el" href="sht41__clctr_8c.html#a173b91873a3fc4f50a95416a6204d963">data</a>)</td></tr>
-<tr class="separator:a2720e3785e692faa32959f9555bc48c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add8af4b818a259e70983d4ae5db46cf6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#add8af4b818a259e70983d4ae5db46cf6">sensor_write_data</a> (FILE *stream, const <a class="el" href="structcommon__t.html">common_t</a> *msg)</td></tr>
+<tr class="separator:add8af4b818a259e70983d4ae5db46cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a430b7748174467e5bde0d30f25c4238d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a430b7748174467e5bde0d30f25c4238d">sensor_set_precision</a> (<a class="el" href="structSensor.html">Sensor</a> sensor, const <a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">SensorPrecision</a> precision)</td></tr>
 <tr class="separator:a430b7748174467e5bde0d30f25c4238d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d7050eeccb4e8dd4e96eaf5ea4f1a36"><td class="memItemLeft" align="right" valign="top">errno_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sensor__api_8h.html#a7d7050eeccb4e8dd4e96eaf5ea4f1a36">sensor_open</a> (<a class="el" href="structSensor.html">Sensor</a> sensor)</td></tr>
@@ -243,6 +249,8 @@ Functions</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a3ed6481c9c2d6a9ef0a5b38b17be8033" name="af3e5add5316f07be5e3f2f32afe68627a3ed6481c9c2d6a9ef0a5b38b17be8033"></a>TAG_VOLTAGE&#160;</td><td class="fielddoc"><p >Voltage in volts with a unique ID. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2" name="af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2"></a>TAG_FIX&#160;</td><td class="fielddoc"><p >Fix type representing the type of fix a gps has </p>
+</td></tr>
 </table>
 
 </div>
@@ -275,6 +283,8 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a12c516a9f3375ec72e5b9a1a2eb74b84acfa7098bd7a6ae77e35dc74e7ce7413b" name="a12c516a9f3375ec72e5b9a1a2eb74b84acfa7098bd7a6ae77e35dc74e7ce7413b"></a>TYPE_I8&#160;</td><td class="fielddoc"><p >int8_t </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a12c516a9f3375ec72e5b9a1a2eb74b84afc93694d5fe644e0153ee3056e2c6a3c" name="a12c516a9f3375ec72e5b9a1a2eb74b84afc93694d5fe644e0153ee3056e2c6a3c"></a>TYPE_VEC3D&#160;</td><td class="fielddoc"><p ><a class="el" href="structvec3d__t.html">vec3d_t</a> </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a12c516a9f3375ec72e5b9a1a2eb74b84ae486046f03d5996caaf92aaa5951ff4d" name="a12c516a9f3375ec72e5b9a1a2eb74b84ae486046f03d5996caaf92aaa5951ff4d"></a>TYPE_VEC2D_I32&#160;</td><td class="fielddoc"><p >vec2d_u32 </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a12c516a9f3375ec72e5b9a1a2eb74b84ab4a015f4c41b5e3a80b9e81380aec5e2" name="a12c516a9f3375ec72e5b9a1a2eb74b84ab4a015f4c41b5e3a80b9e81380aec5e2"></a>TYPE_VEC2D&#160;</td><td class="fielddoc"><p ><a class="el" href="structvec2d__t.html">vec2d_t</a> </p>
 </td></tr>
@@ -500,8 +510,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2720e3785e692faa32959f9555bc48c1" name="a2720e3785e692faa32959f9555bc48c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2720e3785e692faa32959f9555bc48c1">&#9670;&nbsp;</a></span>sensor_write_data()</h2>
+<a id="add8af4b818a259e70983d4ae5db46cf6" name="add8af4b818a259e70983d4ae5db46cf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add8af4b818a259e70983d4ae5db46cf6">&#9670;&nbsp;</a></span>sensor_write_data()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -515,14 +525,8 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">SensorTag</a>&#160;</td>
-          <td class="paramname"><em>tag</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const void *&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
+          <td class="paramtype">const <a class="el" href="structcommon__t.html">common_t</a> *&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

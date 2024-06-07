@@ -51,8 +51,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455a07d5f152927aab40e6321a99ebbc91f3",
-"structSensorTagData.html#abf98d4502e9e8026504ef49143a7bec9"
+"ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455",
+"structSensorTagList.html#acdb5183db15d3d24ba1fd74b6124d91d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

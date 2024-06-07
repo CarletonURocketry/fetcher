@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('main_8c.html',''); initResizable(); })
 <div class="textblock"><code>#include &quot;<a class="el" href="board__id_8h_source.html">board-id/board_id.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors/collectors.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="m24c0x_8h_source.html">drivers/m24c0x/m24c0x.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="sensor__api_8h_source.html">sensor_api.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="sensor__api_8h_source.html">drivers/sensor_api.h</a>&quot;</code><br />
 <code>#include &lt;devctl.h&gt;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;fcntl.h&gt;</code><br />
@@ -143,8 +143,6 @@ Variables</h2></td></tr>
 <tr class="separator:aee602b1e81e37be4b6a8e8609deab9fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5337d97169efd20d499118676788210c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcollector__args__t.html">collector_args_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a5337d97169efd20d499118676788210c">collector_args</a> [<a class="el" href="main_8c.html#aa3d1fc2927eec213e6b5f9e854c392d2">MAX_SENSORS</a>]</td></tr>
 <tr class="separator:a5337d97169efd20d499118676788210c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97eaba5b61706891a4da114bde40da4d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a97eaba5b61706891a4da114bde40da4d">buffer</a> [<a class="el" href="main_8c.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>]</td></tr>
-<tr class="separator:a97eaba5b61706891a4da114bde40da4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cdb3596e1570cb461f3def70adf8ea7"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a6cdb3596e1570cb461f3def70adf8ea7">i2c_bus</a> = NULL</td></tr>
 <tr class="separator:a6cdb3596e1570cb461f3def70adf8ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad605583359753fccc7077dee10856af9"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ad605583359753fccc7077dee10856af9">board_id</a> [<a class="el" href="m24c0x_8h.html#a8f20f69bda90530c8e16f4d55fdcddde">M24C02_CAP</a>+1] = {0}</td></tr>
@@ -285,21 +283,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >A buffer for the contents of the board ID EEPROM. </p>
-
-</div>
-</div>
-<a id="a97eaba5b61706891a4da114bde40da4d" name="a97eaba5b61706891a4da114bde40da4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a97eaba5b61706891a4da114bde40da4d">&#9670;&nbsp;</a></span>buffer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t buffer[<a class="el" href="main_8c.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Buffer for reading sensor messages when print option is selected. </p>
 
 </div>
 </div>

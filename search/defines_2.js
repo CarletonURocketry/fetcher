@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['default_5ftimeout_0',['DEFAULT_TIMEOUT',['../m10spg_8c.html#aad2dd72565852b91c809cd4685833b17',1,'m10spg.c']]],
-  ['drefcast_1',['drefcast',['../sensor__api_8c.html#a027be96558c283856700fd3531351fa9',1,'sensor_api.c']]]
+  ['clctr_5fargs_0',['clctr_args',['../collectors_8h.html#af93fb2db64ecef265e8e018d15f2d5ab',1,'collectors.h']]]
 ];

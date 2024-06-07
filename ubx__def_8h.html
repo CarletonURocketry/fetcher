@@ -108,8 +108,6 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXValsetPayload.html">UBXValsetPayload</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXUniqIDPayload.html">UBXUniqIDPayload</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXNavStatusPayload.html">UBXNavStatusPayload</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXNavPositionPayload.html">UBXNavPositionPayload</a></td></tr>
@@ -123,6 +121,12 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a46e8941a4cd8227a8abe927bef85ffb3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#a46e8941a4cd8227a8abe927bef85ffb3">MAX_VALSET_ITEM_BYTES</a>&#160;&#160;&#160;128</td></tr>
 <tr class="separator:a46e8941a4cd8227a8abe927bef85ffb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfe3dcaa6f7a901a62f45747f80460cc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#abfe3dcaa6f7a901a62f45747f80460cc">LAT_SCALE_TO_DEGREES</a>&#160;&#160;&#160;1e7f</td></tr>
+<tr class="separator:abfe3dcaa6f7a901a62f45747f80460cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4108b1f1a7d5a3b9c9e68682a217f07"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#ac4108b1f1a7d5a3b9c9e68682a217f07">LON_SCALE_TO_DEGREES</a>&#160;&#160;&#160;1e7f</td></tr>
+<tr class="separator:ac4108b1f1a7d5a3b9c9e68682a217f07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a375dfe855d12881cc831aef25cb89d85"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#a375dfe855d12881cc831aef25cb89d85">ALT_SCALE_TO_METERS</a>&#160;&#160;&#160;1e3f</td></tr>
+<tr class="separator:a375dfe855d12881cc831aef25cb89d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -139,6 +143,51 @@ Enumerations</h2></td></tr>
 <tr class="separator:ac59c3c9dfa29a546a7098ada548ae889"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a375dfe855d12881cc831aef25cb89d85" name="a375dfe855d12881cc831aef25cb89d85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a375dfe855d12881cc831aef25cb89d85">&#9670;&nbsp;</a></span>ALT_SCALE_TO_METERS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ALT_SCALE_TO_METERS&#160;&#160;&#160;1e3f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A conversion constant to go from the scale of UBX altitude (mm) to meters </p>
+
+</div>
+</div>
+<a id="abfe3dcaa6f7a901a62f45747f80460cc" name="abfe3dcaa6f7a901a62f45747f80460cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfe3dcaa6f7a901a62f45747f80460cc">&#9670;&nbsp;</a></span>LAT_SCALE_TO_DEGREES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LAT_SCALE_TO_DEGREES&#160;&#160;&#160;1e7f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A conversion constant to go from the scale of UBX latitude (1E-7deg) to regular degrees </p>
+
+</div>
+</div>
+<a id="ac4108b1f1a7d5a3b9c9e68682a217f07" name="ac4108b1f1a7d5a3b9c9e68682a217f07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4108b1f1a7d5a3b9c9e68682a217f07">&#9670;&nbsp;</a></span>LON_SCALE_TO_DEGREES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LON_SCALE_TO_DEGREES&#160;&#160;&#160;1e7f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A conversion constant to go from the scale of UBX longitude (1E-7deg) to regular degrees </p>
+
+</div>
+</div>
 <a id="a46e8941a4cd8227a8abe927bef85ffb3" name="a46e8941a4cd8227a8abe927bef85ffb3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a46e8941a4cd8227a8abe927bef85ffb3">&#9670;&nbsp;</a></span>MAX_VALSET_ITEM_BYTES</h2>
 
@@ -168,10 +217,11 @@ Enumerations</h2></td></tr>
 </div><div class="memdoc">
 <p >A struct representing the configuration layer selected in a configuration message (valset or valget) </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a99a30b5292848ef9d009df8f1ea7d953a65d0a31c6d257b00bf1bf6ea2b2d3a67" name="a99a30b5292848ef9d009df8f1ea7d953a65d0a31c6d257b00bf1bf6ea2b2d3a67"></a>RAM_LAYER&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a99a30b5292848ef9d009df8f1ea7d953a9f76ae7800dea63e4b7dd67f14fc13a4" name="a99a30b5292848ef9d009df8f1ea7d953a9f76ae7800dea63e4b7dd67f14fc13a4"></a>BBR_LAYER&#160;</td><td class="fielddoc"><p >The current configuration - cleared if the reciever enters power saving mode </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a99a30b5292848ef9d009df8f1ea7d953a65d0a31c6d257b00bf1bf6ea2b2d3a67" name="a99a30b5292848ef9d009df8f1ea7d953a65d0a31c6d257b00bf1bf6ea2b2d3a67"></a>RAM_LAYER&#160;</td><td class="fielddoc"><p >The current configuration - cleared if the reciever enters power saving mode </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a99a30b5292848ef9d009df8f1ea7d953a8e076e4f8c1d86316f5fbe2add80880e" name="a99a30b5292848ef9d009df8f1ea7d953a8e076e4f8c1d86316f5fbe2add80880e"></a>FLASH_LAYER&#160;</td><td class="fielddoc"><p >The battery backed memory configuration - not cleared unless the backup battery removed </p>
+<tr><td class="fieldname"><a id="a99a30b5292848ef9d009df8f1ea7d953a9f76ae7800dea63e4b7dd67f14fc13a4" name="a99a30b5292848ef9d009df8f1ea7d953a9f76ae7800dea63e4b7dd67f14fc13a4"></a>BBR_LAYER&#160;</td><td class="fielddoc"><p >The battery backed memory configuration - not cleared unless the backup battery removed </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a99a30b5292848ef9d009df8f1ea7d953a8e076e4f8c1d86316f5fbe2add80880e" name="a99a30b5292848ef9d009df8f1ea7d953a8e076e4f8c1d86316f5fbe2add80880e"></a>FLASH_LAYER&#160;</td><td class="fielddoc"><p >The flash configuration - does not exist on the M10 MAX </p>
 </td></tr>
 </table>
 
@@ -190,12 +240,13 @@ Enumerations</h2></td></tr>
 </div><div class="memdoc">
 <p >An enum representing the different sizes of values that a configuration message can contain </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac59c3c9dfa29a546a7098ada548ae889a4872045fee46e07bf2a94132a7de7e53" name="ac59c3c9dfa29a546a7098ada548ae889a4872045fee46e07bf2a94132a7de7e53"></a>UBX_TYPE_L&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ac59c3c9dfa29a546a7098ada548ae889a3356e69684a76eeeb392ef85060077d8" name="ac59c3c9dfa29a546a7098ada548ae889a3356e69684a76eeeb392ef85060077d8"></a>UBX_TYPE_U1&#160;</td><td class="fielddoc"><p >One bit, occupies one byte </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac59c3c9dfa29a546a7098ada548ae889a4872045fee46e07bf2a94132a7de7e53" name="ac59c3c9dfa29a546a7098ada548ae889a4872045fee46e07bf2a94132a7de7e53"></a>UBX_TYPE_L&#160;</td><td class="fielddoc"><p >One bit, occupies one byte </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ac59c3c9dfa29a546a7098ada548ae889a87e49e506426ca2f2050560b3bfbf193" name="ac59c3c9dfa29a546a7098ada548ae889a87e49e506426ca2f2050560b3bfbf193"></a>UBX_TYPE_U2&#160;</td><td class="fielddoc"><p >One byte </p>
+<tr><td class="fieldname"><a id="ac59c3c9dfa29a546a7098ada548ae889a3356e69684a76eeeb392ef85060077d8" name="ac59c3c9dfa29a546a7098ada548ae889a3356e69684a76eeeb392ef85060077d8"></a>UBX_TYPE_U1&#160;</td><td class="fielddoc"><p >One byte </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ac59c3c9dfa29a546a7098ada548ae889afdbde4860ac581ad9da74a4194d09030" name="ac59c3c9dfa29a546a7098ada548ae889afdbde4860ac581ad9da74a4194d09030"></a>UBX_TYPE_U4&#160;</td><td class="fielddoc"><p >Two bytes, little endian </p>
+<tr><td class="fieldname"><a id="ac59c3c9dfa29a546a7098ada548ae889a87e49e506426ca2f2050560b3bfbf193" name="ac59c3c9dfa29a546a7098ada548ae889a87e49e506426ca2f2050560b3bfbf193"></a>UBX_TYPE_U2&#160;</td><td class="fielddoc"><p >Two bytes, little endian </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac59c3c9dfa29a546a7098ada548ae889afdbde4860ac581ad9da74a4194d09030" name="ac59c3c9dfa29a546a7098ada548ae889afdbde4860ac581ad9da74a4194d09030"></a>UBX_TYPE_U4&#160;</td><td class="fielddoc"><p >Four bytes, little endian (excluding U8 because it's not used) </p>
 </td></tr>
 </table>
 
