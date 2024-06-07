@@ -72,13 +72,11 @@ const SensorTagData SENSOR_TAG_DATA[] = {
                     .has_id = 0},
     [TAG_VOLTAGE] =
         {.name = "Voltage", .unit = "mV", .fmt_str = "%d", .dsize = sizeof(int16_t), .dtype = TYPE_I16, .has_id = 1},
-    /* [TAG_LATITUDE] = */
-    /*     {.name = "Latitude", .unit = "0.1udeg", .fmt_str = "%d", .dsize = sizeof(int32_t), .dtype = TYPE_I32}, */
     /* [TAG_SPEED] = */
     /*     {.name = "Ground speed", .unit = "cm/s", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype = TYPE_U32}, */
     /* [TAG_COURSE] = {.name = "Course", .unit = "10udeg", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype =
        TYPE_U32}, */
-    /* [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8}, */
+    [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8},
 };
 
 /**

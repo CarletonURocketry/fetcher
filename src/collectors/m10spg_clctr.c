@@ -32,27 +32,27 @@ void *m10spg_collector(void *args) {
         // TODO - Don't read if the next epoch hasn't happened
         union read_buffer buf;
         common_t msg;
-        /* err = m10spg_send_command(&loc, UBX_NAV_STAT, &buf, sizeof(UBXNavStatusPayload)); */
-        /* // Check if we have a valid fix, no point logging bad data */
-        /* if (err == EOK) { */
-        /*     // Make sure that the fix is valid (has a reasonable value and is not a no-fix) */
-        /*     if ((buf.stat.flags & 0x01) && buf.stat.gpsFix) { */
-        /*         msg.type = TAG_FIX; */
-        /*         msg.U8 = buf.stat.gpsFix; */
-        /*         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
-        /*             fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
-        /*         } */
-        // The else here is commented out so you can see the data processing is working even while an invalid
-        // fix is held
-        /*     } // else { */
-        /*     //    // Instead of doing a continue, should sleep until the next epoch */
-        /*     //    printf("Bad GPS fix, skipping\n"); */
-        /*     //    continue; */
-        /*     //} */
-        /* } else { */
-        /*     fprintf(stderr, "M10SPG failed to read status: %s\n", strerror(err)); */
-        /*     continue; */
-        /* } */
+        err = m10spg_send_command(&loc, UBX_NAV_STAT, &buf, sizeof(UBXNavStatusPayload));
+        // Check if we have a valid fix, no point logging bad data */
+        if (err == EOK) {
+            // Make sure that the fix is valid (has a reasonable value and is not a no-fix) */
+            // if ((buf.stat.flags & 0x01) && buf.stat.gpsFix) {
+            msg.type = TAG_FIX;
+            msg.data.U8 = buf.stat.gpsFix;
+            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
+                fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
+            }
+            // The else here is commented out so you can see the data processing is working even while an invalid
+            // fix is held
+            //}  else {
+            //    // Instead of doing a continue, should sleep until the next epoch */
+            //    printf("Bad GPS fix, skipping\n"); */
+            //    continue;
+            //}
+        } else {
+            fprintf(stderr, "M10SPG failed to read status: %s\n", strerror(err));
+            continue;
+        }
 
         // Read position
         err = m10spg_send_command(&loc, UBX_NAV_POSLLH, &buf, sizeof(UBXNavPositionPayload));
