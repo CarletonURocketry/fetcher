@@ -52,8 +52,8 @@ typedef enum {
     TAG_LINEAR_ACCEL_REL = 0x7, /**< Relative linear acceleration in meters per second squared */
     TAG_LINEAR_ACCEL_ABS = 0x8, /**< Absolute linear acceleration in meters per second squared */
     TAG_COORDS = 0x9,           /**< Latitude and longitude in degrees */
-    TAG_VOLTAGE = 0x10,         /**< Voltage in volts with a unique ID. */
-    TAG_FIX = 0xb,
+    TAG_VOLTAGE = 0xa,          /**< Voltage in volts with a unique ID. */
+    TAG_FIX = 0xb,              /**< Fix type representing the type of fix a gps has */
 } SensorTag;
 
 /** Describes the data type of the data associated with a tag. */
