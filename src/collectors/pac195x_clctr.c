@@ -8,12 +8,6 @@
 /** The RSENSE value connected to the PAC1952-2 in milliohms. */
 #define RSENSE 18
 
-typedef struct {
-    uint8_t type;
-    uint8_t id;
-    int16_t voltage;
-} voltage_msg_t;
-
 void *pac1952_2_collector(void *args) {
 
     /* Open message queue. */
@@ -48,7 +42,7 @@ void *pac1952_2_collector(void *args) {
     }
 
     uint16_t vbus[2];
-    voltage_msg_t msg;
+    common_t msg;
 
     for (;;) {
 
@@ -63,7 +57,7 @@ void *pac1952_2_collector(void *args) {
         // Calculate voltage on SENSE 1
         msg.type = TAG_VOLTAGE;
         msg.id = 1;
-        msg.voltage = pac195x_calc_bus_voltage(32, vbus[0], false);
+        msg.data.U32 = pac195x_calc_bus_voltage(32, vbus[0], false);
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "Could not send voltage measurement: %s\n", strerror(errno));
         }
@@ -71,7 +65,7 @@ void *pac1952_2_collector(void *args) {
         // Calculate voltage on SENSE 2
         msg.type = TAG_VOLTAGE;
         msg.id = 2;
-        msg.voltage = pac195x_calc_bus_voltage(32, vbus[1], false);
+        msg.data.U32 = pac195x_calc_bus_voltage(32, vbus[1], false);
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
             fprintf(stderr, "Could not send voltage measurement: %s\n", strerror(errno));
         }

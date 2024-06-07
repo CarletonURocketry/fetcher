@@ -132,8 +132,8 @@ inline errno_t __attribute__((always_inline)) sensor_open(Sensor sensor) { retur
  * @param nbytes Will be populated with the number of bytes that were stored in buf after the read.
  * @return Error status of setting up the sensor. EOK if successful.
  */
-inline errno_t __attribute__((always_inline)) sensor_read(Sensor sensor, const SensorTag tag, void *buf,
-                                                          size_t *nbytes) {
+inline errno_t __attribute__((always_inline))
+sensor_read(Sensor sensor, const SensorTag tag, void *buf, size_t *nbytes) {
     return sensor.read(&sensor, tag, buf, nbytes);
 }
 
