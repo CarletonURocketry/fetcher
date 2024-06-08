@@ -76,6 +76,16 @@ typedef struct {
     uint32_t msss;   /**< Milliseconds since startup */
 } UBXNavStatusPayload;
 
+/** A struct representing the different fix types the GPS can have */
+typedef enum {
+    GPS_NO_FIX = 0x00,             /**< The gps has no fix, do not use data */
+    GPS_DEAD_RECKONING = 0x01,     /**< Dead reckoning only (uses previous velocity and position information) */
+    GPS_2D_FIX = 0x02,             /**< Two dimensional fix (no altitude) */
+    GPS_3D_FIX = 0x03,             /**< Three dimensional fix */
+    GPS_FIX_DEAD_RECKONING = 0x04, /**< Dead reckoning and gps combined */
+    GPS_TIME_ONLY = 0x05,          /**< Time solution only, do not use other data */
+} GPSFixType;
+
 /** A struct representing the UBX-NAV-POSLLH (position and height) payload */
 typedef struct {
     uint32_t iTOW;  /**< The GPS time of week of the navigation epoch that created this payload */
