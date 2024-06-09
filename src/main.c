@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
     uint32_t speed = BUS_SPEED;
     int err = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
     if (err) {
-        fprintf(stderr, "Failed to set bus speed to %u with error %s\n", speed, strerror(err));
+        fetcher_log(stderr, LOG_ERROR, "Failed to set bus speed to %u with error %s", speed, strerror(err));
         exit(EXIT_FAILURE);
     }
 
@@ -137,7 +137,7 @@ int main(int argc, char **argv) {
     SensorLocation eeprom_loc = {.bus = bus, .addr = {.addr = BOARD_ID_ADDR, .fmt = I2C_ADDRFMT_7BIT}};
     err = m24c0x_seq_read_rand(&eeprom_loc, 0x00, (uint8_t *)board_id, M24C02_CAP);
     if (err) {
-        fprintf(stderr, "Failed to read EEPROM configuration: %s.\n", strerror(err));
+        fetcher_log(stderr, LOG_ERROR, "Failed to read EEPROM configuration: %s", strerror(err));
         exit(EXIT_FAILURE);
     }
     board_id[M24C02_CAP] = '\0'; // Make sure the string ends with a null terminator
@@ -176,13 +176,13 @@ int main(int argc, char **argv) {
             /* Create sensor data collection threads. */
             collector_t collector = collector_search(sensor_name);
             if (collector == NULL) {
-                fprintf(stderr, "Collector not implemented for sensor %s\n", sensor_name);
+                fetcher_log(stderr, LOG_ERROR, "Collector not implemented for sensor %s", sensor_name);
                 continue; // Just don't create thread
             }
             collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = addresses[i]};
             err = pthread_create(&collector_threads[num_sensors], NULL, collector, &collector_args[num_sensors]);
             if (err != EOK) {
-                fprintf(stderr, "Could not create %s collector: %s\n", sensor_name, strerror(err));
+                fetcher_log(stderr, LOG_ERROR, "Could not create %s collector: %s", sensor_name, strerror(err));
                 exit(EXIT_FAILURE);
             }
             num_sensors++; // Record that a new sensor was created
@@ -208,7 +208,8 @@ int main(int argc, char **argv) {
     while (print_output) {
         if (mq_receive(sensor_q, (char *)&recv_msg, sensor_q_attr.mq_msgsize, NULL) == -1) {
             // Handle error without exiting
-            fprintf(stderr, "Failed to receive message on queue '%s': %s\n", SENSOR_QUEUE, strerror(errno));
+            fetcher_log(stderr, LOG_ERROR, "Failed to receive message on queue '%s': %s", SENSOR_QUEUE,
+                        strerror(errno));
             continue;
         }
         // Successfully received data, print it to output stream
