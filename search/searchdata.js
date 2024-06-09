@@ -6,9 +6,9 @@ var indexSectionsWithContent =
   3: "_cglmprs",
   4: "abcdfghilmnoprstuvxyz",
   5: "c",
-  6: "agimpsu",
+  6: "agilmpsu",
   7: "abcdfglmnoprstuvwxyz",
-  8: "abcdglmnprstw",
+  8: "abcdfglmnprstw",
   9: "f"
 };
 
