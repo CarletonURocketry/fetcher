@@ -8,6 +8,7 @@
 #include "collectors/collectors.h"
 #include "drivers/m24c0x/m24c0x.h"
 #include "drivers/sensor_api.h"
+#include "logging.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -104,21 +105,23 @@ int main(int argc, char **argv) {
     };
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, &q_attr);
     if (sensor_q == -1) {
-        fprintf(stderr, "Could not create internal queue '%s' with error: '%s'\n", SENSOR_QUEUE, strerror(errno));
+        fetcher_log(stderr, LOG_ERROR, "Could not create internal queue '%s' with error: '%s'", SENSOR_QUEUE,
+                    strerror(errno));
         exit(EXIT_FAILURE);
     }
 
     // Get message queue attributes since it's necessary to know max message size for receiving
     struct mq_attr sensor_q_attr;
     if (mq_getattr(sensor_q, &sensor_q_attr) == -1) {
-        fprintf(stderr, "Failed to get attributes of message queue '%s': '%s'\n", SENSOR_QUEUE, strerror(errno));
+        fetcher_log(stderr, LOG_ERROR, "Failed to get attributes of message queue '%s': '%s'", SENSOR_QUEUE,
+                    strerror(errno));
         exit(EXIT_FAILURE);
     }
 
     /* Open I2C. */
     int bus = open(i2c_bus, O_RDWR);
     if (bus < 0) {
-        fprintf(stderr, "Could not open I2C bus with error %s.\n", strerror(errno));
+        fetcher_log(stderr, LOG_ERROR, "Could not open I2C bus with error %s.", strerror(errno));
         exit(EXIT_FAILURE);
     }
 
@@ -163,10 +166,10 @@ int main(int argc, char **argv) {
         if (select_sensor != NULL) {
             if (strncasecmp(select_sensor, sensor_name, MAX_SENSOR_NAME) != 0) {
                 // Skip this sensor, not the right one
-                fprintf(stderr, "Skipping sensor %s\n", sensor_name);
+                fetcher_log(stderr, LOG_ERROR, "Skipping sensor %s", sensor_name);
                 continue;
             } else {
-                fprintf(stderr, "Found sensor %s, starting\n", select_sensor);
+                fetcher_log(stderr, LOG_INFO, "Found sensor %s, starting...", select_sensor);
             }
         }
         for (uint8_t i = 0; i < naddrs; i++) {
