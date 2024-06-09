@@ -76,7 +76,7 @@ const SensorTagData SENSOR_TAG_DATA[] = {
     /*     {.name = "Ground speed", .unit = "cm/s", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype = TYPE_U32}, */
     /* [TAG_COURSE] = {.name = "Course", .unit = "10udeg", .fmt_str = "%d", .dsize = sizeof(uint32_t), .dtype =
        TYPE_U32}, */
-    [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8},
+    /* [TAG_FIX] = {.name = "Fix type", .unit = "", .fmt_str = "0x%x", .dsize = sizeof(uint8_t), .dtype = TYPE_U8}, */
 };
 
 /**
