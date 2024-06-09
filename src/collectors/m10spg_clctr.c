@@ -54,19 +54,6 @@ void *m10spg_collector(void *args) {
             continue;
         }
 
-        // Make sure that the fix is valid
-        if (buf.stat.flags & 0x1) {
-            msg.type = TAG_FIX;
-            msg.data.U8 = buf.stat.gpsFix;
-            fix_type = buf.stat.gpsFix;
-            send_msg(sensor_q, msg);
-        } else {
-            // Send a no-fix so that it's clear we're not getting anything
-            msg.type = TAG_FIX;
-            msg.data.U8 = GPS_NO_FIX;
-            send_msg(sensor_q, msg);
-        }
-
         // Don't bother reading any information if there's no fix
         if (fix_type == GPS_NO_FIX) {
             fetcher_log(stderr, LOG_WARN, "M10SPG could not get fix.");
@@ -75,51 +62,51 @@ void *m10spg_collector(void *args) {
 
         // Read position
         err = m10spg_send_command(&loc, UBX_NAV_POSLLH, &buf, sizeof(UBXNavPositionPayload));
-        if (err == EOK) {
-            switch (fix_type) {
-            case GPS_3D_FIX:
-                msg.type = TAG_ALTITUDE_SEA;
-                msg.data.FLOAT = (((float)buf.pos.hMSL) / ALT_SCALE_TO_METERS);
-                send_msg(sensor_q, msg);
-                // FALL THROUGH
-            case GPS_FIX_DEAD_RECKONING:
-                // FALL THROUGH
-            case GPS_2D_FIX:
-                // FALL THROUGH
-            case GPS_DEAD_RECKONING:
-                msg.type = TAG_COORDS;
-                msg.data.VEC2D_I32.x = buf.pos.lat;
-                msg.data.VEC2D_I32.y = buf.pos.lon;
-                send_msg(sensor_q, msg);
-                break;
-            case GPS_TIME_ONLY:
-                break;
-            default:
-                break;
-            }
-        } else {
+        if (err) {
             fetcher_log(stderr, LOG_ERROR, "M10SPG failed to read position: %s", strerror(err));
             continue;
         }
 
-        // Read velocity
-        /* err = m10spg_send_command(&loc, UBX_NAV_VELNED, &buf, sizeof(UBXNavVelocityPayload)); */
-        /* if (err == EOK) { */
-        /*     msg.type = TAG_SPEED; */
-        /*     msg.U32 = buf.vel.gSpeed; */
-        /*     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
-        /*         fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
-        /*     } */
-        /*     msg.type = TAG_COURSE; */
-        /*     msg.U32 = buf.vel.heading; */
-        /*     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
-        /*         fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
-        /*     } */
-        /* } else { */
-        /*     fprintf(stderr, "M10SPG failed to read velocity: %s\n", strerror(err)); */
-        /*     continue; */
-        /* } */
-        fetcher_log(stderr, LOG_ERROR, "%s", strerror(err));
-        return (void *)((uint64_t)err);
+        switch (fix_type) {
+        case GPS_3D_FIX:
+            msg.type = TAG_ALTITUDE_SEA;
+            msg.data.FLOAT = (((float)buf.pos.hMSL) / ALT_SCALE_TO_METERS);
+            send_msg(sensor_q, msg);
+            // FALL THROUGH
+        case GPS_FIX_DEAD_RECKONING:
+            // FALL THROUGH
+        case GPS_2D_FIX:
+            // FALL THROUGH
+        case GPS_DEAD_RECKONING:
+            msg.type = TAG_COORDS;
+            msg.data.VEC2D_I32.x = buf.pos.lat;
+            msg.data.VEC2D_I32.y = buf.pos.lon;
+            send_msg(sensor_q, msg);
+            break;
+        case GPS_TIME_ONLY:
+            break;
+        default:
+            break;
+        }
     }
+
+    // Read velocity
+    /* err = m10spg_send_command(&loc, UBX_NAV_VELNED, &buf, sizeof(UBXNavVelocityPayload)); */
+    /* if (err == EOK) { */
+    /*     msg.type = TAG_SPEED; */
+    /*     msg.U32 = buf.vel.gSpeed; */
+    /*     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
+    /*         fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
+    /*     } */
+    /*     msg.type = TAG_COURSE; */
+    /*     msg.U32 = buf.vel.heading; */
+    /*     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
+    /*         fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
+    /*     } */
+    /* } else { */
+    /*     fprintf(stderr, "M10SPG failed to read velocity: %s\n", strerror(err)); */
+    /*     continue; */
+    /* } */
+    fetcher_log(stderr, LOG_ERROR, "%s", strerror(err));
+    return (void *)((uint64_t)err);
 }
