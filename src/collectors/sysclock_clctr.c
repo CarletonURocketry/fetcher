@@ -1,5 +1,6 @@
 #include "../drivers/sensor_api.h"
 #include "collectors.h"
+#include "logging.h"
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
@@ -16,7 +17,8 @@ void *sysclock_collector(void *args) {
     /* Open message queue to send data. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
-        fprintf(stderr, "Sysclock collector could not open message queue '%s': '%s' \n", SENSOR_QUEUE, strerror(errno));
+        fetcher_log(stderr, LOG_ERROR, "Sysclock collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
+                    strerror(errno));
         return (void *)((uint64_t)errno);
     }
 
@@ -41,7 +43,7 @@ void *sysclock_collector(void *args) {
 
         // Infinitely send the time
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-            fprintf(stderr, "Sysclock couldn't send message: %s.\n", strerror(errno));
+            fetcher_log(stderr, LOG_ERROR, "Sysclock couldn't send message: %s.", strerror(errno));
         }
         usleep(10000); // Little sleep to not flood message queue
     }

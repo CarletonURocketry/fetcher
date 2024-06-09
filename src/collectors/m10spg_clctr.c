@@ -1,6 +1,7 @@
 #include "../drivers/m10spg/m10spg.h"
 #include "../drivers/m10spg/ubx_def.h"
 #include "collectors.h"
+#include "logging.h"
 
 union read_buffer {
     UBXNavPositionPayload pos;
@@ -13,7 +14,8 @@ void *m10spg_collector(void *args) {
     /* Open message queue. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
-        fprintf(stderr, "M10SPG collector could not open message queue '%s': '%s' \n", SENSOR_QUEUE, strerror(errno));
+        fetcher_log(stderr, LOG_ERROR, "M10SPG collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
+                    strerror(errno));
         return (void *)((uint64_t)errno);
     }
 
@@ -24,7 +26,7 @@ void *m10spg_collector(void *args) {
 
     int err = m10spg_open(&loc);
     if (err != EOK) {
-        fprintf(stderr, "Could not open M10SPG: %s\n", strerror(err));
+        fetcher_log(stderr, LOG_ERROR,"Could not open M10SPG: %s", strerror(err));
         return (void *)((uint64_t)err);
     }
 
@@ -40,7 +42,7 @@ void *m10spg_collector(void *args) {
             msg.type = TAG_FIX;
             msg.data.U8 = buf.stat.gpsFix;
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-                fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
+                fetcher_log(stderr, LOG_ERROR, "M10SPG couldn't send message: %s.", strerror(errno));
             }
             // The else here is commented out so you can see the data processing is working even while an invalid
             // fix is held
@@ -50,7 +52,7 @@ void *m10spg_collector(void *args) {
             //    continue;
             //}
         } else {
-            fprintf(stderr, "M10SPG failed to read status: %s\n", strerror(err));
+            fetcher_log(stderr, LOG_ERROR, "M10SPG failed to read status: %s", strerror(err));
             continue;
         }
 
@@ -62,15 +64,15 @@ void *m10spg_collector(void *args) {
             msg.data.VEC2D_I32.y = buf.pos.lon;
 
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-                fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
+                fetcher_log(stderr, LOG_ERROR, "M10SPG couldn't send message: %s.", strerror(errno));
             }
             msg.type = TAG_ALTITUDE_SEA;
             msg.data.FLOAT = (((float)buf.pos.hMSL) / ALT_SCALE_TO_METERS);
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-                fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno));
+                fetcher_log(stderr, LOG_ERROR, "M10SPG couldn't send message: %s.", strerror(errno));
             }
         } else {
-            fprintf(stderr, "M10SPG failed to read position: %s\n", strerror(err));
+            fetcher_log(stderr, LOG_ERROR, "M10SPG failed to read position: %s", strerror(err));
             continue;
         }
 
@@ -92,6 +94,6 @@ void *m10spg_collector(void *args) {
         /*     continue; */
         /* } */
     }
-    fprintf(stderr, "%s\n", strerror(err));
+    fetcher_log(stderr, LOG_ERROR, "%s", strerror(err));
     return (void *)((uint64_t)err);
 }
