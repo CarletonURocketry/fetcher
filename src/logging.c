@@ -35,8 +35,10 @@ void _fetcher_log(FILE *stream, log_level_e lvl, const char *file, const char *f
     strftime(time_str, sizeof(time_str), TIME_FORMAT, tm);
 
     // Log to stream
+    flockfile(stream);
     fprintf(stream, "[%s] %s fetcher %s:%d - %s() - \"", time_str, LEVEL_STRING[lvl], file, line, func);
     vfprintf(stream, fmt_string, args);
     fputc('"', stream);
     fputc('\n', stream);
+    funlockfile(stream);
 }

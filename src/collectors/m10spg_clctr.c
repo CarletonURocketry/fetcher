@@ -26,7 +26,7 @@ void *m10spg_collector(void *args) {
 
     int err = m10spg_open(&loc);
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR,"Could not open M10SPG: %s", strerror(err));
+        fetcher_log(stderr, LOG_ERROR, "Could not open M10SPG: %s", strerror(err));
         return (void *)((uint64_t)err);
     }
 
