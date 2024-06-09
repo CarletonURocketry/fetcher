@@ -2,7 +2,6 @@
 #include "../drivers/m10spg/ubx_def.h"
 #include "collectors.h"
 #include "logging.h"
-#include <cstdio>
 
 union read_buffer {
     UBXNavPositionPayload pos;
@@ -15,7 +14,7 @@ union read_buffer {
  */
 #define send_msg(sensor_q, msg)                                                                                        \
     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {                                                       \
-        fetcher_log(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                         \
+        fetcher_log(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                           \
     }
 
 void *m10spg_collector(void *args) {
