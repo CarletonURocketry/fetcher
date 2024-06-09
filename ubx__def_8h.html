@@ -141,6 +141,17 @@ Enumerations</h2></td></tr>
 , <a class="el" href="ubx__def_8h.html#ac59c3c9dfa29a546a7098ada548ae889afdbde4860ac581ad9da74a4194d09030">UBX_TYPE_U4</a> = 4
  }</td></tr>
 <tr class="separator:ac59c3c9dfa29a546a7098ada548ae889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5593a1fbaa68a265a62fd586ee2523c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0">GPSFixType</a> { <br />
+&#160;&#160;<a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a8f223f7b67de244b4ba89af487e7fc81">GPS_NO_FIX</a> = 0x00
+, <a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0afbd83fa9459731bd8f2c7d72d866ea9a">GPS_DEAD_RECKONING</a> = 0x01
+, <a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a416d1e3e046444fa6dc6d59542586298">GPS_2D_FIX</a> = 0x02
+, <a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a33af21bd371a48359515ddc901aacbb3">GPS_3D_FIX</a> = 0x03
+, <br />
+&#160;&#160;<a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a1577b00cee31a656d2e636a8e0d28b81">GPS_FIX_DEAD_RECKONING</a> = 0x04
+, <a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a93c5464286d36d3a494fcb559f134baf">GPS_TIME_ONLY</a> = 0x05
+<br />
+ }</td></tr>
+<tr class="separator:a5593a1fbaa68a265a62fd586ee2523c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a375dfe855d12881cc831aef25cb89d85" name="a375dfe855d12881cc831aef25cb89d85"></a>
@@ -204,6 +215,35 @@ Enumerations</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a5593a1fbaa68a265a62fd586ee2523c0" name="a5593a1fbaa68a265a62fd586ee2523c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5593a1fbaa68a265a62fd586ee2523c0">&#9670;&nbsp;</a></span>GPSFixType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0">GPSFixType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A struct representing the different fix types the GPS can have </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a5593a1fbaa68a265a62fd586ee2523c0a8f223f7b67de244b4ba89af487e7fc81" name="a5593a1fbaa68a265a62fd586ee2523c0a8f223f7b67de244b4ba89af487e7fc81"></a>GPS_NO_FIX&#160;</td><td class="fielddoc"><p >The gps has no fix, do not use data </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a5593a1fbaa68a265a62fd586ee2523c0afbd83fa9459731bd8f2c7d72d866ea9a" name="a5593a1fbaa68a265a62fd586ee2523c0afbd83fa9459731bd8f2c7d72d866ea9a"></a>GPS_DEAD_RECKONING&#160;</td><td class="fielddoc"><p >Dead reckoning only (uses previous velocity and position information) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a5593a1fbaa68a265a62fd586ee2523c0a416d1e3e046444fa6dc6d59542586298" name="a5593a1fbaa68a265a62fd586ee2523c0a416d1e3e046444fa6dc6d59542586298"></a>GPS_2D_FIX&#160;</td><td class="fielddoc"><p >Two dimensional fix (no altitude) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a5593a1fbaa68a265a62fd586ee2523c0a33af21bd371a48359515ddc901aacbb3" name="a5593a1fbaa68a265a62fd586ee2523c0a33af21bd371a48359515ddc901aacbb3"></a>GPS_3D_FIX&#160;</td><td class="fielddoc"><p >Three dimensional fix </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a5593a1fbaa68a265a62fd586ee2523c0a1577b00cee31a656d2e636a8e0d28b81" name="a5593a1fbaa68a265a62fd586ee2523c0a1577b00cee31a656d2e636a8e0d28b81"></a>GPS_FIX_DEAD_RECKONING&#160;</td><td class="fielddoc"><p >Dead reckoning and gps combined </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a5593a1fbaa68a265a62fd586ee2523c0a93c5464286d36d3a494fcb559f134baf" name="a5593a1fbaa68a265a62fd586ee2523c0a93c5464286d36d3a494fcb559f134baf"></a>GPS_TIME_ONLY&#160;</td><td class="fielddoc"><p >Time solution only, do not use other data </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <a id="a99a30b5292848ef9d009df8f1ea7d953" name="a99a30b5292848ef9d009df8f1ea7d953"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a99a30b5292848ef9d009df8f1ea7d953">&#9670;&nbsp;</a></span>UBXConfigLayer</h2>
 

@@ -15,5 +15,11 @@ var searchData=
   ['g_5fodr_5f52_12',['G_ODR_52',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa732c5e8a9396d72d37aadde0bc08a285',1,'lsm6dso32.h']]],
   ['g_5fodr_5f6664_13',['G_ODR_6664',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa3a07357b5e55c76d79a02ec8ba744ddf',1,'lsm6dso32.h']]],
   ['g_5fodr_5f833_14',['G_ODR_833',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa899c732ef0caea0ce747856b91d32a39',1,'lsm6dso32.h']]],
-  ['gpio_5falert2_15',['GPIO_ALERT2',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741dae6770edbef43b458aff7df54a4c060c1',1,'pac195x.c']]]
+  ['gpio_5falert2_15',['GPIO_ALERT2',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741dae6770edbef43b458aff7df54a4c060c1',1,'pac195x.c']]],
+  ['gps_5f2d_5ffix_16',['GPS_2D_FIX',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a416d1e3e046444fa6dc6d59542586298',1,'ubx_def.h']]],
+  ['gps_5f3d_5ffix_17',['GPS_3D_FIX',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a33af21bd371a48359515ddc901aacbb3',1,'ubx_def.h']]],
+  ['gps_5fdead_5freckoning_18',['GPS_DEAD_RECKONING',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0afbd83fa9459731bd8f2c7d72d866ea9a',1,'ubx_def.h']]],
+  ['gps_5ffix_5fdead_5freckoning_19',['GPS_FIX_DEAD_RECKONING',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a1577b00cee31a656d2e636a8e0d28b81',1,'ubx_def.h']]],
+  ['gps_5fno_5ffix_20',['GPS_NO_FIX',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a8f223f7b67de244b4ba89af487e7fc81',1,'ubx_def.h']]],
+  ['gps_5ftime_5fonly_21',['GPS_TIME_ONLY',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a93c5464286d36d3a494fcb559f134baf',1,'ubx_def.h']]]
 ];

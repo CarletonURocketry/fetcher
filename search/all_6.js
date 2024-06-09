@@ -18,10 +18,17 @@ var searchData=
   ['g_5fodr_5f833_15',['G_ODR_833',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599aa899c732ef0caea0ce747856b91d32a39',1,'lsm6dso32.h']]],
   ['generate_5fcrc8_5flookup_16',['generate_crc8_lookup',['../crc_8c.html#a7bf70573c0a65e722831f78ec302a7bb',1,'generate_crc8_lookup(CRC8LookupTable *lookup, uint8_t polynomial):&#160;crc.c'],['../crc_8h.html#a7bf70573c0a65e722831f78ec302a7bb',1,'generate_crc8_lookup(CRC8LookupTable *lookup, uint8_t polynomial):&#160;crc.c']]],
   ['gpio_5falert2_17',['GPIO_ALERT2',['../pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741dae6770edbef43b458aff7df54a4c060c1',1,'pac195x.c']]],
-  ['gpsfix_18',['gpsFix',['../structUBXNavStatusPayload.html#a78e4f2aa22f0326dcf2b10f890340b45',1,'UBXNavStatusPayload']]],
-  ['gravit_5facc_19',['GRAVIT_ACC',['../lsm6dso32_8c.html#ae93eef7df99ce96ee99ff06b5bd78ac3',1,'lsm6dso32.c']]],
-  ['ground_5fpressure_20',['ground_pressure',['../structMS5611Context.html#ab42664a67bac2ec087dacfe2cfec0510',1,'MS5611Context']]],
-  ['gspeed_21',['gSpeed',['../structUBXNavVelocityPayload.html#ad8cfac802d3a272394c1693d5258509b',1,'UBXNavVelocityPayload']]],
-  ['gyro_5ffsr_5fe_22',['gyro_fsr_e',['../lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90',1,'lsm6dso32.h']]],
-  ['gyro_5fodr_5fe_23',['gyro_odr_e',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a',1,'lsm6dso32.h']]]
+  ['gps_5f2d_5ffix_18',['GPS_2D_FIX',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a416d1e3e046444fa6dc6d59542586298',1,'ubx_def.h']]],
+  ['gps_5f3d_5ffix_19',['GPS_3D_FIX',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a33af21bd371a48359515ddc901aacbb3',1,'ubx_def.h']]],
+  ['gps_5fdead_5freckoning_20',['GPS_DEAD_RECKONING',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0afbd83fa9459731bd8f2c7d72d866ea9a',1,'ubx_def.h']]],
+  ['gps_5ffix_5fdead_5freckoning_21',['GPS_FIX_DEAD_RECKONING',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a1577b00cee31a656d2e636a8e0d28b81',1,'ubx_def.h']]],
+  ['gps_5fno_5ffix_22',['GPS_NO_FIX',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a8f223f7b67de244b4ba89af487e7fc81',1,'ubx_def.h']]],
+  ['gps_5ftime_5fonly_23',['GPS_TIME_ONLY',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a93c5464286d36d3a494fcb559f134baf',1,'ubx_def.h']]],
+  ['gpsfix_24',['gpsFix',['../structUBXNavStatusPayload.html#a78e4f2aa22f0326dcf2b10f890340b45',1,'UBXNavStatusPayload']]],
+  ['gpsfixtype_25',['GPSFixType',['../ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0',1,'ubx_def.h']]],
+  ['gravit_5facc_26',['GRAVIT_ACC',['../lsm6dso32_8c.html#ae93eef7df99ce96ee99ff06b5bd78ac3',1,'lsm6dso32.c']]],
+  ['ground_5fpressure_27',['ground_pressure',['../structMS5611Context.html#ab42664a67bac2ec087dacfe2cfec0510',1,'MS5611Context']]],
+  ['gspeed_28',['gSpeed',['../structUBXNavVelocityPayload.html#ad8cfac802d3a272394c1693d5258509b',1,'UBXNavVelocityPayload']]],
+  ['gyro_5ffsr_5fe_29',['gyro_fsr_e',['../lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90',1,'lsm6dso32.h']]],
+  ['gyro_5fodr_5fe_30',['gyro_odr_e',['../lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a',1,'lsm6dso32.h']]]
 ];

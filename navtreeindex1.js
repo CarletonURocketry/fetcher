@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"main_8c.html#ad605583359753fccc7077dee10856af9":[1,0,0,6,7],
 "main_8c.html#ae87bb274fc7bda9c66edab64ea9ddeaf":[1,0,0,6,2],
 "main_8c.html#aee602b1e81e37be4b6a8e8609deab9fd":[1,0,0,6,9],
 "main_8c.html#afadb863a7dece64ab5df54bcc753298d":[1,0,0,6,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "structSensor.html#a810cfcc9bbfaf705f69c353b7d26acfb":[0,0,6,5],
 "structSensor.html#a8f3139bb67729fe6381e7de18ddedbfb":[0,0,6,0],
 "structSensor.html#aab8250f2beb3f7bd73af566c03a16ce5":[0,0,6,3],
-"structSensor.html#ae609668d0669ccdfbf525651997823b1":[0,0,6,2],
-"structSensor.html#aee84ea1743e4d2981a44f5975d7f5c1f":[0,0,6,1]
+"structSensor.html#ae609668d0669ccdfbf525651997823b1":[0,0,6,2]
 };

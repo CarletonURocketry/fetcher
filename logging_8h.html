@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('logging_8h.html',''); initResizable();
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:afd5bb68e40b941e2a29cc7ba6a967a56"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="logging_8h.html#afd5bb68e40b941e2a29cc7ba6a967a56">fetcher_log</a>(stream,  lvl,  fmt_string, ...)&#160;&#160;&#160;    <a class="el" href="logging_8h.html#a1647fa6e470d40bf70d35ae6300a9aa2">_fetcher_log</a>((stream), (lvl), __FILE__, __FUNCTION__, __LINE__, (fmt_string), __VA_ARGS__)</td></tr>
+<tr class="memitem:afd5bb68e40b941e2a29cc7ba6a967a56"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="logging_8h.html#afd5bb68e40b941e2a29cc7ba6a967a56">fetcher_log</a>(stream,  lvl,  fmt_string, ...)&#160;&#160;&#160;    <a class="el" href="logging_8h.html#a1647fa6e470d40bf70d35ae6300a9aa2">_fetcher_log</a>((stream), (lvl), __FILE__, __FUNCTION__, __LINE__, (fmt_string), ##__VA_ARGS__)</td></tr>
 <tr class="separator:afd5bb68e40b941e2a29cc7ba6a967a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
@@ -152,7 +152,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    <a class="el" href="logging_8h.html#a1647fa6e470d40bf70d35ae6300a9aa2">_fetcher_log</a>((stream), (lvl), __FILE__, __FUNCTION__, __LINE__, (fmt_string), __VA_ARGS__)</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="logging_8h.html#a1647fa6e470d40bf70d35ae6300a9aa2">_fetcher_log</a>((stream), (lvl), __FILE__, __FUNCTION__, __LINE__, (fmt_string), ##__VA_ARGS__)</td>
         </tr>
       </table>
 </div><div class="memdoc">
