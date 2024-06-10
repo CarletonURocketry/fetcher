@@ -54,6 +54,8 @@ void *m10spg_collector(void *args) {
             continue;
         }
 
+        fix_type = buf.stat.gpsFix;
+
         // Don't bother reading any information if there's no fix
         if (fix_type == GPS_NO_FIX) {
             fetcher_log(stderr, LOG_WARN, "M10SPG could not get fix.");
