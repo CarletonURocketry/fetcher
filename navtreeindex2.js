@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"structSensor.html#aee84ea1743e4d2981a44f5975d7f5c1f":[0,0,6,1],
 "structSensorContext.html":[0,0,7],
 "structSensorContext.html#a5610f1972bc480fe549e0564bca9f47c":[0,0,7,1],
 "structSensorContext.html#aa09226a629a333bd3e79d9200dcbe7e8":[0,0,7,0],
@@ -102,7 +101,8 @@ var NAVTREEINDEX2 =
 "structvec3d__t.html#af415dcd92e78d0019acab4b246316d9b":[0,0,21,2],
 "structvec3d__t.html#affb93ea8e5a916d24363dddcb912a772":[0,0,21,1],
 "sysclock__clctr_8c.html":[1,0,0,1,7],
-"sysclock__clctr_8c.html#a0b264e5669f5548d29995e150f5aa756":[1,0,0,1,7,0],
+"sysclock__clctr_8c.html#a0b264e5669f5548d29995e150f5aa756":[1,0,0,1,7,1],
+"sysclock__clctr_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c":[1,0,0,1,7,0],
 "ubx__def_8h.html":[1,0,0,3,1,2],
 "ubx__def_8h.html#a375dfe855d12881cc831aef25cb89d85":[1,0,0,3,1,2,8],
 "ubx__def_8h.html#a46e8941a4cd8227a8abe927bef85ffb3":[1,0,0,3,1,2,11],

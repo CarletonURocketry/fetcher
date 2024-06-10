@@ -185,7 +185,6 @@ var NAVTREEINDEX1 =
 "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a645b0324d1b00b8effbc7e26b2d24191":[1,0,0,3,7,10,7],
 "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a77096c239833721afd44e38e9769f2f0":[1,0,0,3,7,10,4],
 "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a79b8f12f28f3fb66e4960905ca94f9b2":[1,0,0,3,7,10,8],
-"sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9a0f9527e0be0c2a836e8da1a53528e2":[1,0,0,3,7,10,11],
 "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9d3e825e50062dac129ce8a3889a86ba":[1,0,0,3,7,10,3],
 "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627a9e65523ce44fc3e7de9689d2d589cdc9":[1,0,0,3,7,10,6],
 "sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627aa48af8706c919611056f8f453b200431":[1,0,0,3,7,10,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "structSensor.html#a810cfcc9bbfaf705f69c353b7d26acfb":[0,0,6,5],
 "structSensor.html#a8f3139bb67729fe6381e7de18ddedbfb":[0,0,6,0],
 "structSensor.html#aab8250f2beb3f7bd73af566c03a16ce5":[0,0,6,3],
-"structSensor.html#ae609668d0669ccdfbf525651997823b1":[0,0,6,2]
+"structSensor.html#ae609668d0669ccdfbf525651997823b1":[0,0,6,2],
+"structSensor.html#aee84ea1743e4d2981a44f5975d7f5c1f":[0,0,6,1]
 };
