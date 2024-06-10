@@ -198,6 +198,11 @@ typedef struct {
     uint16_t magAcc;     /**< Magnetic declination accuracy, not supported on M10SPG*/
 } UBXNavPVTPayload;
 
+/** Bit masks for the "flags" member of the UBX-NAV-PVT message */
+typedef enum {
+    GNSS_FIX_OK = 0x01, /**< A single bit flag, the result of this mask is a 1 if the current fix is valid */
+} UBXFlagsMasks;
+
 /** A struct representing the UBX-ACK-ACK/UBX-ACK-NACK (acknowledgement) payload */
 typedef struct {
     uint8_t clsId; /**< The class ID of the acknowledged or not acknowledged message */

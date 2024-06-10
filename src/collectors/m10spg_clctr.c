@@ -46,7 +46,11 @@ void *m10spg_collector(void *args) {
             log_print(stderr, LOG_ERROR, "Could not send command to M10SPG: %s", strerror(err));
             wait_for_meas(NULL);
             continue;
-        } else if (!(payload.flags & 0x1) || payload.fixType == GPS_NO_FIX) {
+        }
+        fetcher_log(stderr, LOG_INFO, "M10SPG current fix is: %d", payload.fixType);
+
+        // Skip this payload if the fix isn't valid
+        if (!(payload.flags & GNSS_FIX_OK)) {
             // Don't bother looking at data if it is going to be invalid
             log_print(stderr, LOG_WARN, "M10SPG fix is invalid or no-fix, skipping this payload ");
             wait_for_meas(&payload);
@@ -71,6 +75,8 @@ void *m10spg_collector(void *args) {
             send_msg(sensor_q, msg, 3);
             break;
         case GPS_TIME_ONLY:
+            break;
+        case GPS_NO_FIX:
             break;
         default:
             break;
