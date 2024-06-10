@@ -9,6 +9,7 @@
 #define _MAXM10S_
 
 #include "../sensor_api.h"
+#include "ubx_def.h"
 #include <stdint.h>
 
 /** An enum representing the commands that can be used for polling M10SPG data. */
@@ -18,9 +19,10 @@ typedef enum {
     UBX_NAV_VELNED, /**< Velocity and heading information */
     UBX_NAV_STAT,   /**< GPS status information about fix, fix type */
     UBX_MON_VER,    /**< Firmware version information */
+    UBX_NAV_PVT,    /**< Position, velocity, time information, it is reccomended to use this message */
 } M10SPG_cmd_t;
 
 int m10spg_open(const SensorLocation *loc);
-int m10spg_send_command(const SensorLocation *loc, M10SPG_cmd_t command, void *response, size_t size);
-
+int m10spg_read(const SensorLocation *loc, M10SPG_cmd_t command, void *response, size_t size);
+void wait_for_meas(UBXNavPVTPayload *payload);
 #endif // _MAXM10S_

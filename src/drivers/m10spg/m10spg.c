@@ -41,12 +41,16 @@
 /** The nominal time between gps measurements in milliseconds */
 #define NOMINAL_MEASUREMENT_RATE 300
 
+/** A configuration key for enabling or disabling periodic message output of the UBX-NAV-PVT message */
+#define MSGOUT_I2C_NAV_PVT 0x20910006
+
 static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_UTC] = {.header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67},
     [UBX_NAV_POSLLH] = {.header = {.class = 0x01, .id = 0x02, .length = 0x00}, .checksum_a = 0x03, .checksum_b = 0x0a},
     [UBX_NAV_VELNED] = {.header = {.class = 0x01, .id = 0x12, .length = 0x00}, .checksum_a = 0x13, .checksum_b = 0x3a},
     [UBX_NAV_STAT] = {.header = {.class = 0x01, .id = 0x03, .length = 0x00}, .checksum_a = 0x04, .checksum_b = 0x0d},
     [UBX_MON_VER] = {.header = {.class = 0x0A, .id = 0x04, .length = 0x00}, .checksum_a = 0x0E, .checksum_b = 0x34},
+    [UBX_NAV_PVT] = {0},
 };
 
 /**
@@ -287,12 +291,10 @@ static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_p
  * @param size The maximum number of bytes to read into the response buffer
  * @return int The error status of the call. EOK if successful.
  */
-int m10spg_send_command(const SensorLocation *loc, M10SPG_cmd_t command, void *response, size_t size) {
-    int err = send_message(loc, &PREMADE_MESSAGES[command]);
-    return_err(err);
+int m10spg_read(const SensorLocation *loc, M10SPG_cmd_t command, void *response, size_t size) {
     UBXFrame recv;
     recv.payload = response;
-    err = recv_message(loc, &recv, size, DEFAULT_TIMEOUT);
+    int err = recv_message(loc, &recv, size, DEFAULT_TIMEOUT);
     return err;
 }
 
@@ -329,6 +331,7 @@ int m10spg_open(const SensorLocation *loc) {
     uint8_t config_disabled = 0;
     uint8_t config_dynmodel = DYNMODEL_AIR_4G;
     uint16_t measurement_rate = NOMINAL_MEASUREMENT_RATE;
+    uint8_t config_enabled = 1;
     // Disable NMEA output on I2C
     add_valset_item(&msg, (uint32_t)NMEA_I2C_OUTPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
     // Disable NMEA input on I2C
@@ -339,6 +342,8 @@ int m10spg_open(const SensorLocation *loc) {
     add_valset_item(&msg, (uint32_t)MEASUREMENT_RATE_CONFIG_KEY, &measurement_rate, UBX_TYPE_U2);
     // Turn off the BDS satellites, which increases the maximum update rate, but needs a reset of the GPS subsystem
     add_valset_item(&msg, (uint32_t)BSD_SIGNAL_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
+    // Enable periodic output of the NAV-PVT message (this doesn't change how often it is calculated, just output)
+    add_valset_item(&msg, (uint32_t)MSGOUT_I2C_NAV_PVT, &config_enabled, UBX_TYPE_U1);
 
     calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
 
@@ -363,6 +368,15 @@ int m10spg_open(const SensorLocation *loc) {
 
     // Some other response interrupted our exchange
     return EINTR;
+}
+
+/**
+ * Helper function to sleep this thread until it's likely there will be a new payload in the data buffer soon
+ * @param payload A payload, if we recieved one, or NULL if we did not or could not
+ */
+void wait_for_meas(UBXNavPVTPayload *payload) {
+    // Garbage for now
+    usleep(1000);
 }
 
 #ifdef __M10SPG_DEBUG__

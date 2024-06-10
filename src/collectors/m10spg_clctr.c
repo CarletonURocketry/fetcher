@@ -3,12 +3,6 @@
 #include "../logging-utils/logging.h"
 #include "collectors.h"
 
-union read_buffer {
-    UBXNavPositionPayload pos;
-    UBXNavVelocityPayload vel;
-    UBXNavStatusPayload stat;
-};
-
 /**
  * Helper function to simplify sending a message on the message queue
  */
@@ -18,7 +12,6 @@ union read_buffer {
     }
 
 void *m10spg_collector(void *args) {
-
     /* Open message queue. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
@@ -42,37 +35,29 @@ void *m10spg_collector(void *args) {
     } while (err != EOK);
 
     for (;;) {
-        // TODO - Don't read if the next epoch hasn't happened
-        union read_buffer buf;
-        GPSFixType fix_type = GPS_NO_FIX;
+        UBXNavPVTPayload payload;
         common_t msg;
-        err = m10spg_send_command(&loc, UBX_NAV_STAT, &buf, sizeof(UBXNavStatusPayload));
-
+        err = m10spg_read(&loc, UBX_NAV_PVT, &payload, sizeof(payload));
         // Check if we could send command
-        if (err) {
+        if (err == ENODATA) {
+            // Nothing in the queue yet, but we expect there to be something soon, so keep reading
+            continue;
+        } else if (err) {
             log_print(stderr, LOG_ERROR, "Could not send command to M10SPG: %s", strerror(err));
+            wait_for_meas(NULL);
+            continue;
+        } else if (!(payload.flags & 0x1) || payload.fixType == GPS_NO_FIX) {
+            // Don't bother looking at data if it is going to be invalid
+            log_print(stderr, LOG_WARN, "M10SPG fix is invalid or no-fix, skipping this payload ");
+            wait_for_meas(&payload);
             continue;
         }
 
-        fix_type = buf.stat.gpsFix;
-
-        // Don't bother reading any information if there's no fix
-        if (fix_type == GPS_NO_FIX) {
-            log_print(stderr, LOG_WARN, "M10SPG could not get fix, fix type: %d", fix_type);
-            continue;
-        }
-
-        // Read position
-        err = m10spg_send_command(&loc, UBX_NAV_POSLLH, &buf, sizeof(UBXNavPositionPayload));
-        if (err) {
-            log_print(stderr, LOG_ERROR, "M10SPG failed to read position: %s", strerror(err));
-            continue;
-        }
-
-        switch (fix_type) {
+        // Only transmit data that is valid
+        switch (payload.fixType) {
         case GPS_3D_FIX:
             msg.type = TAG_ALTITUDE_SEA;
-            msg.data.FLOAT = (((float)buf.pos.hMSL) / ALT_SCALE_TO_METERS);
+            msg.data.FLOAT = (((float)payload.hMSL) / ALT_SCALE_TO_METERS);
             send_msg(sensor_q, msg, 2);
             // FALL THROUGH
         case GPS_FIX_DEAD_RECKONING:
@@ -81,8 +66,8 @@ void *m10spg_collector(void *args) {
             // FALL THROUGH
         case GPS_DEAD_RECKONING:
             msg.type = TAG_COORDS;
-            msg.data.VEC2D_I32.x = buf.pos.lat;
-            msg.data.VEC2D_I32.y = buf.pos.lon;
+            msg.data.VEC2D_I32.x = payload.lat;
+            msg.data.VEC2D_I32.y = payload.lon;
             send_msg(sensor_q, msg, 3);
             break;
         case GPS_TIME_ONLY:
@@ -90,25 +75,8 @@ void *m10spg_collector(void *args) {
         default:
             break;
         }
+        wait_for_meas(&payload);
     }
-
-    // Read velocity
-    /* err = m10spg_send_command(&loc, UBX_NAV_VELNED, &buf, sizeof(UBXNavVelocityPayload)); */
-    /* if (err == EOK) { */
-    /*     msg.type = TAG_SPEED; */
-    /*     msg.U32 = buf.vel.gSpeed; */
-    /*     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
-    /*         fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
-    /*     } */
-    /*     msg.type = TAG_COURSE; */
-    /*     msg.U32 = buf.vel.heading; */
-    /*     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
-    /*         fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
-    /*     } */
-    /* } else { */
-    /*     fprintf(stderr, "M10SPG failed to read velocity: %s\n", strerror(err)); */
-    /*     continue; */
-    /* } */
-    log_print(stderr, LOG_ERROR, "%s", strerror(err));
+    log_print(stderr, LOG_ERROR, "M10SPG exited unexpectedly: %s", strerror(err));
     return (void *)((uint64_t)err);
 }
