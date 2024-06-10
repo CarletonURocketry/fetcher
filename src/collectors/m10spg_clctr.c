@@ -12,8 +12,8 @@ union read_buffer {
 /**
  * Helper function to simplify sending a message on the message queue
  */
-#define send_msg(sensor_q, msg)                                                                                        \
-    if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {                                                       \
+#define send_msg(sensor_q, msg, prio)                                                                                  \
+    if (mq_send((sensor_q), (char *)(&(msg)), sizeof(msg), (prio)) == -1) {                                            \
         fetcher_log(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                           \
     }
 
@@ -73,7 +73,7 @@ void *m10spg_collector(void *args) {
         case GPS_3D_FIX:
             msg.type = TAG_ALTITUDE_SEA;
             msg.data.FLOAT = (((float)buf.pos.hMSL) / ALT_SCALE_TO_METERS);
-            send_msg(sensor_q, msg);
+            send_msg(sensor_q, msg, 2);
             // FALL THROUGH
         case GPS_FIX_DEAD_RECKONING:
             // FALL THROUGH
@@ -83,7 +83,7 @@ void *m10spg_collector(void *args) {
             msg.type = TAG_COORDS;
             msg.data.VEC2D_I32.x = buf.pos.lat;
             msg.data.VEC2D_I32.y = buf.pos.lon;
-            send_msg(sensor_q, msg);
+            send_msg(sensor_q, msg, 3);
             break;
         case GPS_TIME_ONLY:
             break;

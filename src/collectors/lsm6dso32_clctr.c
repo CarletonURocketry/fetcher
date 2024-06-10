@@ -99,7 +99,7 @@ void *lsm6dso32_collector(void *args) {
             lsm6dso32_convert_accel(LA_FS_32G, &x, &y, &z);
             msg.type = TAG_LINEAR_ACCEL_REL;
             msg.data.VEC3D = (vec3d_t){.x = x, .y = y, .z = z};
-            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
+            if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 1) == -1) {
                 fetcher_log(stderr, LOG_ERROR, "LSM6DSO32 couldn't send message: %s", strerror(errno));
             }
         }

@@ -78,14 +78,14 @@ void *ms5611_collector(void *args) {
         // Transmit pressure
         msg.type = TAG_PRESSURE;
         msg.data.FLOAT = (float)pressure;
-        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 1) == -1) {
             fetcher_log(stderr, LOG_ERROR, "MS5611 couldn't send message: %s.", strerror(errno));
         }
 
         // Transmit altitude
         msg.type = TAG_ALTITUDE_REL;
         msg.data.FLOAT = (float)altitude;
-        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
+        if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 2) == -1) {
             fetcher_log(stderr, LOG_ERROR, "MS5611 couldn't send message: %s.", strerror(errno));
         }
     }

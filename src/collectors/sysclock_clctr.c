@@ -1,9 +1,13 @@
 #include "../drivers/sensor_api.h"
 #include "collectors.h"
 #include "logging.h"
+#include <errno.h>
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
+
+/** Macro to cast `errno_t` to void pointer before returning. */
+#define return_err(err) return (void *)((uint64_t)err)
 
 /**
  * Collector thread for the system clock.
@@ -23,23 +27,30 @@ void *sysclock_collector(void *args) {
     }
 
     // Get the current UNIX time and time information
-    time_t start_unix_time;
-    time(&start_unix_time);
-    struct tm *time_info = localtime(&start_unix_time);
-    struct timezone tz = {.tz_dsttime = 0, .tz_minuteswest = time_info->tm_gmtoff};
-    struct timeval tval;
+    struct timespec start;
+    int err = clock_gettime(CLOCK_REALTIME, &start);
+    if (err) {
+        fetcher_log(stderr, LOG_ERROR, "Could not get startup time: %s", strerror(errno));
+        return_err(errno);
+    }
 
     // Infinitely check the time
+    struct timespec now;
     common_t msg;
     msg.type = TAG_TIME;
     for (;;) {
 
         // Get time with nanosecond precision
-        gettimeofday(&tval, &tz);
+        err = clock_gettime(CLOCK_REALTIME, &now);
+        if (err) {
+            fetcher_log(stderr, LOG_ERROR, "Could not get current time: %s", strerror(errno));
+            continue;
+        }
 
         // Calculate elapsed time from launch
-        time_t elapsed_s = tval.tv_sec - start_unix_time;
-        msg.data.U32 = (elapsed_s * 1000) + (tval.tv_usec / 1000);
+        long elapsed_s = now.tv_sec - start.tv_sec;
+        long elapsed_ns = now.tv_nsec - start.tv_nsec;
+        msg.data.U32 = (elapsed_s * 1000) + (elapsed_ns / 1000000);
 
         // Infinitely send the time
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
