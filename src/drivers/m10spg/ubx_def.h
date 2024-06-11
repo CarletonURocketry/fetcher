@@ -65,6 +65,21 @@ typedef struct {
     uint8_t config_items[MAX_VALSET_ITEM_BYTES]; /** An array of keys and value pairs */
 } UBXValsetPayload;
 
+/** A configuration key for enabling or disabling output of NMEA messages on I2C */
+#define NMEA_I2C_OUTPUT_CONFIG_KEY 0x10720002
+
+/** A configuration key for enabling or disabling input of poll requests for NMEA messages on I2C */
+#define NMEA_I2C_INPUT_CONFIG_KEY 0x10710002
+
+/** A configuration key for selecting the platform model of the reciever */
+#define DYNMODEL_CONFIG_KEY 0x20110021
+
+/** A configuration key for enabling or disabling the BeiDou satellites */
+#define BSD_SIGNAL_CONFIG_KEY 0x10310022
+
+/** A configuration key for selecting the number of milliseconds between measurements */
+#define MEASUREMENT_RATE_CONFIG_KEY 0x30210001
+
 /** A struct representing the UBX-NAV-STAT (navigation status) payload */
 typedef struct {
     uint32_t iTOW;   /**< The GPS time of week of the navigation epoch that created this payload */
