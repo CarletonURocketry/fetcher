@@ -54,6 +54,22 @@ typedef struct {
     uint8_t flags; /**< Flags that describe if this time information is valid (see the interface description) */
 } UBXUTCPayload;
 
+typedef enum {
+    UBX_HARD_RESET = 0x00,      /**< Hardware reset (watchdog), immediate */
+    UBX_SOFT_RESET = 0x01,      /**< Controlled software reset (clears RAM) */
+    UBX_SOFT_GNSS_RESET = 0x02, /**< Controlled software reset, GNSS only */
+    UBX_HARD_WDT_RESET = 0x04,  /**< Hardware reset (watchdog), after shutdown */
+    UBX_STOP_GNSS = 0x08,       /** Controlled GNSS stop */
+    UBX_START_GNSS = 0x09,      /**< Controlled GNSS start */
+} UBXResetMode;
+
+/** A struct representing the UBX-CFG-RST (reset reciever) payload */
+typedef struct {
+    uint8_t navBbrMask[2]; /**< Bit fields that select what BBR data to clear (leave as 0 for a hot start) */
+    uint8_t resetMode;     /**< The type of reset to perform, of type UBXResetMode */
+    uint8_t reserved;      /**< Reserved bytes */
+} UBXConfigResetPayload;
+
 /** Max bytes to be used for valset payload items (limit of 64 items per message) */
 #define MAX_VALSET_ITEM_BYTES 128
 
