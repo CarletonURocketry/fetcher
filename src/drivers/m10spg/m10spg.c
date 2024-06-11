@@ -306,8 +306,25 @@ int m10spg_open(const SensorLocation *loc) {
     UBXValsetPayload valset_payload;
     UBXAckPayload ack_payload;
 
+    // Clear the RAM configuration to ensure our settings are the only ones being used
+    msg.header.class = 0x06;
+    msg.header.id = 0x04;
+    msg.header.length = 4;
+
+    UBXConfigResetPayload reset_payload;
+    reset_payload.navBbrMask[0] = 0x00;
+    reset_payload.navBbrMask[1] = 0x00;
+    reset_payload.resetMode = UBX_SOFT_RESET;
+    msg.payload = &reset_payload;
+    calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
+    send_message(loc, &msg);
+    // Has no response, sleep to wait for reset
+    sleep(1);
+
     // Configure the chip
     msg.payload = &valset_payload;
+
+    // Put our actual configuration on there
     init_valset_message(&msg, RAM_LAYER);
     uint8_t config_disabled = 0;
     uint8_t config_dynmodel = DYNMODEL_AIR_4G;
