@@ -8,7 +8,7 @@
 #include "collectors/collectors.h"
 #include "drivers/m24c0x/m24c0x.h"
 #include "drivers/sensor_api.h"
-#include "logging.h"
+#include "../logging-utils/logging.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
     };
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, &q_attr);
     if (sensor_q == -1) {
-        fetcher_log(stderr, LOG_ERROR, "Could not create internal queue '%s' with error: '%s'", SENSOR_QUEUE,
+        log_print(stderr, LOG_ERROR, "Could not create internal queue '%s' with error: '%s'", SENSOR_QUEUE,
                     strerror(errno));
         exit(EXIT_FAILURE);
     }
@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
     // Get message queue attributes since it's necessary to know max message size for receiving
     struct mq_attr sensor_q_attr;
     if (mq_getattr(sensor_q, &sensor_q_attr) == -1) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to get attributes of message queue '%s': '%s'", SENSOR_QUEUE,
+        log_print(stderr, LOG_ERROR, "Failed to get attributes of message queue '%s': '%s'", SENSOR_QUEUE,
                     strerror(errno));
         exit(EXIT_FAILURE);
     }
@@ -121,7 +121,7 @@ int main(int argc, char **argv) {
     /* Open I2C. */
     int bus = open(i2c_bus, O_RDWR);
     if (bus < 0) {
-        fetcher_log(stderr, LOG_ERROR, "Could not open I2C bus with error %s.", strerror(errno));
+        log_print(stderr, LOG_ERROR, "Could not open I2C bus with error %s.", strerror(errno));
         exit(EXIT_FAILURE);
     }
 
@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
     uint32_t speed = BUS_SPEED;
     int err = devctl(bus, DCMD_I2C_SET_BUS_SPEED, &speed, sizeof(speed), NULL);
     if (err) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to set bus speed to %u with error %s", speed, strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to set bus speed to %u with error %s", speed, strerror(err));
         exit(EXIT_FAILURE);
     }
 
@@ -137,7 +137,7 @@ int main(int argc, char **argv) {
     SensorLocation eeprom_loc = {.bus = bus, .addr = {.addr = BOARD_ID_ADDR, .fmt = I2C_ADDRFMT_7BIT}};
     err = m24c0x_seq_read_rand(&eeprom_loc, 0x00, (uint8_t *)board_id, M24C02_CAP);
     if (err) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to read EEPROM configuration: %s", strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to read EEPROM configuration: %s", strerror(err));
         exit(EXIT_FAILURE);
     }
     board_id[M24C02_CAP] = '\0'; // Make sure the string ends with a null terminator
@@ -166,23 +166,23 @@ int main(int argc, char **argv) {
         if (select_sensor != NULL) {
             if (strncasecmp(select_sensor, sensor_name, MAX_SENSOR_NAME) != 0) {
                 // Skip this sensor, not the right one
-                fetcher_log(stderr, LOG_ERROR, "Skipping sensor %s", sensor_name);
+                log_print(stderr, LOG_ERROR, "Skipping sensor %s", sensor_name);
                 continue;
             } else {
-                fetcher_log(stderr, LOG_INFO, "Found sensor %s, starting...", select_sensor);
+                log_print(stderr, LOG_INFO, "Found sensor %s, starting...", select_sensor);
             }
         }
         for (uint8_t i = 0; i < naddrs; i++) {
             /* Create sensor data collection threads. */
             collector_t collector = collector_search(sensor_name);
             if (collector == NULL) {
-                fetcher_log(stderr, LOG_ERROR, "Collector not implemented for sensor %s", sensor_name);
+                log_print(stderr, LOG_ERROR, "Collector not implemented for sensor %s", sensor_name);
                 continue; // Just don't create thread
             }
             collector_args[num_sensors] = (collector_args_t){.bus = bus, .addr = addresses[i]};
             err = pthread_create(&collector_threads[num_sensors], NULL, collector, &collector_args[num_sensors]);
             if (err != EOK) {
-                fetcher_log(stderr, LOG_ERROR, "Could not create %s collector: %s", sensor_name, strerror(err));
+                log_print(stderr, LOG_ERROR, "Could not create %s collector: %s", sensor_name, strerror(err));
                 exit(EXIT_FAILURE);
             }
             num_sensors++; // Record that a new sensor was created
@@ -208,7 +208,7 @@ int main(int argc, char **argv) {
     while (print_output) {
         if (mq_receive(sensor_q, (char *)&recv_msg, sensor_q_attr.mq_msgsize, NULL) == -1) {
             // Handle error without exiting
-            fetcher_log(stderr, LOG_ERROR, "Failed to receive message on queue '%s': %s", SENSOR_QUEUE,
+            log_print(stderr, LOG_ERROR, "Failed to receive message on queue '%s': %s", SENSOR_QUEUE,
                         strerror(errno));
             continue;
         }

@@ -1,4 +1,4 @@
-#include "logging.h"
+#include "../logging-utils/logging.h"
 #include <stdint.h>
 #include <stdio.h>
 #define SHT41_USE_CRC_LOOKUP
@@ -19,7 +19,7 @@ void *sht41_collector(void *args) {
     /* Open message queue. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
-        fetcher_log(stderr, LOG_ERROR, "SHT41 collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
+        log_print(stderr, LOG_ERROR, "SHT41 collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
                     strerror(errno));
         return (void *)((uint64_t)errno);
     }
@@ -34,7 +34,7 @@ void *sht41_collector(void *args) {
     int err = sht41_reset(&loc);
     usleep(100); // Wait just a little bit
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR, "%s", strerror(err));
+        log_print(stderr, LOG_ERROR, "%s", strerror(err));
         return_errno(err);
     }
 
@@ -52,14 +52,14 @@ void *sht41_collector(void *args) {
         msg.type = TAG_TEMPERATURE;
         msg.data.FLOAT = temperature;
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-            fetcher_log(stderr, LOG_ERROR, "SHT41 couldn't send message: %s", strerror(errno));
+            log_print(stderr, LOG_ERROR, "SHT41 couldn't send message: %s", strerror(errno));
         }
 
         // Send humidity
         msg.type = TAG_HUMIDITY;
         msg.data.FLOAT = humidity;
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-            fetcher_log(stderr, LOG_ERROR, "SHT41 couldn't send message: %s", strerror(errno));
+            log_print(stderr, LOG_ERROR, "SHT41 couldn't send message: %s", strerror(errno));
         }
     }
 }

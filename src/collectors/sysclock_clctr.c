@@ -1,6 +1,6 @@
 #include "../drivers/sensor_api.h"
 #include "collectors.h"
-#include "logging.h"
+#include "../logging-utils/logging.h"
 #include <errno.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -21,7 +21,7 @@ void *sysclock_collector(void *args) {
     /* Open message queue to send data. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
-        fetcher_log(stderr, LOG_ERROR, "Sysclock collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
+        log_print(stderr, LOG_ERROR, "Sysclock collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
                     strerror(errno));
         return (void *)((uint64_t)errno);
     }
@@ -30,7 +30,7 @@ void *sysclock_collector(void *args) {
     struct timespec start;
     int err = clock_gettime(CLOCK_REALTIME, &start);
     if (err) {
-        fetcher_log(stderr, LOG_ERROR, "Could not get startup time: %s", strerror(errno));
+        log_print(stderr, LOG_ERROR, "Could not get startup time: %s", strerror(errno));
         return_err(errno);
     }
 
@@ -43,7 +43,7 @@ void *sysclock_collector(void *args) {
         // Get time with nanosecond precision
         err = clock_gettime(CLOCK_REALTIME, &now);
         if (err) {
-            fetcher_log(stderr, LOG_ERROR, "Could not get current time: %s", strerror(errno));
+            log_print(stderr, LOG_ERROR, "Could not get current time: %s", strerror(errno));
             continue;
         }
 
@@ -54,7 +54,7 @@ void *sysclock_collector(void *args) {
 
         // Infinitely send the time
         if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-            fetcher_log(stderr, LOG_ERROR, "Sysclock couldn't send message: %s.", strerror(errno));
+            log_print(stderr, LOG_ERROR, "Sysclock couldn't send message: %s.", strerror(errno));
         }
         usleep(10000); // Little sleep to not flood message queue
     }

@@ -1,7 +1,7 @@
 #include "../drivers/lsm6dso32/lsm6dso32.h"
 #include "../drivers/sensor_api.h"
 #include "collectors.h"
-#include "logging.h"
+#include "../logging-utils/logging.h"
 #include <stdio.h>
 
 #define return_err(err) return (void *)((uint64_t)errno)
@@ -16,7 +16,7 @@ void *lsm6dso32_collector(void *args) {
     /* Open message queue. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
-        fetcher_log(stderr, LOG_ERROR, "LSM6DSO32 collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
+        log_print(stderr, LOG_ERROR, "LSM6DSO32 collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
                     strerror(errno));
         return_err(err);
     }
@@ -29,13 +29,13 @@ void *lsm6dso32_collector(void *args) {
     int err;
     err = lsm6dso32_reset(&loc);
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to reset LSM6DSO32: %s", strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to reset LSM6DSO32: %s", strerror(err));
         return_err(err);
     }
 
     err = lsm6dso32_mem_reboot(&loc);
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to reboot LSM6DSO32 memory content: %s", strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to reboot LSM6DSO32 memory content: %s", strerror(err));
         return_err(err);
     }
 
@@ -43,31 +43,31 @@ void *lsm6dso32_collector(void *args) {
 
     err = lsm6dso32_high_performance(&loc, true);
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to set LSM6DSO32 to high performance mode: %s", strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to set LSM6DSO32 to high performance mode: %s", strerror(err));
         return_err(err);
     }
 
     err = lsm6dso32_set_acc_fsr(&loc, LA_FS_32G);
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to set LSM6DSO32 accelerometer FSR: %s", strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to set LSM6DSO32 accelerometer FSR: %s", strerror(err));
         return_err(err);
     }
 
     err = lsm6dso32_set_gyro_fsr(&loc, G_FS_500);
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to set LSM6DSO32 gyroscope FSR: %s", strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to set LSM6DSO32 gyroscope FSR: %s", strerror(err));
         return_err(err);
     }
 
     err = lsm6dso32_set_acc_odr(&loc, LA_ODR_6664);
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to set LSM6DSO32 accelerometer ODR: %s", strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to set LSM6DSO32 accelerometer ODR: %s", strerror(err));
         return_err(err);
     }
 
     err = lsm6dso32_set_gyro_odr(&loc, G_ODR_6664);
     if (err != EOK) {
-        fetcher_log(stderr, LOG_ERROR, "Failed to set LSM6DSO32 gyroscope ODR: %s", strerror(err));
+        log_print(stderr, LOG_ERROR, "Failed to set LSM6DSO32 gyroscope ODR: %s", strerror(err));
         return_err(err);
     }
 
@@ -82,25 +82,25 @@ void *lsm6dso32_collector(void *args) {
         // Read temperature
         err = lsm6dso32_get_temp(&loc, &temperature);
         if (err != EOK) {
-            fetcher_log(stderr, LOG_ERROR, "LSM6DSO32 could not read temperature: %s", strerror(errno));
+            log_print(stderr, LOG_ERROR, "LSM6DSO32 could not read temperature: %s", strerror(errno));
         } else {
             msg.type = TAG_TEMPERATURE;
             msg.data.FLOAT = (float)temperature;
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-                fetcher_log(stderr, LOG_ERROR, "LSM6DSO32 couldn't send message: %s", strerror(errno));
+                log_print(stderr, LOG_ERROR, "LSM6DSO32 couldn't send message: %s", strerror(errno));
             }
         }
 
         // Read linear acceleration
         err = lsm6dso32_get_accel(&loc, &x, &y, &z);
         if (err != EOK) {
-            fetcher_log(stderr, LOG_ERROR, "LSM6DSO32 could not read linear acceleration: %s", strerror(errno));
+            log_print(stderr, LOG_ERROR, "LSM6DSO32 could not read linear acceleration: %s", strerror(errno));
         } else {
             lsm6dso32_convert_accel(LA_FS_32G, &x, &y, &z);
             msg.type = TAG_LINEAR_ACCEL_REL;
             msg.data.VEC3D = (vec3d_t){.x = x, .y = y, .z = z};
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 1) == -1) {
-                fetcher_log(stderr, LOG_ERROR, "LSM6DSO32 couldn't send message: %s", strerror(errno));
+                log_print(stderr, LOG_ERROR, "LSM6DSO32 couldn't send message: %s", strerror(errno));
             }
         }
 
@@ -108,13 +108,13 @@ void *lsm6dso32_collector(void *args) {
         err = lsm6dso32_get_angular_vel(&loc, &x, &y, &z);
 
         if (err != EOK) {
-            fetcher_log(stderr, LOG_ERROR, "LSM6DSO32 could not read angular velocity: %s", strerror(errno));
+            log_print(stderr, LOG_ERROR, "LSM6DSO32 could not read angular velocity: %s", strerror(errno));
         } else {
             lsm6dso32_convert_angular_vel(G_FS_500, &x, &y, &z);
             msg.type = TAG_ANGULAR_VEL;
             msg.data.VEC3D = (vec3d_t){.x = x, .y = y, .z = z};
             if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) {
-                fetcher_log(stderr, LOG_ERROR, "LSM6DSO32 couldn't send message: %s", strerror(errno));
+                log_print(stderr, LOG_ERROR, "LSM6DSO32 couldn't send message: %s", strerror(errno));
             }
         }
     }
