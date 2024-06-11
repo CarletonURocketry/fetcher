@@ -41,6 +41,18 @@
 /** A configuration key for enabling or disabling input of poll requests for NMEA messages on I2C */
 #define NMEA_I2C_INPUT_CONFIG_KEY 0x10710002
 
+/** A configuration key for selecting the platform model of the reciever */
+#define DYNMODEL_CONFIG_KEY 0x20110021
+
+/** A configuration key for selecting the number of milliseconds between measurements */
+#define MEASUREMENT_RATE_CONFIG_KEY 0x3021000
+
+/** The confirmation value for the platform model that corresponds to an airborne vehicle doing <4G of acceleration */
+#define DYNMODEL_AIR_4G 8
+
+/** The nominal time between gps measurements */
+#define NOMINAL_MEASUREMENT_RATE 3333
+
 static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_UTC] = {.header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67},
     [UBX_NAV_POSLLH] = {.header = {.class = 0x01, .id = 0x02, .length = 0x00}, .checksum_a = 0x03, .checksum_b = 0x0a},
@@ -310,10 +322,17 @@ int m10spg_open(const SensorLocation *loc) {
     msg.payload = &valset_payload;
     init_valset_message(&msg, RAM_LAYER);
     uint8_t config_disabled = 0;
+    uint8_t config_dynmodel = DYNMODEL_AIR_4G;
+    uint16_t measurement_rate = NOMINAL_MEASUREMENT_RATE;
     // Disable NMEA output on I2C
     add_valset_item(&msg, (uint32_t)NMEA_I2C_OUTPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
     // Disable NMEA input on I2C
     add_valset_item(&msg, (uint32_t)NMEA_I2C_INPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
+    // Set the dynamic platform model to have the maximum speed, acceleration, and height possible
+    add_valset_item(&msg, (uint32_t)DYNMODEL_CONFIG_KEY, &config_dynmodel, UBX_TYPE_U1);
+    // Set the config update rate
+    add_valset_item(&msg, (uint32_t)MEASUREMENT_RATE_CONFIG_KEY, &measurement_rate, UBX_TYPE_U2);
+
     calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
 
     int err = send_message(loc, &msg);
