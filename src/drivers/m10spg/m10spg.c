@@ -44,14 +44,17 @@
 /** A configuration key for selecting the platform model of the reciever */
 #define DYNMODEL_CONFIG_KEY 0x20110021
 
+/** A configuration key for enabling or disabling the BeiDou satellites */
+#define BSD_SIGNAL_CONFIG_KEY 0x10310022
+
 /** A configuration key for selecting the number of milliseconds between measurements */
 #define MEASUREMENT_RATE_CONFIG_KEY 0x3021000
 
 /** The confirmation value for the platform model that corresponds to an airborne vehicle doing <4G of acceleration */
 #define DYNMODEL_AIR_4G 8
 
-/** The nominal time between gps measurements */
-#define NOMINAL_MEASUREMENT_RATE 3333
+/** The nominal time between gps measurements in milliseconds */
+#define NOMINAL_MEASUREMENT_RATE 100
 
 static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_UTC] = {.header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67},
@@ -332,6 +335,8 @@ int m10spg_open(const SensorLocation *loc) {
     add_valset_item(&msg, (uint32_t)DYNMODEL_CONFIG_KEY, &config_dynmodel, UBX_TYPE_U1);
     // Set the config update rate
     add_valset_item(&msg, (uint32_t)MEASUREMENT_RATE_CONFIG_KEY, &measurement_rate, UBX_TYPE_U2);
+    // Turn off the BDS satellites, which increases the maximum update rate, but needs a reset of the GPS subsystem
+    add_valset_item(&msg, (uint32_t)BSD_SIGNAL_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
 
     calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
 
@@ -340,7 +345,9 @@ int m10spg_open(const SensorLocation *loc) {
 
     // Check if configuration was successful
     msg.payload = &ack_payload;
-    err = recv_message(loc, &msg, sizeof(ack_payload), 1);
+    // Give at least 0.5 seconds for the gps subsystem to restart, because we disabled the BDS signal
+    sleep(1);
+    err = recv_message(loc, &msg, sizeof(ack_payload), DEFAULT_TIMEOUT);
     return_err(err);
     if (msg.header.class == 0x05) {
         if (msg.header.id == 0x01) {
