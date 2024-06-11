@@ -1,7 +1,7 @@
 #include "../drivers/m10spg/m10spg.h"
 #include "../drivers/m10spg/ubx_def.h"
+#include "../logging.h"
 #include "collectors.h"
-#include "logging.h"
 
 union read_buffer {
     UBXNavPositionPayload pos;
