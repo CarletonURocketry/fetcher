@@ -50,7 +50,7 @@ static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_VELNED] = {.header = {.class = 0x01, .id = 0x12, .length = 0x00}, .checksum_a = 0x13, .checksum_b = 0x3a},
     [UBX_NAV_STAT] = {.header = {.class = 0x01, .id = 0x03, .length = 0x00}, .checksum_a = 0x04, .checksum_b = 0x0d},
     [UBX_MON_VER] = {.header = {.class = 0x0A, .id = 0x04, .length = 0x00}, .checksum_a = 0x0E, .checksum_b = 0x34},
-    [UBX_NAV_PVT] = {0},
+    [UBX_NAV_PVT] = {.header = {.class = 0x01, .id = 0x07, .length = 0x00}, .checksum_a = 0x08, .checksum_b = 0x19},
 };
 
 /**
