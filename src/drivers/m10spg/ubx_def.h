@@ -150,6 +150,54 @@ typedef struct {
     uint32_t cAcc;   /**< Course/heading accuracy estimate, in 0.00001 * degrees */
 } UBXNavVelocityPayload;
 
+/** A payload containing position, velocity, and time information. This payload is reccomended by UBlox over the other
+ * payloads containing position, velocity, or time information (they are only retained for backwards compatability)*/
+typedef struct {
+    uint32_t iTOW; /**< The GPS time of week of the navigation epoch that created this payload */
+    // Time information
+    uint16_t year; /**< A year from 1999 to 2099 (this can be incorrect if the chip was manufactured 20+ years ago) */
+    uint8_t month; /**< A month from 1 to 12 */
+    uint8_t day;   /**< Day of the month in the range 1 to 31 */
+    uint8_t hour;  /**< Hour of the day in the range 0 to 23 */
+    uint8_t min;   /**< Minute of the hour in the range 0 to 59 */
+    uint8_t sec;   /**< Second of the minute in the range 0 to 60 */
+    uint8_t valid; /**< Flags that describe if this time information is valid (see the interface description) */
+    uint32_t tAcc; /**< A time accuracy measurement for the UTC time, in nanoseconds */
+    int32_t nano;  /**< A time correction for the date that follows in this payload, in nanoseconds */
+
+    // Status information
+    uint8_t fixType; /**< The type of fix */
+    uint8_t flags;   /**< Fix status flags */
+    uint8_t flags2;  /**< Additional flags for UTC time validity */
+    uint8_t numSV;   /**< The number of satellites used in solution */
+
+    // Position information
+    int32_t lon;    /**< Longitude, in 0.0000001 * degrees */
+    int32_t lat;    /**< Latitude, in 0.0000001 * degrees */
+    int32_t height; /**< Height above ellipsoid in millimeters */
+    int32_t hMSL;   /**< Height above mean sea level in millimeters */
+    uint32_t hAcc;  /**< Horizontal accuracy measurement in millimeters */
+    uint32_t vAcc;  /**< Vertical accuracy measurement in millimeters */
+
+    // Velocity information
+    int32_t velN;     /**< North velocity component, in cm/s */
+    int32_t velE;     /**< East velocity component, in cm/s */
+    int32_t velD;     /**< Down velocity component, in cm/s */
+    int32_t gSpeed;   /**< Ground speed (2-D), in cm/s */
+    int32_t headMot;  /**< Heading of motion (2-D), in 1e-5 degrees */
+    uint32_t sAcc;    /**< Speed accuracy estimate, in cm/s */
+    uint32_t headAcc; /**< Course/heading accuracy estimate, in 1e-5 degrees */
+
+    uint16_t pDOP;   /**< Position dilution of precision (3D) in increments of 0.01, < 1 is ideal, > 20 is useless  */
+    uint16_t flags3; /**< Additional flags related to position accuracy */
+
+    // Extra information
+    uint8_t reserved[4]; /**< Reserved bytes */
+    int32_t headVeh;     /**< Heading of vehicle (2D), not enabled on the M10SPG */
+    int16_t magDec;      /**< Magnetic declination, not supported on M10SPG */
+    uint16_t magAcc;     /**< Magnetic declination accuracy, not supported on M10SPG*/
+} UBXNavPVTPayload;
+
 /** A struct representing the UBX-ACK-ACK/UBX-ACK-NACK (acknowledgement) payload */
 typedef struct {
     uint8_t clsId; /**< The class ID of the acknowledged or not acknowledged message */
