@@ -30,31 +30,16 @@
 #define SYNC_TWO 0x62
 
 /** How long the recieve command for UBX messages should wait between trying to read a message, in usec */
-#define RECV_SLEEP_TIME 10000
+#define RECV_SLEEP_TIME 1000
 
 /** How long m10spg_read should wait for a response in seconds */
-#define DEFAULT_TIMEOUT 10
-
-/** A configuration key for enabling or disabling output of NMEA messages on I2C */
-#define NMEA_I2C_OUTPUT_CONFIG_KEY 0x10720002
-
-/** A configuration key for enabling or disabling input of poll requests for NMEA messages on I2C */
-#define NMEA_I2C_INPUT_CONFIG_KEY 0x10710002
-
-/** A configuration key for selecting the platform model of the reciever */
-#define DYNMODEL_CONFIG_KEY 0x20110021
-
-/** A configuration key for enabling or disabling the BeiDou satellites */
-#define BSD_SIGNAL_CONFIG_KEY 0x10310022
-
-/** A configuration key for selecting the number of milliseconds between measurements */
-#define MEASUREMENT_RATE_CONFIG_KEY 0x3021000
+#define DEFAULT_TIMEOUT 2
 
 /** The confirmation value for the platform model that corresponds to an airborne vehicle doing <4G of acceleration */
 #define DYNMODEL_AIR_4G 8
 
 /** The nominal time between gps measurements in milliseconds */
-#define NOMINAL_MEASUREMENT_RATE 100
+#define NOMINAL_MEASUREMENT_RATE 300
 
 static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_UTC] = {.header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67},
@@ -345,8 +330,7 @@ int m10spg_open(const SensorLocation *loc) {
 
     // Check if configuration was successful
     msg.payload = &ack_payload;
-    // Give at least 0.5 seconds for the gps subsystem to restart, because we disabled the BDS signal
-    sleep(1);
+    // Longer timeout for the reboot
     err = recv_message(loc, &msg, sizeof(ack_payload), DEFAULT_TIMEOUT);
     return_err(err);
     if (msg.header.class == 0x05) {
@@ -357,6 +341,9 @@ int m10spg_open(const SensorLocation *loc) {
             return ECANCELED;
         }
     }
+    // Give at least 0.5 seconds for the gps subsystem to restart, because we disabled the BDS signal
+    usleep(500000);
+
     // Some other response interrupted our exchange
     return EINTR;
 }
