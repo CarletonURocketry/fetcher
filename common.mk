@@ -34,7 +34,7 @@ WARNINGS += -Wdisabled-optimization -Wsuggest-attribute=const
 CCFLAGS += -std=$(CSTD) $(OPTIMIZATION) $(WARNINGS)
 
 # For logging utility
-CCFLAGS += -DPROGNAME=fetcher
+CCFLAGS += -DPROGNAME=$(NAME)
 
 #### PROJECT SPECIFIC ####
 
