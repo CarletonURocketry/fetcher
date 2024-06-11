@@ -4,11 +4,11 @@
  *
  * The main function for the fetcher module, where program logic is used to create a console application.
  */
+#include "../logging-utils/logging.h"
 #include "board-id/board_id.h"
 #include "collectors/collectors.h"
 #include "drivers/m24c0x/m24c0x.h"
 #include "drivers/sensor_api.h"
-#include "../logging-utils/logging.h"
 #include <devctl.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_CREAT | O_RDONLY, S_IWOTH | S_IRUSR, &q_attr);
     if (sensor_q == -1) {
         log_print(stderr, LOG_ERROR, "Could not create internal queue '%s' with error: '%s'", SENSOR_QUEUE,
-                    strerror(errno));
+                  strerror(errno));
         exit(EXIT_FAILURE);
     }
 
@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
     struct mq_attr sensor_q_attr;
     if (mq_getattr(sensor_q, &sensor_q_attr) == -1) {
         log_print(stderr, LOG_ERROR, "Failed to get attributes of message queue '%s': '%s'", SENSOR_QUEUE,
-                    strerror(errno));
+                  strerror(errno));
         exit(EXIT_FAILURE);
     }
 
@@ -208,8 +208,7 @@ int main(int argc, char **argv) {
     while (print_output) {
         if (mq_receive(sensor_q, (char *)&recv_msg, sensor_q_attr.mq_msgsize, NULL) == -1) {
             // Handle error without exiting
-            log_print(stderr, LOG_ERROR, "Failed to receive message on queue '%s': %s", SENSOR_QUEUE,
-                        strerror(errno));
+            log_print(stderr, LOG_ERROR, "Failed to receive message on queue '%s': %s", SENSOR_QUEUE, strerror(errno));
             continue;
         }
         // Successfully received data, print it to output stream

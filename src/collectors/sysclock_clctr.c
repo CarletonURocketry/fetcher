@@ -1,6 +1,6 @@
 #include "../drivers/sensor_api.h"
-#include "collectors.h"
 #include "../logging-utils/logging.h"
+#include "collectors.h"
 #include <errno.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -22,7 +22,7 @@ void *sysclock_collector(void *args) {
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
         log_print(stderr, LOG_ERROR, "Sysclock collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
-                    strerror(errno));
+                  strerror(errno));
         return (void *)((uint64_t)errno);
     }
 

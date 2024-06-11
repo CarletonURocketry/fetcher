@@ -1,7 +1,7 @@
 #include "../drivers/lsm6dso32/lsm6dso32.h"
 #include "../drivers/sensor_api.h"
-#include "collectors.h"
 #include "../logging-utils/logging.h"
+#include "collectors.h"
 #include <stdio.h>
 
 #define return_err(err) return (void *)((uint64_t)errno)
@@ -17,7 +17,7 @@ void *lsm6dso32_collector(void *args) {
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
         log_print(stderr, LOG_ERROR, "LSM6DSO32 collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
-                    strerror(errno));
+                  strerror(errno));
         return_err(err);
     }
 

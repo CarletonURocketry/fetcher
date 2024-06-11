@@ -1,6 +1,6 @@
+#include "../logging-utils/logging.h"
 #include "collectors.h"
 #include "drivers/pac195x/pac195x.h"
-#include "../logging-utils/logging.h"
 #include <stdio.h>
 
 /** Macro to early return errors. */
@@ -15,7 +15,7 @@ void *pac1952_2_collector(void *args) {
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
         log_print(stderr, LOG_ERROR, "PAC195X collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
-                    strerror(errno));
+                  strerror(errno));
         return_err(err);
     }
 
