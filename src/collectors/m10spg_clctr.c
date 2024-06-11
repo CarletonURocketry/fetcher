@@ -1,7 +1,7 @@
 #include "../drivers/m10spg/m10spg.h"
 #include "../drivers/m10spg/ubx_def.h"
-#include "collectors.h"
 #include "../logging-utils/logging.h"
+#include "collectors.h"
 
 union read_buffer {
     UBXNavPositionPayload pos;
@@ -14,7 +14,7 @@ union read_buffer {
  */
 #define send_msg(sensor_q, msg, prio)                                                                                  \
     if (mq_send((sensor_q), (char *)(&(msg)), sizeof(msg), (prio)) == -1) {                                            \
-        log_print(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                           \
+        log_print(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                             \
     }
 
 void *m10spg_collector(void *args) {
@@ -23,7 +23,7 @@ void *m10spg_collector(void *args) {
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
         log_print(stderr, LOG_ERROR, "M10SPG collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
-                    strerror(errno));
+                  strerror(errno));
         return (void *)((uint64_t)errno);
     }
 
