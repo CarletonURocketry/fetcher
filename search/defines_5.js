@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['g_0',['g',['../ms5611_8c.html#a167d2c0ec9b943d55f2124f7442b2f6d',1,'ms5611.c']]],
-  ['gravit_5facc_1',['GRAVIT_ACC',['../lsm6dso32_8c.html#ae93eef7df99ce96ee99ff06b5bd78ac3',1,'lsm6dso32.c']]]
+  ['lat_5fscale_5fto_5fdegrees_0',['LAT_SCALE_TO_DEGREES',['../ubx__def_8h.html#abfe3dcaa6f7a901a62f45747f80460cc',1,'ubx_def.h']]],
+  ['lon_5fscale_5fto_5fdegrees_1',['LON_SCALE_TO_DEGREES',['../ubx__def_8h.html#ac4108b1f1a7d5a3b9c9e68682a217f07',1,'ubx_def.h']]]
 ];

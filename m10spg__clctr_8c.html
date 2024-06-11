@@ -96,8 +96,8 @@ $(document).ready(function(){initNavTree('m10spg__clctr_8c.html',''); initResiza
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="m10spg_8h_source.html">../drivers/m10spg/m10spg.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ubx__def_8h_source.html">../drivers/m10spg/ubx_def.h</a>&quot;</code><br />
+<code>#include &quot;../logging-utils/logging.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="collectors_8h_source.html">collectors.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="logging_8h_source.html">logging.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -147,9 +147,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">if</span> (mq_send((sensor_q), (<span class="keywordtype">char</span> *)(&amp;(msg)), <span class="keyword">sizeof</span>(msg), (prio)) == -1) {                                            \</div>
-<div class="line">        fetcher_log(stderr, <a class="code hl_enumvalue" href="logging_8h.html#ae3b8a89d425d14a2f6b56b007edc0a06ac8041ffa22bc823d4726701cdb13fc13">LOG_WARN</a>, <span class="stringliteral">&quot;M10SPG couldn&#39;t send message: %s.&quot;</span>, strerror(errno));                           \</div>
+<div class="line">        log_print(stderr, LOG_WARN, <span class="stringliteral">&quot;M10SPG couldn&#39;t send message: %s.&quot;</span>, strerror(errno));                             \</div>
 <div class="line">    }</div>
-<div class="ttc" id="alogging_8h_html_ae3b8a89d425d14a2f6b56b007edc0a06ac8041ffa22bc823d4726701cdb13fc13"><div class="ttname"><a href="logging_8h.html#ae3b8a89d425d14a2f6b56b007edc0a06ac8041ffa22bc823d4726701cdb13fc13">LOG_WARN</a></div><div class="ttdeci">@ LOG_WARN</div><div class="ttdef"><b>Definition:</b> logging.h:9</div></div>
 </div><!-- fragment --><p >Helper function to simplify sending a message on the message queue </p>
 
 </div>

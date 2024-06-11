@@ -14,9 +14,5 @@ var searchData=
   ['la_5fodr_5f416_11',['LA_ODR_416',['../lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda8ad92472baad1f07437b9ae88232db5f',1,'lsm6dso32.h']]],
   ['la_5fodr_5f52_12',['LA_ODR_52',['../lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda7762d0f759ea8eea5e7eac55637653eb',1,'lsm6dso32.h']]],
   ['la_5fodr_5f6664_13',['LA_ODR_6664',['../lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111eda18c1053c13e685a544b782343c6e8cc9',1,'lsm6dso32.h']]],
-  ['la_5fodr_5f833_14',['LA_ODR_833',['../lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111edabfa162443246ea210a4765ea0770d2a6',1,'lsm6dso32.h']]],
-  ['log_5fdebug_15',['LOG_DEBUG',['../logging_8h.html#ae3b8a89d425d14a2f6b56b007edc0a06ab9f002c6ffbfd511da8090213227454e',1,'logging.h']]],
-  ['log_5ferror_16',['LOG_ERROR',['../logging_8h.html#ae3b8a89d425d14a2f6b56b007edc0a06a230506cce5c68c3bac5a821c42ed3473',1,'logging.h']]],
-  ['log_5finfo_17',['LOG_INFO',['../logging_8h.html#ae3b8a89d425d14a2f6b56b007edc0a06a6e98ff471e3ce6c4ef2d75c37ee51837',1,'logging.h']]],
-  ['log_5fwarn_18',['LOG_WARN',['../logging_8h.html#ae3b8a89d425d14a2f6b56b007edc0a06ac8041ffa22bc823d4726701cdb13fc13',1,'logging.h']]]
+  ['la_5fodr_5f833_14',['LA_ODR_833',['../lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111edabfa162443246ea210a4765ea0770d2a6',1,'lsm6dso32.h']]]
 ];
