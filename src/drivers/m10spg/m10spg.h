@@ -20,9 +20,22 @@ typedef enum {
     UBX_NAV_STAT,   /**< GPS status information about fix, fix type */
     UBX_MON_VER,    /**< Firmware version information */
     UBX_NAV_PVT,    /**< Position, velocity, time information, it is reccomended to use this message */
-} M10SPG_cmd_t;
+} M10SPGMessageType;
+
+/**
+ * A pointer to a function that will recieve a buffer containing a populated message containing a complete payload and
+ * the type of the message that was recieved. The handler is reponsible for using the data, after which it will be
+ * discarded
+ *
+ * @param msg The message that was last read from the gps and which now needs to be consumed
+ * @param type The type of msg (containing the same information as the class and id fields)
+ * @return 0 if the message was handled successfully, -1 if there was an error processing the message
+ */
+typedef int (*M10SPGMessageHandler)(UBXFrame *msg, M10SPGMessageType type);
 
 int m10spg_open(const SensorLocation *loc);
-int m10spg_read(const SensorLocation *loc, M10SPG_cmd_t command, void *response, size_t size);
+int m10spg_read(const SensorLocation *loc, M10SPGMessageType msg_type, uint8_t *buf, size_t size);
+int m10spg_register_periodic(const SensorLocation *loc, M10SPGMessageHandler handler, M10SPGMessageType msg_type);
 void wait_for_meas(UBXNavPVTPayload *payload);
+
 #endif // _MAXM10S_

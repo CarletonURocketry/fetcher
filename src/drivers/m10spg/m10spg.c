@@ -240,61 +240,51 @@ static int send_message(const SensorLocation *loc, const UBXFrame *msg) {
  * @param loc The m10spg's location on the I2C bus
  * @param msg An empty message structure, with a payload pointing at a data buffer to read the payload into
  * @param max_payload The maximum size that the payload can be (the size of the buffer pointed to by it)
- * @param timeout THe maximum time to try and get a message
  * @return int EINVAL if the buffer is too small for the message found. ETIMEOUT if the timeout expires before a
  * message is found. EBADMSG if the second sync char is not valid. EOK otherwise.
  */
-static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_payload, uint8_t timeout) {
-    struct timespec start, stop;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-    do {
-        uint8_t sync = 0;
-        errno_t err = read_bytes(loc, &sync, sizeof(sync));
+static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_payload) {
+    uint8_t sync = 0;
+    errno_t err = read_bytes(loc, &sync, sizeof(sync));
+    return_err(err);
+    // Make sure we're at the start of a new message
+    if (sync == SYNC_ONE) {
+        err = read_bytes(loc, &sync, sizeof(sync));
         return_err(err);
-
-        // Make sure we're at the start of a new message
-        if (sync == SYNC_ONE) {
-            err = read_bytes(loc, &sync, sizeof(sync));
+        if (sync == SYNC_TWO) {
+            // Found something. Get message class, id, and length
+            err = read_bytes(loc, &msg->header.class,
+                             sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(msg->header.length));
             return_err(err);
-            if (sync == SYNC_TWO) {
-                // Found something. Get message class, id, and length
-                err = read_bytes(loc, &msg->header.class,
-                                 sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(msg->header.length));
-                return_err(err);
-                // Make sure the space we allocated for the payload is big enough
-                if (msg->header.length > max_payload) {
-                    return EINVAL;
-                }
-                // Read payload
-                err = read_bytes(loc, msg->payload, msg->header.length);
-                return_err(err);
-                // Read in the checksums (assume contiguous)
-                err = read_bytes(loc, &msg->checksum_a, 2);
-                return err;
-            } else {
-                return EBADMSG;
+            // Make sure the space we allocated for the payload is big enough
+            if (msg->header.length > max_payload) {
+                return EINVAL;
             }
+            // Read payload
+            err = read_bytes(loc, msg->payload, msg->header.length);
+            return_err(err);
+            // Read in the checksums (assume contiguous)
+            err = read_bytes(loc, &msg->checksum_a, 2);
+            return err;
+        } else {
+            return EBADMSG;
         }
-        // Sleeping gives time for the buffer to be opened, if it has closed (timeout occurs after 1.5s)
-        usleep(RECV_SLEEP_TIME);
-        // Get the time now
-        clock_gettime(CLOCK_MONOTONIC, &stop);
-    } while ((stop.tv_sec - start.tv_sec) < timeout);
-    return ETIMEDOUT;
+    }
+    return ENODATA;
 }
 
 /**
- * Reads the specified data from the M10SPG.
+ * Reads messages from the sensor until a message of type msg_type is read
  * @param loc The m10spg's location on the I2C bus
- * @param response A buffer to place the payload of the response (use a structure with the same format as the message's
- * pre-defined payload)
- * @param size The maximum number of bytes to read into the response buffer
- * @return int The error status of the call. EOK if successful.
+ * @param msg_type The type of the last message to be read, if there are multiple messages in the data buffer
+ * @param buf The location to store the message of msg_type. Buffer contents may be modified if a message is not found
+ * @param size The size of the data buffer, should be at least large enough for any periodic messages that were registered
+ * @return int 0 if the message of msg_type was placed in buf, ENODATA if the buffer is empty, and other errors for problems reading over I2C 
  */
-int m10spg_read(const SensorLocation *loc, M10SPG_cmd_t command, void *response, size_t size) {
+int m10spg_read(const SensorLocation *loc, M10SPGMessageType msg_type, uint8_t *buf, size_t size) {
     UBXFrame recv;
-    recv.payload = response;
-    int err = recv_message(loc, &recv, size, DEFAULT_TIMEOUT);
+    recv.payload = buf;
+    int err = recv_message(loc, &recv, size);
     return err;
 }
 
