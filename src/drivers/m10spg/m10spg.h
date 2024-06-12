@@ -23,6 +23,7 @@ typedef enum {
     UBX_NAV_STAT = 0x0103,   /**< Read GPS status information about fix, fix type */
     UBX_MON_VER = 0x0A04,    /**< Read Firmware version information */
     UBX_NAV_PVT = 0x0107,    /**< Read Position, velocity, time information (reccomended) */
+    UBX_ACK = 0x1,
 } M10SPGMessageType;
 
 /**
@@ -48,8 +49,8 @@ typedef struct {
 } M10SPGContext;
 
 int m10spg_open(M10SPGContext *ctx, SensorLocation *loc);
-int m10spg_read(const M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t size);
-int m10spg_register_periodic(const M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type);
+int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t size);
+int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type);
 void wait_for_meas(M10SPGContext *ctx);
 
 #endif // _MAXM10S_

@@ -223,11 +223,11 @@ static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_p
  * @param msg_type The type of the last message to be read, if there are multiple messages in the data buffer
  * @param buf The location to store the message of msg_type. Buffer contents may be modified if a message is not found
  * @param size The size of the data buffer, should be at least large enough for any periodic messages that were
- * registered
+ * registered.
  * @return int 0 if the message of msg_type was placed in buf, ENODATA if the buffer is empty, and other errors for
  * problems reading over I2C
  */
-int m10spg_read(const M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t size) {
+int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t size) {
     UBXFrame recv;
     recv.payload = buf;
     int err = recv_message(ctx->loc, &recv, size);
@@ -235,13 +235,68 @@ int m10spg_read(const M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *b
 }
 
 /**
+ * Configures the sensor to output a periodic message of the specified type
+ * @param ctx The context of a m10spg sensor
+ * @param type The type of message that should be output periodically
+ * @return int If the message could be configured, the error status of the write or read, or ENOSYS if the message type
+ * is not supported
+ */
+static int enable_periodic_message(M10SPGContext *ctx, M10SPGMessageType type) {
+    UBXFrame msg;
+    UBXValsetPayload valset_payload;
+    UBXAckPayload ack_payload;
+    msg.payload = &valset_payload;
+    init_valset_message(&msg, RAM_LAYER);
+    uint32_t config_key = 0;
+    uint8_t config_value = 1;
+
+    switch (type) {
+    case UBX_NAV_PVT:
+        config_key = UBX_MSGOUT_I2C_NAV_PVT;
+        break;
+    default:
+        return ENOSYS;
+    };
+    add_valset_item(&msg, config_key, &config_value, UBX_TYPE_U1);
+    int err = send_message(ctx->loc, &msg);
+    return_err(err);
+    return m10spg_read(ctx, UBX_ACK, (uint8_t *)&ack_payload, sizeof(ack_payload));
+}
+
+/**
  * Enables a periodic message and registers a handler for that periodic message
  * @param ctx The context of a m10spg sensor
  * @param handler A function pointer which has the described properties that will consume periodic messages
- * @param msg_type The type of message that will cause the handler to be called
- * @return int
+ * @param msg_type The type of message that will cause the handler to be called, if this already has a handler it will
+ * be overwritten
+ * @return int 0 if the periodic message was enabled
  */
-int m10spg_register_periodic(const M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type) {}
+int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type) {
+    int i;
+    for (i = 0; i < MAX_PERIODIC_MESSAGES; i++) {
+        // Made it to a unfilled handler spot or overwrite an existing handler
+        if (ctx->handlers[i].type == UBX_NO_MESSAGE || ctx->handlers[i].type == msg_type) {
+            int err = enable_periodic_message(ctx, msg_type);
+            return_err(err);
+            ctx->handlers[i].type = msg_type;
+            ctx->handlers[i].handler = handler;
+        }
+    }
+}
+
+static int send_valset_message(M10SPGContext *ctx, UBXFrame *msg) {
+    calculate_checksum(msg, &msg->checksum_a, &msg->checksum_b);
+    int err = send_message(ctx->loc, &msg);
+    return_err(err);
+
+    UBXAckPayload ack_payload;
+    err = m10spg_read(ctx, UBX_ACK, (uint8_t *)&ack_payload, sizeof(ack_payload));
+    if (err == ENODATA) {
+        // Configuration didn't work
+        return ECANCELED;
+    }
+    return err;
+}
 
 /**
  * Prepares the M10SPG for reading and sets up its context
@@ -254,7 +309,6 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
 
     UBXFrame msg;
     UBXValsetPayload valset_payload;
-    UBXAckPayload ack_payload;
     UBXConfigResetPayload reset_payload;
 
     // Clear the RAM configuration to ensure our settings are the only ones being used
@@ -279,7 +333,6 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
     uint8_t config_disabled = 0;
     uint8_t config_dynmodel = UBX_DYNMODEL_AIR_4G;
     uint16_t measurement_rate = UBX_NOMINAL_MEASUREMENT_RATE;
-    uint8_t config_enabled = 1;
     // Disable NMEA output on I2C
     add_valset_item(&msg, (uint32_t)NMEA_I2C_OUTPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
     // Disable NMEA input on I2C
@@ -291,29 +344,7 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
     // Turn off the BDS satellites, which increases the maximum update rate, but needs a reset of the GPS subsystem
     add_valset_item(&msg, (uint32_t)UBX_BSD_SIGNAL_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
 
-    calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
-
-    int err = send_message(loc, &msg);
-    return_err(err);
-
-    // Check if configuration was successful
-    msg.payload = &ack_payload;
-    // Longer timeout for the reboot
-    err = recv_message(loc, &msg, sizeof(ack_payload));
-    return_err(err);
-    if (msg.header.class == 0x05) {
-        if (msg.header.id == 0x01) {
-            return EOK;
-        } else if (msg.header.id == 0x00) {
-            // Valset was not successful, check interface manual for possible reasons
-            return ECANCELED;
-        }
-    }
-    // Give at least 0.5 seconds for the gps subsystem to restart, because we disabled the BDS signal
-    usleep(500000);
-
-    // Some other response interrupted our exchange
-    return EINTR;
+    return send_valset_message(ctx, &msg);
 }
 
 /**
@@ -322,7 +353,7 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
  */
 void wait_for_meas(M10SPGContext *ctx) {
     // Sleep the time between measurements, which should be roughly the time between packages
-    usleep(NOMINAL_MEASUREMENT_RATE * 1000);
+    usleep(UBX_NOMINAL_MEASUREMENT_RATE * 1000);
 }
 
 #ifdef __M10SPG_DEBUG__
