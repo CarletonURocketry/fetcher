@@ -144,38 +144,6 @@ static int add_valset_item(UBXFrame *msg, uint32_t key, const void *value, UBXVa
 }
 
 /**
- * Returns the number of bytes ready to be read from the sensor. Currently does not exhibit the expected behaviour and
- * we don't know why, try this again later
- *
- * @param loc The m10spg's location on the I2C bus
- * @param result The total number of bytes ready to be read
- * @return int The error status of the call. EOK if successful.
- */
-static int m10spg_available_bytes(const SensorLocation *loc, uint16_t *result) {
-    // Send the address of the first register, then the second byte read will be the next register (0xFE)
-    i2c_send_t write_header = {.stop = 0, .len = 1};
-    write_header.slave = loc->addr;
-
-    uint8_t address_cmd[sizeof(write_header) + 1];
-    memcpy(address_cmd, &write_header, sizeof(write_header));
-    address_cmd[sizeof(write_header)] = 0xFD;
-
-    i2c_recv_t read_header = {.stop = 1, .len = 2};
-    read_header.slave = loc->addr;
-    uint8_t read_cmd[sizeof(read_header) + 2];
-    memcpy(read_cmd, &read_header, sizeof(read_header));
-
-    errno_t err = devctl(loc->bus, DCMD_I2C_SEND, address_cmd, sizeof(address_cmd), NULL);
-    return_err(err);
-
-    err = devctl(loc->bus, DCMD_I2C_RECV, read_cmd, sizeof(read_cmd), NULL);
-    return_err(err);
-
-    *result = ((uint16_t)read_cmd[sizeof(write_header)]) * 256 + (uint16_t)(read_cmd[sizeof(write_header) + 1]);
-    return EOK;
-}
-
-/**
  * Reads a certain number of bytes into the specified buffer
  * @param loc The m10spg's location on the I2C bus
  * @param buf A pointer to the memory location to store the data.
@@ -195,24 +163,6 @@ int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
     // Copy out what we recieved
     memcpy(buf, read_cmd + sizeof(header), nbytes);
     return EOK;
-}
-
-/**
- * Writes data to the M10SPG. Currently useless - UBX messages should be written using the send_ubx_message function
- * @param loc The m10spg's location on the I2C bus
- * @param buf A pointer to the memory location containing the data.
- * @param nbytes The number of bytes to be written to the M10SPG.
- * @return int Status of reading from the sensor, EOK if successful.
- */
-static int write_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
-    i2c_send_t header = {.stop = 1};
-    header.slave = loc->addr;
-    header.len = nbytes;
-    uint8_t data[sizeof(header) + nbytes];
-    memcpy(data, &header, sizeof(header));
-    memcpy(data + sizeof(header), buf, nbytes);
-
-    return devctl(loc->bus, DCMD_I2C_SEND, data, sizeof(header) + nbytes, NULL);
 }
 
 /**
