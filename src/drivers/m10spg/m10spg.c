@@ -35,27 +35,6 @@
 /** How long to wait after issuing a restart command, in usec */
 #define RESTART_SLEEP_TIME 500000
 
-/** How long m10spg_read should wait for a response in seconds */
-#define DEFAULT_TIMEOUT 2
-
-/** The confirmation value for the platform model that corresponds to an airborne vehicle doing <4G of acceleration */
-#define DYNMODEL_AIR_4G 8
-
-/** The nominal time between gps measurements in milliseconds */
-#define NOMINAL_MEASUREMENT_RATE 300
-
-/** A configuration key for enabling or disabling periodic message output of the UBX-NAV-PVT message */
-#define MSGOUT_I2C_NAV_PVT 0x20910006
-
-static const UBXFrame PREMADE_MESSAGES[] = {
-    [UBX_NAV_UTC] = {.header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67},
-    [UBX_NAV_POSLLH] = {.header = {.class = 0x01, .id = 0x02, .length = 0x00}, .checksum_a = 0x03, .checksum_b = 0x0a},
-    [UBX_NAV_VELNED] = {.header = {.class = 0x01, .id = 0x12, .length = 0x00}, .checksum_a = 0x13, .checksum_b = 0x3a},
-    [UBX_NAV_STAT] = {.header = {.class = 0x01, .id = 0x03, .length = 0x00}, .checksum_a = 0x04, .checksum_b = 0x0d},
-    [UBX_MON_VER] = {.header = {.class = 0x0A, .id = 0x04, .length = 0x00}, .checksum_a = 0x0E, .checksum_b = 0x34},
-    [UBX_NAV_PVT] = {.header = {.class = 0x01, .id = 0x07, .length = 0x00}, .checksum_a = 0x08, .checksum_b = 0x19},
-};
-
 /**
  * Gets the total length of a message, including checksums and sync characters
  * @return uint16_t
@@ -298,21 +277,19 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
     // Put our actual configuration on there
     init_valset_message(&msg, RAM_LAYER);
     uint8_t config_disabled = 0;
-    uint8_t config_dynmodel = DYNMODEL_AIR_4G;
-    uint16_t measurement_rate = NOMINAL_MEASUREMENT_RATE;
+    uint8_t config_dynmodel = UBX_DYNMODEL_AIR_4G;
+    uint16_t measurement_rate = UBX_NOMINAL_MEASUREMENT_RATE;
     uint8_t config_enabled = 1;
     // Disable NMEA output on I2C
     add_valset_item(&msg, (uint32_t)NMEA_I2C_OUTPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
     // Disable NMEA input on I2C
     add_valset_item(&msg, (uint32_t)NMEA_I2C_INPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
     // Set the dynamic platform model to have the maximum speed, acceleration, and height possible
-    add_valset_item(&msg, (uint32_t)DYNMODEL_CONFIG_KEY, &config_dynmodel, UBX_TYPE_U1);
+    add_valset_item(&msg, (uint32_t)UBX_DYNMODEL_CONFIG_KEY, &config_dynmodel, UBX_TYPE_U1);
     // Set the config update rate
-    add_valset_item(&msg, (uint32_t)MEASUREMENT_RATE_CONFIG_KEY, &measurement_rate, UBX_TYPE_U2);
+    add_valset_item(&msg, (uint32_t)UBX_MEAS_RATE_CONFIG_KEY, &measurement_rate, UBX_TYPE_U2);
     // Turn off the BDS satellites, which increases the maximum update rate, but needs a reset of the GPS subsystem
-    add_valset_item(&msg, (uint32_t)BSD_SIGNAL_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
-    // Enable periodic output of the NAV-PVT message (this doesn't change how often it is calculated, just output)
-    add_valset_item(&msg, (uint32_t)MSGOUT_I2C_NAV_PVT, &config_enabled, UBX_TYPE_U1);
+    add_valset_item(&msg, (uint32_t)UBX_BSD_SIGNAL_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
 
     calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
 

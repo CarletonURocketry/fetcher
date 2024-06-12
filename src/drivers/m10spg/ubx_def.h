@@ -88,13 +88,22 @@ typedef struct {
 #define NMEA_I2C_INPUT_CONFIG_KEY 0x10710002
 
 /** A configuration key for selecting the platform model of the reciever */
-#define DYNMODEL_CONFIG_KEY 0x20110021
+#define UBX_DYNMODEL_CONFIG_KEY 0x20110021
+
+/** The confirmation value for the platform model that corresponds to an airborne vehicle doing <4G of acceleration */
+#define UBX_DYNMODEL_AIR_4G 8
+
+/** The nominal time between gps measurements in milliseconds */
+#define UBX_NOMINAL_MEASUREMENT_RATE 300
+
+/** A configuration key for enabling or disabling periodic message output of the UBX-NAV-PVT message */
+#define UBX_MSGOUT_I2C_NAV_PVT 0x20910006
 
 /** A configuration key for enabling or disabling the BeiDou satellites */
-#define BSD_SIGNAL_CONFIG_KEY 0x10310022
+#define UBX_BSD_SIGNAL_CONFIG_KEY 0x10310022
 
 /** A configuration key for selecting the number of milliseconds between measurements */
-#define MEASUREMENT_RATE_CONFIG_KEY 0x30210001
+#define UBX_MEAS_RATE_CONFIG_KEY 0x30210001
 
 /** A struct representing the UBX-NAV-STAT (navigation status) payload */
 typedef struct {

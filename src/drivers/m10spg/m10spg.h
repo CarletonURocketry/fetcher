@@ -12,14 +12,17 @@
 #include "ubx_def.h"
 #include <stdint.h>
 
-/** An enum representing the commands that can be used for polling M10SPG data. */
+/** An enum representing the commands that can be used for reading from the M10SPG, where the value of the enum
+ * represents the class and id, in the high and low bytes of a uint16, respectively */
 typedef enum {
-    UBX_NAV_UTC,    /**< UTC time information, recieved formatted as a human readable date */
-    UBX_NAV_POSLLH, /**< Latitude and longitude information, along with altitude */
-    UBX_NAV_VELNED, /**< Velocity and heading information */
-    UBX_NAV_STAT,   /**< GPS status information about fix, fix type */
-    UBX_MON_VER,    /**< Firmware version information */
-    UBX_NAV_PVT,    /**< Position, velocity, time information, it is reccomended to use this message */
+    UBX_NO_MESSAGE = 0x0000, /**< Read no message */
+    UBX_ANY = 0xFFFF,        /**< Read any message */
+    UBX_NAV_UTC = 0x0121,    /**< Read UTC time information, recieved formatted as a human readable date */
+    UBX_NAV_POSLLH = 0x0102, /**< Read Latitude and longitude information, along with altitude */
+    UBX_NAV_VELNED = 0x0112, /**< Read Velocity and heading information */
+    UBX_NAV_STAT = 0x0103,   /**< Read GPS status information about fix, fix type */
+    UBX_MON_VER = 0x0A04,    /**< Read Firmware version information */
+    UBX_NAV_PVT = 0x0107,    /**< Read Position, velocity, time information (reccomended) */
 } M10SPGMessageType;
 
 /**
