@@ -32,6 +32,9 @@
 /** How long the recieve command for UBX messages should wait between trying to read a message, in usec */
 #define RECV_SLEEP_TIME 1000
 
+/** How long to wait after issuing a restart command, in usec */
+#define RESTART_SLEEP_TIME 500000
+
 /** How long m10spg_read should wait for a response in seconds */
 #define DEFAULT_TIMEOUT 2
 
@@ -236,6 +239,18 @@ static int send_message(const SensorLocation *loc, const UBXFrame *msg) {
 }
 
 /**
+ * Initializes a m10spg context structure for use, but does not configure the chip
+ * @param ctx The context to be set up
+ * @param loc The m10spg's location on the I2C bus
+ */
+static void init_context(M10SPGContext *ctx, const SensorLocation *loc) {
+    for (int i = 0; i < MAX_PERIODIC_MESSAGES; i++) {
+        ctx->handlers[i].type = 0;
+    }
+    ctx->loc = loc;
+}
+
+/**
  * Gets the next ublox protcol message from the reciever, reading through any non-ublox data
  * @param loc The m10spg's location on the I2C bus
  * @param msg An empty message structure, with a payload pointing at a data buffer to read the payload into
@@ -275,35 +290,49 @@ static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_p
 
 /**
  * Reads messages from the sensor until a message of type msg_type is read
- * @param loc The m10spg's location on the I2C bus
+ * @param ctx The context of a m10spg sensor
  * @param msg_type The type of the last message to be read, if there are multiple messages in the data buffer
  * @param buf The location to store the message of msg_type. Buffer contents may be modified if a message is not found
- * @param size The size of the data buffer, should be at least large enough for any periodic messages that were registered
- * @return int 0 if the message of msg_type was placed in buf, ENODATA if the buffer is empty, and other errors for problems reading over I2C 
+ * @param size The size of the data buffer, should be at least large enough for any periodic messages that were
+ * registered
+ * @return int 0 if the message of msg_type was placed in buf, ENODATA if the buffer is empty, and other errors for
+ * problems reading over I2C
  */
-int m10spg_read(const SensorLocation *loc, M10SPGMessageType msg_type, uint8_t *buf, size_t size) {
+int m10spg_read(const M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t size) {
     UBXFrame recv;
     recv.payload = buf;
-    int err = recv_message(loc, &recv, size);
+    int err = recv_message(ctx->loc, &recv, size);
     return err;
 }
 
 /**
- * Prepares the M10SPG for reading.
- * @param loc The m10spg's location on the I2C bus
+ * Enables a periodic message and registers a handler for that periodic message
+ * @param ctx The context of a m10spg sensor
+ * @param handler A function pointer which has the described properties that will consume periodic messages
+ * @param msg_type The type of message that will cause the handler to be called
+ * @return int
+ */
+int m10spg_register_periodic(const M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type) {}
+
+/**
+ * Prepares the M10SPG for reading and sets up its context
+ * @param ctx The context of a m10spg sensor
+ * @param loc The location of this sensor on the I2C bus
  * @return int The error status of the call. EOK if successful.
  */
-int m10spg_open(const SensorLocation *loc) {
+int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
+    init_context(ctx, loc);
+
     UBXFrame msg;
     UBXValsetPayload valset_payload;
     UBXAckPayload ack_payload;
+    UBXConfigResetPayload reset_payload;
 
     // Clear the RAM configuration to ensure our settings are the only ones being used
     msg.header.class = 0x06;
     msg.header.id = 0x04;
-    msg.header.length = 4;
+    msg.header.length = sizeof(reset_payload);
 
-    UBXConfigResetPayload reset_payload;
     reset_payload.navBbrMask[0] = 0x00;
     reset_payload.navBbrMask[1] = 0x00;
     reset_payload.resetMode = UBX_SOFT_RESET;
@@ -343,7 +372,7 @@ int m10spg_open(const SensorLocation *loc) {
     // Check if configuration was successful
     msg.payload = &ack_payload;
     // Longer timeout for the reboot
-    err = recv_message(loc, &msg, sizeof(ack_payload), DEFAULT_TIMEOUT);
+    err = recv_message(loc, &msg, sizeof(ack_payload));
     return_err(err);
     if (msg.header.class == 0x05) {
         if (msg.header.id == 0x01) {
@@ -362,11 +391,11 @@ int m10spg_open(const SensorLocation *loc) {
 
 /**
  * Helper function to sleep this thread until it's likely there will be a new payload in the data buffer soon
- * @param payload A payload, if we recieved one, or NULL if we did not or could not
+ * @param ctx The context of the m10spg sensor that should be waited for
  */
-void wait_for_meas(UBXNavPVTPayload *payload) {
-    // Garbage for now
-    usleep(1000);
+void wait_for_meas(M10SPGContext *ctx) {
+    // Sleep the time between measurements, which should be roughly the time between packages
+    usleep(NOMINAL_MEASUREMENT_RATE * 1000);
 }
 
 #ifdef __M10SPG_DEBUG__

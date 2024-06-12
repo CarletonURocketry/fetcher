@@ -33,9 +33,20 @@ typedef enum {
  */
 typedef int (*M10SPGMessageHandler)(UBXFrame *msg, M10SPGMessageType type);
 
-int m10spg_open(const SensorLocation *loc);
-int m10spg_read(const SensorLocation *loc, M10SPGMessageType msg_type, uint8_t *buf, size_t size);
-int m10spg_register_periodic(const SensorLocation *loc, M10SPGMessageHandler handler, M10SPGMessageType msg_type);
-void wait_for_meas(UBXNavPVTPayload *payload);
+#define MAX_PERIODIC_MESSAGES 3
+
+/** A struct that describes a M10SPG sensor */
+typedef struct {
+    const SensorLocation *loc; /**< The location of this sensor on the I2C bus */
+    struct {
+        M10SPGMessageType type;       /**< The type of message that this handler takes */
+        M10SPGMessageHandler handler; /**< The function to call when finding a message of the specified type */
+    } handlers[MAX_PERIODIC_MESSAGES];
+} M10SPGContext;
+
+int m10spg_open(M10SPGContext *ctx, SensorLocation *loc);
+int m10spg_read(const M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t size);
+int m10spg_register_periodic(const M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type);
+void wait_for_meas(M10SPGContext *ctx);
 
 #endif // _MAXM10S_

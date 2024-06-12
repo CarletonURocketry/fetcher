@@ -24,10 +24,11 @@ void *m10spg_collector(void *args) {
         .bus = clctr_args(args)->bus,
         .addr = {.addr = (clctr_args(args)->addr), .fmt = I2C_ADDRFMT_7BIT},
     };
+    M10SPGContext ctx;
 
     int err;
     do {
-        err = m10spg_open(&loc);
+        err = m10spg_open(&ctx, &loc);
         if (err != EOK) {
             log_print(stderr, LOG_ERROR, "Could not open M10SPG: %s", strerror(err));
             return (void *)((uint64_t)err);
@@ -37,25 +38,26 @@ void *m10spg_collector(void *args) {
     for (;;) {
         UBXNavPVTPayload payload;
         common_t msg;
-        err = m10spg_read(&loc, UBX_NAV_PVT, &payload, sizeof(payload));
+        err = m10spg_read(&ctx, UBX_NAV_PVT, (uint8_t *)&payload, sizeof(payload));
         // Check if we could send command
         if (err == ENODATA) {
             // Nothing in the queue yet, but we expect there to be something soon, so keep reading
             continue;
         } else if (err) {
             log_print(stderr, LOG_ERROR, "Could not send command to M10SPG: %s", strerror(err));
-            wait_for_meas(NULL);
+            wait_for_meas(&ctx);
             continue;
         }
-        fetcher_log(stderr, LOG_INFO, "M10SPG current fix is: %d", payload.fixType);
-
+        
         // Skip this payload if the fix isn't valid
         if (!(payload.flags & GNSS_FIX_OK)) {
             // Don't bother looking at data if it is going to be invalid
-            log_print(stderr, LOG_WARN, "M10SPG fix is invalid or no-fix, skipping this payload ");
-            wait_for_meas(&payload);
+            log_print(stderr, LOG_WARN, "M10SPG fix is invalid, skipping this payload");
+            wait_for_meas(&ctx);
             continue;
         }
+        log_print(stderr, LOG_INFO, "M10SPG current fix is: %d", payload.fixType);
+
 
         // Only transmit data that is valid
         switch (payload.fixType) {
@@ -81,7 +83,7 @@ void *m10spg_collector(void *args) {
         default:
             break;
         }
-        wait_for_meas(&payload);
+        wait_for_meas(&ctx);
     }
     log_print(stderr, LOG_ERROR, "M10SPG exited unexpectedly: %s", strerror(err));
     return (void *)((uint64_t)err);
