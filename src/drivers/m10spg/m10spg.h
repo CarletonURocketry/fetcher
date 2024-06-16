@@ -54,6 +54,6 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc);
 int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, UBXFrame *recv, size_t size);
 int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type);
 int m10spg_is_type(UBXFrame *msg, M10SPGMessageType type);
-void m10spg_sleep_epoch(M10SPGContext *ctx);
+void m10spg_sleep_epoch();
 
 #endif // _MAXM10S_

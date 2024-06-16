@@ -127,9 +127,8 @@ static inline int checksum_is_valid(UBXFrame *msg) {
 
 /**
  * Helper function to sleep this thread until it's likely there will be a new payload in the data buffer soon
- * @param ctx The context of the m10spg sensor that should be waited for
  */
-void m10spg_sleep_epoch(M10SPGContext *ctx) {
+void m10spg_sleep_epoch() {
     // Sleep the time between measurements, which should be roughly the time between packages
     usleep(UBX_NOMINAL_MEASUREMENT_RATE * 1000);
 }
@@ -141,7 +140,7 @@ void m10spg_sleep_epoch(M10SPGContext *ctx) {
  * @param nbytes The number of bytes to read into the buffer
  * @return int The error status of the call. EOK if successful.
  */
-int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
+static int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
     i2c_recv_t header = {.stop = 1};
     header.slave = loc->addr;
     header.len = nbytes;

@@ -48,7 +48,7 @@ void *m10spg_collector(void *args) {
     for (;;) {
         // Clear out our read buffer (ask for nothing back)
         m10spg_read(&ctx, UBX_MSG_NONE, &msg, sizeof(payload));
-        m10spg_sleep_epoch(&ctx);
+        m10spg_sleep_epoch();
     }
     log_print(stderr, LOG_ERROR, "M10SPG exited unexpectedly: %s", strerror(err));
     return (void *)((uint64_t)err);
