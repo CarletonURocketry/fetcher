@@ -128,7 +128,7 @@ static inline int checksum_is_valid(UBXFrame *msg) {
 /**
  * Helper function to sleep this thread until it's likely there will be a new payload in the data buffer soon
  */
-void m10spg_sleep_epoch() {
+void m10spg_sleep_epoch(void) {
     // Sleep the time between measurements, which should be roughly the time between packages
     usleep(UBX_NOMINAL_MEASUREMENT_RATE * 1000);
 }
