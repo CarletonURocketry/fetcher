@@ -56,7 +56,6 @@ void *m10spg_collector(void *args) {
 
 /** A function implementing the M10SPGMessageHandler definition, for handling PVT messages (not thread safe currently)*/
 int m10spg_pvt_handler(UBXFrame *msg) {
-    // TODO - double check the type ourselves
     if (!m10spg_is_type(msg, UBX_MSG_NAV_PVT)) {
         log_print(stderr, LOG_ERROR, "Handler was given a type it cannot handle, configuration error");
         return -1;

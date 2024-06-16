@@ -117,53 +117,21 @@ static void calculate_checksum(UBXFrame *msg, uint8_t *ck_a, uint8_t *ck_b) {
 /**
  * Tests if the checksum is valid
  * @param msg The message to check the checksum of, with an initialized header and payload
- * @return uint8_t Zero if the checksum is valid
+ * @return int 1 if the checksum is valid, 0 otherwise
  */
-static inline uint8_t test_checksum(UBXFrame *msg) {
+static inline int checksum_is_valid(UBXFrame *msg) {
     uint8_t a, b;
     calculate_checksum(msg, &a, &b);
     return msg->checksum_a == a && msg->checksum_b == b;
 }
 
 /**
- * Initializes a valset message, but does not add any configuration items to set
- * @param msg A message with a UBXValsetPayload as its payload
- * @param layer The layer this valset message will configure its items at
+ * Helper function to sleep this thread until it's likely there will be a new payload in the data buffer soon
+ * @param ctx The context of the m10spg sensor that should be waited for
  */
-static void init_valset_message(UBXFrame *msg, UBXConfigLayer layer) {
-    msg->header.class = 0x06;
-    msg->header.id = 0x8a;
-
-    UBXValsetPayload *payload = ((UBXValsetPayload *)msg->payload);
-    payload->version = 0x00;
-    payload->layer = (uint8_t)layer;
-
-    // Set up the message with no items, configure those later and change the length then
-    msg->header.length =
-        sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(payload->layer) + sizeof(payload->version);
-}
-
-/**
- * Add a configuration item to a valset payload
- * @param msg A UBXFrame with a UBXValsetPayload as its payload
- * @param key A key (in little endian) of the item to set
- * @param value The configuration value to set the key to
- * @param type The type of value being set
- * @return int EINVAL if the message has no space for this configuration item, EOK otherwise
- */
-static int add_valset_item(UBXFrame *msg, uint32_t key, const void *value, UBXValueType type) {
-    UBXValsetPayload *payload = ((UBXValsetPayload *)msg->payload);
-    // Get the next empty byte in the payload's configuration item array
-    uint8_t next_byte = msg->header.length - (sizeof(msg->header.class) + sizeof(msg->header.id) +
-                                              sizeof(payload->layer) + sizeof(payload->version));
-    // Return error if no space left to place the key
-    if ((next_byte + sizeof(key) + type) > sizeof(payload->config_items)) {
-        return EINVAL;
-    }
-    memcpy(payload->config_items + next_byte, &key, sizeof(key));
-    memcpy(payload->config_items + next_byte + sizeof(key), value, type);
-    msg->header.length += sizeof(key) + type;
-    return EOK;
+void m10spg_sleep_epoch(M10SPGContext *ctx) {
+    // Sleep the time between measurements, which should be roughly the time between packages
+    usleep(UBX_NOMINAL_MEASUREMENT_RATE * 1000);
 }
 
 /**
@@ -209,18 +177,6 @@ static int send_message(const SensorLocation *loc, const UBXFrame *msg) {
 
     int err = devctl(loc->bus, DCMD_I2C_SEND, data, sizeof(data), NULL);
     return err;
-}
-
-/**
- * Initializes a m10spg context structure for use, but does not configure the chip
- * @param ctx The context to be set up
- * @param loc The m10spg's location on the I2C bus
- */
-static void init_context(M10SPGContext *ctx, const SensorLocation *loc) {
-    for (int i = 0; i < MAX_PERIODIC_MESSAGES; i++) {
-        ctx->handlers[i].type = UBX_MSG_NONE;
-    }
-    ctx->loc = loc;
 }
 
 /**
@@ -295,6 +251,47 @@ int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, UBXFrame *recv, 
     } while (++retires < READ_MAX_RETIRES);
     // No data in buf
     return ENODATA;
+}
+
+/**
+ * Initializes a valset message, but does not add any configuration items to set
+ * @param msg A message with a UBXValsetPayload as its payload
+ * @param layer The layer this valset message will configure its items at
+ */
+static void init_valset_message(UBXFrame *msg, UBXConfigLayer layer) {
+    msg->header.class = 0x06;
+    msg->header.id = 0x8a;
+
+    UBXValsetPayload *payload = ((UBXValsetPayload *)msg->payload);
+    payload->version = 0x00;
+    payload->layer = (uint8_t)layer;
+
+    // Set up the message with no items, configure those later and change the length then
+    msg->header.length =
+        sizeof(msg->header.class) + sizeof(msg->header.id) + sizeof(payload->layer) + sizeof(payload->version);
+}
+
+/**
+ * Add a configuration item to a valset payload
+ * @param msg A UBXFrame with a UBXValsetPayload as its payload
+ * @param key A key (in little endian) of the item to set
+ * @param value The configuration value to set the key to
+ * @param type The type of value being set
+ * @return int EINVAL if the message has no space for this configuration item, EOK otherwise
+ */
+static int add_valset_item(UBXFrame *msg, uint32_t key, const void *value, UBXValueType type) {
+    UBXValsetPayload *payload = ((UBXValsetPayload *)msg->payload);
+    // Get the next empty byte in the payload's configuration item array
+    uint8_t next_byte = msg->header.length - (sizeof(msg->header.class) + sizeof(msg->header.id) +
+                                              sizeof(payload->layer) + sizeof(payload->version));
+    // Return error if no space left to place the key
+    if ((next_byte + sizeof(key) + type) > sizeof(payload->config_items)) {
+        return EINVAL;
+    }
+    memcpy(payload->config_items + next_byte, &key, sizeof(key));
+    memcpy(payload->config_items + next_byte + sizeof(key), value, type);
+    msg->header.length += sizeof(key) + type;
+    return EOK;
 }
 
 /**
@@ -375,6 +372,18 @@ int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M
 }
 
 /**
+ * Initializes a m10spg context structure for use, but does not configure the chip
+ * @param ctx The context to be set up
+ * @param loc The m10spg's location on the I2C bus
+ */
+static void init_context(M10SPGContext *ctx, const SensorLocation *loc) {
+    for (int i = 0; i < MAX_PERIODIC_MESSAGES; i++) {
+        ctx->handlers[i].type = UBX_MSG_NONE;
+    }
+    ctx->loc = loc;
+}
+
+/**
  * Prepares the M10SPG for reading and sets up its context
  * @param ctx The context of a m10spg sensor
  * @param loc The location of this sensor on the I2C bus
@@ -382,13 +391,10 @@ int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M
  */
 int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
     init_context(ctx, loc);
-
     UBXFrame msg;
-    UBXValsetPayload valset_payload;
-    UBXConfigResetPayload reset_payload;
 
-    // TODO - replace this with something better
     // Clear the RAM configuration to ensure our settings are the only ones being used
+    UBXConfigResetPayload reset_payload;
     msg.header.class = 0x06;
     msg.header.id = 0x04;
     msg.header.length = sizeof(reset_payload);
@@ -400,9 +406,10 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
     calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
     send_message(loc, &msg);
     // Has no response, sleep to wait for reset
-    sleep(1);
+    usleep(RESTART_SLEEP_TIME);
 
-    // Configure the chip
+    // Configure the chip with some base settings
+    UBXValsetPayload valset_payload;
     msg.payload = &valset_payload;
 
     // Put our actual configuration on there
@@ -422,15 +429,6 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
     add_valset_item(&msg, (uint32_t)UBX_BSD_SIGNAL_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
 
     return send_valset_message(ctx, &msg);
-}
-
-/**
- * Helper function to sleep this thread until it's likely there will be a new payload in the data buffer soon
- * @param ctx The context of the m10spg sensor that should be waited for
- */
-void m10spg_sleep_epoch(M10SPGContext *ctx) {
-    // Sleep the time between measurements, which should be roughly the time between packages
-    usleep(UBX_NOMINAL_MEASUREMENT_RATE * 1000);
 }
 
 #ifdef __M10SPG_DEBUG__
