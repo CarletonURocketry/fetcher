@@ -1,6 +1,6 @@
 #include "../drivers/m10spg/m10spg.h"
 #include "../drivers/m10spg/ubx_def.h"
-#include "../logging.h"
+#include "../logging-utils/logging.h"
 #include "collectors.h"
 
 union read_buffer {
@@ -14,7 +14,7 @@ union read_buffer {
  */
 #define send_msg(sensor_q, msg, prio)                                                                                  \
     if (mq_send((sensor_q), (char *)(&(msg)), sizeof(msg), (prio)) == -1) {                                            \
-        fetcher_log(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                           \
+        log_print(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                             \
     }
 
 void *m10spg_collector(void *args) {
@@ -22,8 +22,8 @@ void *m10spg_collector(void *args) {
     /* Open message queue. */
     mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
-        fetcher_log(stderr, LOG_ERROR, "M10SPG collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
-                    strerror(errno));
+        log_print(stderr, LOG_ERROR, "M10SPG collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
+                  strerror(errno));
         return (void *)((uint64_t)errno);
     }
 
@@ -36,7 +36,7 @@ void *m10spg_collector(void *args) {
     do {
         err = m10spg_open(&loc);
         if (err != EOK) {
-            fetcher_log(stderr, LOG_ERROR, "Could not open M10SPG: %s", strerror(err));
+            log_print(stderr, LOG_ERROR, "Could not open M10SPG: %s", strerror(err));
             return (void *)((uint64_t)err);
         }
     } while (err != EOK);
@@ -50,7 +50,7 @@ void *m10spg_collector(void *args) {
 
         // Check if we could send command
         if (err) {
-            fetcher_log(stderr, LOG_ERROR, "Could not send command to M10SPG: %s", strerror(err));
+            log_print(stderr, LOG_ERROR, "Could not send command to M10SPG: %s", strerror(err));
             continue;
         }
 
@@ -58,14 +58,14 @@ void *m10spg_collector(void *args) {
 
         // Don't bother reading any information if there's no fix
         if (fix_type == GPS_NO_FIX) {
-            fetcher_log(stderr, LOG_WARN, "M10SPG could not get fix.");
+            log_print(stderr, LOG_WARN, "M10SPG could not get fix, fix type: %d", fix_type);
             continue;
         }
 
         // Read position
         err = m10spg_send_command(&loc, UBX_NAV_POSLLH, &buf, sizeof(UBXNavPositionPayload));
         if (err) {
-            fetcher_log(stderr, LOG_ERROR, "M10SPG failed to read position: %s", strerror(err));
+            log_print(stderr, LOG_ERROR, "M10SPG failed to read position: %s", strerror(err));
             continue;
         }
 
@@ -109,6 +109,6 @@ void *m10spg_collector(void *args) {
     /*     fprintf(stderr, "M10SPG failed to read velocity: %s\n", strerror(err)); */
     /*     continue; */
     /* } */
-    fetcher_log(stderr, LOG_ERROR, "%s", strerror(err));
+    log_print(stderr, LOG_ERROR, "%s", strerror(err));
     return (void *)((uint64_t)err);
 }

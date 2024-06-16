@@ -32,11 +32,16 @@ WARNINGS += -Wdisabled-optimization -Wsuggest-attribute=const
 
 ### UPDATE CFLAGS ###
 CCFLAGS += -std=$(CSTD) $(OPTIMIZATION) $(WARNINGS)
+
+# For logging utility
+CCFLAGS += -DPROGNAME=$(NAME)
+
 #### PROJECT SPECIFIC ####
 
 ### SOURCE FILES ###
 SRC_SUBDIRECTORIES = $(shell find $(PROJECT_ROOT)/src -type d)
 EXTRA_SRCVPATH += $(SRC_SUBDIRECTORIES)
+EXTRA_SRCVPATH += $(PROJECT_ROOT)/../logging-utils
 
 ### EXTRA LIBRARIES ###
 LIBS += i2c-master m
