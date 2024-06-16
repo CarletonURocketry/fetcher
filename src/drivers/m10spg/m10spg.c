@@ -35,7 +35,16 @@
 /** How long to wait after issuing a restart command, in usec */
 #define RESTART_SLEEP_TIME 500000
 
-// TODO - add a lookup table for types
+/** How many times to try and read from the sensor if there are errors or no data is waiting */
+#define READ_MAX_RETIRES 10
+
+/** An array containing UBX headers that describe the message types */
+const UBXHeader MSG_HEADER[] = {
+    [UBX_MSG_NAV_PVT] = {.class = 0x01, .id = 0x07, .length = 0},
+    [UBX_MSG_ACK] = {.class = 0x05, .id = 0x01, .length = 0},
+    [UBX_MSG_NACK] = {.class = 0x05, .id = 0x00, .length = 0},
+    [UBX_MSG_RST] = {.class = 0x06, .id = 0x04, .length = 0},
+};
 
 /**
  * Gets the total length of a message, including checksums and sync characters
@@ -222,20 +231,42 @@ static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_p
 }
 
 /**
- * Reads messages from the sensor until a message of type msg_type is read
+ * Reads messages from the sensor until a message of type msg_type is read, handling registered messages
  * @param ctx The context of a m10spg sensor
- * @param msg_type The type of the last message to be read, if there are multiple messages in the data buffer
- * @param buf The location to store the message of msg_type. Buffer contents may be modified if a message is not found
+ * @param msg_type Read until a message of this type is found - messages that aren't of this type will be handled by a
+ * registered handler, or ignored if none exist
+ * @param buf The location to store the message of msg_type
  * @param size The size of the data buffer, should be at least large enough for any periodic messages that were
- * registered.
- * @return int 0 if the message of msg_type was placed in buf, ENODATA if the buffer is empty, and other errors for
- * problems reading over I2C
+ * registered, when the function returns this is the length of the message in buf
+ * @return M10SPGMessageType the type of who's payload is in buf, UBX_MSG_NONE if there was no payload to return, or -1
+ * if there was an error reading/processing a message
  */
-int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t size) {
+M10SPGMessageType m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t *size) {
     UBXFrame recv;
     recv.payload = buf;
-    int err = recv_message(ctx->loc, &recv, size);
-    return err;
+    int retires = 0;
+    do {
+        if (recv_message(ctx->loc, &recv, *size) == EOK) {
+            M10SPGMessageType recv_type = m10spg_get_payload_type(&recv);
+            if (recv_type == msg_type) {
+                *size = recv.header.length;
+                return msg_type;
+            }
+            for (int i = 0; i < MAX_PERIODIC_MESSAGES && ctx->handlers[i].type != UBX_MSG_NONE; i++) {
+                if (ctx->handlers[i].type == recv_type) {
+                    // Handle the message
+                    ctx->handlers[i].handler(&recv, recv_type);
+                    // TODO - consider checking the error message, taking some action on it
+                    break;
+                }
+            }
+        }
+        // If no data, retry until retires. If error that isn't fatal, retry until retires
+        // TODO - checking of err should be improved using new recv_message definition
+    } while (++retires < READ_MAX_RETIRES);
+    // No data in buf
+    *size = 0;
+    return UBX_MSG_NONE;
 }
 
 /**
@@ -287,13 +318,15 @@ int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M
     }
 }
 
+// TODO - add description
 static int send_valset_message(M10SPGContext *ctx, UBXFrame *msg) {
     calculate_checksum(msg, &msg->checksum_a, &msg->checksum_b);
     int err = send_message(ctx->loc, msg);
     return_err(err);
 
     UBXAckPayload ack_payload;
-    err = m10spg_read(ctx, UBX_MSG_ACK_NACK, (uint8_t *)&ack_payload, sizeof(ack_payload));
+    size_t ack_size = sizeof(ack_payload);
+    err = m10spg_read(ctx, UBX_MSG_ACK_NACK, (uint8_t *)&ack_payload, &ack_size);
     if (err == ENODATA) {
         // Configuration didn't work
         return ECANCELED;

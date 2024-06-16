@@ -42,11 +42,11 @@ void *m10spg_collector(void *args) {
             continue;
         }
     } while (err != EOK);
-
+    UBXNavPVTPayload payload;
     for (;;) {
-        UBXNavPVTPayload payload;
+        size_t payload_size = sizeof(payload);
         // Clear out our read buffer (ask for nothing back)
-        err = m10spg_read(&ctx, UBX_MSG_NONE, (uint8_t *)&payload, sizeof(payload));
+        err = m10spg_read(&ctx, UBX_MSG_NONE, (uint8_t *)&payload, &payload_size);
         // TODO - Check err
         // Wait until the next navigation epoch
         m10spg_sleep_epoch(&ctx);

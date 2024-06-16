@@ -15,17 +15,18 @@
 /** An enum representing the commands that can be used for reading from the M10SPG, where the value of the enum
  * represents the class and id, in the high and low bytes of a uint16, respectively */
 typedef enum {
-    UBX_MSG_NONE = 0X00, /**< No message */
-    UBX_MSG_ANY,         /**< Any message */
-    UBX_MSG_ACK,         /**< Acknowledgment message */
-    UBX_MSG_NACK,        /**< Non-acknowledgement message */
-    UBX_MSG_ACK_NACK,    /**< Acknowledgement or non-acknowledgement message */
-    UBX_MSG_NAV_UTC,     /**< UTC time information, recieved formatted as a human readable date */
-    UBX_MSG_NAV_POSLLH,  /**< Latitude and longitude information, along with altitude */
-    UBX_MSG_NAV_VELNED,  /**< Velocity and heading information */
-    UBX_MSG_NAV_STAT,    /**< GPS status information about fix, fix type */
-    UBX_MSG_MON_VER,     /**< Firmware version information */
-    UBX_MSG_NAV_PVT,     /**< Position, velocity, time information (reccomended) */
+    UBX_MSG_NONE = 0X00,       /**< No message */
+    UBX_MSG_ANY = 0x01,        /**< Any message */
+    UBX_MSG_ACK = 0x02,        /**< Acknowledgment message */
+    UBX_MSG_NACK = 0x03,       /**< Non-acknowledgement message */
+    UBX_MSG_ACK_NACK = 0x04,   /**< Acknowledgement or non-acknowledgement message */
+    UBX_MSG_NAV_UTC = 0x05,    /**< UTC time information, recieved formatted as a human readable date */
+    UBX_MSG_NAV_POSLLH = 0x06, /**< Latitude and longitude information, along with altitude */
+    UBX_MSG_NAV_VELNED = 0x07, /**< Velocity and heading information */
+    UBX_MSG_NAV_STAT = 0x08,   /**< GPS status information about fix, fix type */
+    UBX_MSG_MON_VER = 0x09,    /**< Firmware version information */
+    UBX_MSG_NAV_PVT = 0x0a,    /**< Position, velocity, time information (reccomended) */
+    UBX_MSG_RST = 0x0b,        /**< Reciever reset message */
 } M10SPGMessageType;
 
 /**
@@ -51,7 +52,7 @@ typedef struct {
 } M10SPGContext;
 
 int m10spg_open(M10SPGContext *ctx, SensorLocation *loc);
-int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t size);
+M10SPGMessageType m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t *size);
 int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type);
 M10SPGMessageType m10spg_get_payload_type(UBXFrame *msg);
 void m10spg_sleep_epoch(M10SPGContext *ctx);
