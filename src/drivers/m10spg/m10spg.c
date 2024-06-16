@@ -188,7 +188,6 @@ int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
     return EOK;
 }
 
-// TODO - auto assembly of our packages?
 /**
  * Sends a UBX message
  * @param loc The m10spg's location on the I2C bus
@@ -303,7 +302,8 @@ int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, UBXFrame *recv, 
  * @param ctx The context of the m10spg sensor to configure
  * @param msg A valset message that has been initialized and had configuration keys added to it using the provided
  * functions
- * @return int 0 if the
+ * @return int EOK if the configuration was successful, ECANCELED if the reciever didn't apply the configuration, EIO if
+ * there was a problem communicating with the reciever
  */
 static int send_valset_message(M10SPGContext *ctx, UBXFrame *msg) {
     calculate_checksum(msg, &msg->checksum_a, &msg->checksum_b);
@@ -326,8 +326,8 @@ static int send_valset_message(M10SPGContext *ctx, UBXFrame *msg) {
  * Configures the sensor to output a periodic message of the specified type
  * @param ctx The context of a m10spg sensor
  * @param type The type of message that should be output periodically
- * @return int If the message could be configured, the error status of the write or read, or ENOSYS if the message type
- * is not supported
+ * @return int EOK if the message was configured, ENOSYS if the message type is not supported, or an error describing
+ * problems configuring the reciever
  */
 static int enable_periodic_message(M10SPGContext *ctx, M10SPGMessageType type) {
     UBXFrame msg;
@@ -352,21 +352,26 @@ static int enable_periodic_message(M10SPGContext *ctx, M10SPGMessageType type) {
  * Enables a periodic message and registers a handler for that periodic message
  * @param ctx The context of a m10spg sensor
  * @param handler A function pointer which has the described properties that will consume periodic messages
- * @param msg_type The type of message that will cause the handler to be called, if this already has a handler it will
- * be overwritten
- * @return int 0 if the periodic message was enabled
+ * @param msg_type What types to give to this handler, overwriting any existing handlers of the same types
+ * @return int EOK if the periodic message was enabled, ENOSPC if the max number of periodic messages are already
+ * enabled, ENOSYS if this message is not supported, ECANCELED if the message could not be configured. Other error codes
+ * will still add a handler
  */
 int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type) {
     for (int i = 0; i < MAX_PERIODIC_MESSAGES; i++) {
         // Made it to a unfilled handler spot or overwrite an existing handler
         if (ctx->handlers[i].type == UBX_MSG_NONE || ctx->handlers[i].type == msg_type) {
             int err = enable_periodic_message(ctx, msg_type);
-            return_err(err);
+            if (err == ENOSYS || err == ECANCELED) {
+                return err;
+            }
+            // Still configure if there's a chance the periodic message was actually enabled
             ctx->handlers[i].type = msg_type;
             ctx->handlers[i].handler = handler;
-            // TODO - return here?
+            return err;
         }
     }
+    return ENOSPC;
 }
 
 /**
