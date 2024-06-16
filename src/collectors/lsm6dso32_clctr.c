@@ -117,5 +117,7 @@ void *lsm6dso32_collector(void *args) {
                 log_print(stderr, LOG_ERROR, "LSM6DSO32 couldn't send message: %s", strerror(err));
             }
         }
+
+        usleep(1000);
     }
 }
