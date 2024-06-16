@@ -209,6 +209,9 @@ static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_p
             return_err(err);
             // Read in the checksums (assume contiguous)
             err = read_bytes(loc, &msg->checksum_a, 2);
+            if (!checksum_is_valid(msg)) {
+                return EBADMSG;
+            }
             return err;
         } else {
             return EBADMSG;
