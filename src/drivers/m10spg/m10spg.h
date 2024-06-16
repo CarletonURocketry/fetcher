@@ -15,12 +15,12 @@
 /** An enum representing the commands that can be used for reading from the M10SPG, where the value of the enum
  * represents the class and id, in the high and low bytes of a uint16, respectively */
 typedef enum {
-    UBX_MSG_NONE = 0X00,       /**< No message */
-    UBX_MSG_ANY = 0x01,        /**< Any message */
-    UBX_MSG_ACK = 0x02,        /**< Acknowledgment message */
-    UBX_MSG_NACK = 0x03,       /**< Non-acknowledgement message */
-    UBX_MSG_ACK_NACK = 0x04,   /**< Acknowledgement or non-acknowledgement message */
-    UBX_MSG_NAV_UTC = 0x05,    /**< UTC time information, recieved formatted as a human readable date */
+    UBX_MSG_NONE = 0x00,     /**< No message (not a real message type) */
+    UBX_MSG_ANY = 0x01,      /**< Any message (not a real message type) */
+    UBX_MSG_ACK = 0x02,      /**< Acknowledgment message */
+    UBX_MSG_NACK = 0x03,     /**< Non-acknowledgement message */
+    UBX_MSG_ACK_NACK = 0x04, /**< Either the acknowledgement or non-acknowledgement message (not a real message type) */
+    UBX_MSG_NAV_UTC = 0x05,  /**< UTC time information, recieved formatted as a human readable date */
     UBX_MSG_NAV_POSLLH = 0x06, /**< Latitude and longitude information, along with altitude */
     UBX_MSG_NAV_VELNED = 0x07, /**< Velocity and heading information */
     UBX_MSG_NAV_STAT = 0x08,   /**< GPS status information about fix, fix type */
@@ -35,10 +35,9 @@ typedef enum {
  * discarded
  *
  * @param msg The message that was last read from the gps and which now needs to be consumed
- * @param type The type of msg (containing the same information as the class and id fields)
  * @return 0 if the message was handled successfully, -1 if there was an error processing the message
  */
-typedef int (*M10SPGMessageHandler)(UBXFrame *msg, M10SPGMessageType type);
+typedef int (*M10SPGMessageHandler)(UBXFrame *msg);
 
 #define MAX_PERIODIC_MESSAGES 1
 
@@ -52,9 +51,9 @@ typedef struct {
 } M10SPGContext;
 
 int m10spg_open(M10SPGContext *ctx, SensorLocation *loc);
-M10SPGMessageType m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t *size);
+int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, UBXFrame *recv, size_t size);
 int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type);
-M10SPGMessageType m10spg_get_payload_type(UBXFrame *msg);
+int m10spg_is_type(UBXFrame *msg, M10SPGMessageType type);
 void m10spg_sleep_epoch(M10SPGContext *ctx);
 
 #endif // _MAXM10S_

@@ -39,12 +39,45 @@
 #define READ_MAX_RETIRES 10
 
 /** An array containing UBX headers that describe the message types */
-const UBXHeader MSG_HEADER[] = {
+const UBXHeader MSG_HEADERS[] = {
+    [UBX_MSG_NONE] = {.class = 0x00, .id = 0x00, .length = 0},
+    [UBX_MSG_ANY] = {.class = 0x00, .id = 0x00, .length = 0},
+    [UBX_MSG_ACK_NACK] = {.class = 0x00, .id = 0x00, .length = 0},
+    [UBX_MSG_NAV_UTC] = {.class = 0x01, .id = 0x21, .length = 0},
+    [UBX_MSG_NAV_POSLLH] = {.class = 0x01, .id = 0x02, .length = 0},
+    [UBX_MSG_NAV_VELNED] = {.class = 0x01, .id = 0x12, .length = 0},
+    [UBX_MSG_NAV_STAT] = {.class = 0x01, .id = 0x03, .length = 0},
+    [UBX_MSG_MON_VER] = {.class = 0x0a, .id = 0x04, .length = 0},
     [UBX_MSG_NAV_PVT] = {.class = 0x01, .id = 0x07, .length = 0},
     [UBX_MSG_ACK] = {.class = 0x05, .id = 0x01, .length = 0},
     [UBX_MSG_NACK] = {.class = 0x05, .id = 0x00, .length = 0},
     [UBX_MSG_RST] = {.class = 0x06, .id = 0x04, .length = 0},
 };
+
+/**
+ * Checks if this message is of the specified type
+ * @param msg A message with an intialized header
+ * @param type A message type that describes which messages to match with - if the type is UBX_MSG_ANY, matches any
+ * message, and UBX_MSG_NONE matches no messages
+ * @return int 1 if the message is of the correct type, 0 otherwise
+ */
+int m10spg_is_type(UBXFrame *msg, M10SPGMessageType type) {
+    switch (type) {
+    case UBX_MSG_NONE:
+        return 0;
+        break;
+    case UBX_MSG_ANY:
+        return 1;
+        break;
+    case UBX_MSG_ACK_NACK:
+        // Saves having to make a whole other function (ACK_NACK should be used very infrequently)
+        return m10spg_is_type(msg, UBX_MSG_ACK) || m10spg_is_type(msg, UBX_MSG_NACK);
+        break;
+    default:
+        return MSG_HEADERS[type].class == msg->header.class && MSG_HEADERS[type].id == msg->header.id;
+    }
+    return 0;
+}
 
 /**
  * Gets the total length of a message, including checksums and sync characters
@@ -191,14 +224,13 @@ static void init_context(M10SPGContext *ctx, const SensorLocation *loc) {
     ctx->loc = loc;
 }
 
-// TODO - try this without the small reads?
 /**
  * Gets the next ublox protcol message from the reciever, reading through any non-ublox data
  * @param loc The m10spg's location on the I2C bus
  * @param msg An empty message structure, with a payload pointing at a data buffer to read the payload into
  * @param max_payload The maximum size that the payload can be (the size of the buffer pointed to by it)
  * @return int EINVAL if the buffer is too small for the message found. ETIMEOUT if the timeout expires before a
- * message is found. EBADMSG if the second sync char is not valid. EOK otherwise.
+ * message is found. EBADMSG if the recieved message is not valid (bad sync characters or bad checksum). EOK otherwise.
  */
 static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_payload) {
     uint8_t sync = 0;
@@ -231,42 +263,63 @@ static int recv_message(const SensorLocation *loc, UBXFrame *msg, uint16_t max_p
 }
 
 /**
- * Reads messages from the sensor until a message of type msg_type is read, handling registered messages
+ * Reads messages from the sensor until a message of type msg_type is read
  * @param ctx The context of a m10spg sensor
- * @param msg_type Read until a message of this type is found - messages that aren't of this type will be handled by a
- * registered handler, or ignored if none exist
- * @param buf The location to store the message of msg_type
- * @param size The size of the data buffer, should be at least large enough for any periodic messages that were
- * registered, when the function returns this is the length of the message in buf
- * @return M10SPGMessageType the type of who's payload is in buf, UBX_MSG_NONE if there was no payload to return, or -1
- * if there was an error reading/processing a message
+ * @param msg_type Read until a message of this type is found
+ * @param recv The location to store the recieved message, with an initialized payload.
+ * @param size The size of recv's payload, should be big enough for any periodic messages
+ * @return int EOK if the recieved message could be found, ENODATA if it could not be found, or another error code
+ * describing an error reading from the reciever
  */
-M10SPGMessageType m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, uint8_t *buf, size_t *size) {
-    UBXFrame recv;
-    recv.payload = buf;
+int m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, UBXFrame *recv, size_t size) {
     int retires = 0;
     do {
-        if (recv_message(ctx->loc, &recv, *size) == EOK) {
-            M10SPGMessageType recv_type = m10spg_get_payload_type(&recv);
-            if (recv_type == msg_type) {
-                *size = recv.header.length;
-                return msg_type;
+        int err = recv_message(ctx->loc, recv, size);
+        if (err == EOK) {
+            if (m10spg_is_type(recv, msg_type)) {
+                return EOK;
             }
             for (int i = 0; i < MAX_PERIODIC_MESSAGES && ctx->handlers[i].type != UBX_MSG_NONE; i++) {
-                if (ctx->handlers[i].type == recv_type) {
+                if (m10spg_is_type(recv, ctx->handlers[i].type)) {
                     // Handle the message
-                    ctx->handlers[i].handler(&recv, recv_type);
+                    ctx->handlers[i].handler(recv);
                     // TODO - consider checking the error message, taking some action on it
                     break;
                 }
             }
         }
-        // If no data, retry until retires. If error that isn't fatal, retry until retires
-        // TODO - checking of err should be improved using new recv_message definition
+#ifdef __M10SPG_DEBUG__
+        else {
+            fprintf(stderr, "Error reading from reciever: %s", strerror(err));
+        }
+#endif
     } while (++retires < READ_MAX_RETIRES);
     // No data in buf
-    *size = 0;
-    return UBX_MSG_NONE;
+    return ENODATA;
+}
+
+/**
+ * Sends a valset configuration message to the reciever
+ * @param ctx The context of the m10spg sensor to configure
+ * @param msg A valset message that has been initialized and had configuration keys added to it using the provided
+ * functions
+ * @return int 0 if the
+ */
+static int send_valset_message(M10SPGContext *ctx, UBXFrame *msg) {
+    calculate_checksum(msg, &msg->checksum_a, &msg->checksum_b);
+    int err = send_message(ctx->loc, msg);
+    return_err(err);
+    UBXAckPayload ack_payload;
+    UBXFrame ack_msg;
+    ack_msg.payload = &ack_payload;
+    if (m10spg_read(ctx, UBX_MSG_ACK_NACK, &ack_msg, sizeof(ack_payload)) == 0) {
+        if (m10spg_is_type(&ack_msg, UBX_MSG_ACK)) {
+            return EOK;
+        } else {
+            return ECANCELED;
+        }
+    }
+    return EIO;
 }
 
 /**
@@ -279,7 +332,6 @@ M10SPGMessageType m10spg_read(M10SPGContext *ctx, M10SPGMessageType msg_type, ui
 static int enable_periodic_message(M10SPGContext *ctx, M10SPGMessageType type) {
     UBXFrame msg;
     UBXValsetPayload valset_payload;
-    UBXAckPayload ack_payload;
     msg.payload = &valset_payload;
     init_valset_message(&msg, RAM_LAYER);
     uint32_t config_key = 0;
@@ -293,9 +345,7 @@ static int enable_periodic_message(M10SPGContext *ctx, M10SPGMessageType type) {
         return ENOSYS;
     };
     add_valset_item(&msg, config_key, &config_value, UBX_TYPE_U1);
-    int err = send_message(ctx->loc, &msg);
-    return_err(err);
-    return m10spg_read(ctx, UBX_MSG_ACK, (uint8_t *)&ack_payload, sizeof(ack_payload));
+    return send_valset_message(ctx, &msg);
 }
 
 /**
@@ -314,29 +364,10 @@ int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M
             return_err(err);
             ctx->handlers[i].type = msg_type;
             ctx->handlers[i].handler = handler;
+            // TODO - return here?
         }
     }
 }
-
-// TODO - add description
-static int send_valset_message(M10SPGContext *ctx, UBXFrame *msg) {
-    calculate_checksum(msg, &msg->checksum_a, &msg->checksum_b);
-    int err = send_message(ctx->loc, msg);
-    return_err(err);
-
-    UBXAckPayload ack_payload;
-    size_t ack_size = sizeof(ack_payload);
-    err = m10spg_read(ctx, UBX_MSG_ACK_NACK, (uint8_t *)&ack_payload, &ack_size);
-    if (err == ENODATA) {
-        // Configuration didn't work
-        return ECANCELED;
-    }
-    // TODO - check the returned message type
-    return err;
-}
-
-// TODO - implement this function
-M10SPGMessageType m10spg_get_payload_type(UBXFrame *msg) { return UBX_MSG_NAV_PVT; }
 
 /**
  * Prepares the M10SPG for reading and sets up its context

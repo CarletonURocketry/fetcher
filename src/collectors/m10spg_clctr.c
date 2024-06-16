@@ -11,7 +11,7 @@
         log_print(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                             \
     }
 
-int m10spg_pvt_handler(UBXFrame *msg, M10SPGMessageType type);
+int m10spg_pvt_handler(UBXFrame *msg);
 // Share the sensor queue - not thread safe if different m10spg_collector threads use different message queues
 mqd_t sensor_q;
 
@@ -42,13 +42,12 @@ void *m10spg_collector(void *args) {
             continue;
         }
     } while (err != EOK);
+    UBXFrame msg;
     UBXNavPVTPayload payload;
+    msg.payload = &payload;
     for (;;) {
-        size_t payload_size = sizeof(payload);
         // Clear out our read buffer (ask for nothing back)
-        err = m10spg_read(&ctx, UBX_MSG_NONE, (uint8_t *)&payload, &payload_size);
-        // TODO - Check err
-        // Wait until the next navigation epoch
+        m10spg_read(&ctx, UBX_MSG_NONE, &msg, sizeof(payload));
         m10spg_sleep_epoch(&ctx);
     }
     log_print(stderr, LOG_ERROR, "M10SPG exited unexpectedly: %s", strerror(err));
@@ -56,9 +55,9 @@ void *m10spg_collector(void *args) {
 }
 
 /** A function implementing the M10SPGMessageHandler definition, for handling PVT messages (not thread safe currently)*/
-int m10spg_pvt_handler(UBXFrame *msg, M10SPGMessageType type) {
+int m10spg_pvt_handler(UBXFrame *msg) {
     // TODO - double check the type ourselves
-    if (type != UBX_MSG_NAV_PVT) {
+    if (!m10spg_is_type(msg, UBX_MSG_NAV_PVT)) {
         log_print(stderr, LOG_ERROR, "Handler was given a type it cannot handle, configuration error");
         return -1;
     }
