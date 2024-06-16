@@ -11,9 +11,13 @@
         log_print(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                             \
     }
 
+int m10spg_pvt_handler(UBXFrame *msg, M10SPGMessageType type);
+// Share the sensor queue - not thread safe if different m10spg_collector threads use different message queues
+mqd_t sensor_q;
+
 void *m10spg_collector(void *args) {
     /* Open message queue. */
-    mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
+    sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
         log_print(stderr, LOG_ERROR, "M10SPG collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
                   strerror(errno));
@@ -25,66 +29,72 @@ void *m10spg_collector(void *args) {
         .addr = {.addr = (clctr_args(args)->addr), .fmt = I2C_ADDRFMT_7BIT},
     };
     M10SPGContext ctx;
-
     int err;
     do {
         err = m10spg_open(&ctx, &loc);
         if (err != EOK) {
             log_print(stderr, LOG_ERROR, "Could not open M10SPG: %s", strerror(err));
-            return (void *)((uint64_t)err);
+            continue;
+        }
+        err = m10spg_register_periodic(&ctx, m10spg_pvt_handler, UBX_MSG_NAV_PVT);
+        if (err != EOK) {
+            log_print(stderr, LOG_ERROR, "Could not configure periodic message: %s", strerror(err));
+            continue;
         }
     } while (err != EOK);
 
     for (;;) {
         UBXNavPVTPayload payload;
-        common_t msg;
-        err = m10spg_read(&ctx, UBX_NAV_PVT, (uint8_t *)&payload, sizeof(payload));
-        // Check if we could send command
-        if (err == ENODATA) {
-            // Nothing in the queue yet, but we expect there to be something soon, so keep reading
-            continue;
-        } else if (err) {
-            log_print(stderr, LOG_ERROR, "Could not send command to M10SPG: %s", strerror(err));
-            wait_for_meas(&ctx);
-            continue;
-        }
-        
-        // Skip this payload if the fix isn't valid
-        if (!(payload.flags & GNSS_FIX_OK)) {
-            // Don't bother looking at data if it is going to be invalid
-            log_print(stderr, LOG_WARN, "M10SPG fix is invalid, skipping this payload");
-            wait_for_meas(&ctx);
-            continue;
-        }
-        log_print(stderr, LOG_INFO, "M10SPG current fix is: %d", payload.fixType);
-
-
-        // Only transmit data that is valid
-        switch (payload.fixType) {
-        case GPS_3D_FIX:
-            msg.type = TAG_ALTITUDE_SEA;
-            msg.data.FLOAT = (((float)payload.hMSL) / ALT_SCALE_TO_METERS);
-            send_msg(sensor_q, msg, 2);
-            // FALL THROUGH
-        case GPS_FIX_DEAD_RECKONING:
-            // FALL THROUGH
-        case GPS_2D_FIX:
-            // FALL THROUGH
-        case GPS_DEAD_RECKONING:
-            msg.type = TAG_COORDS;
-            msg.data.VEC2D_I32.x = payload.lat;
-            msg.data.VEC2D_I32.y = payload.lon;
-            send_msg(sensor_q, msg, 3);
-            break;
-        case GPS_TIME_ONLY:
-            break;
-        case GPS_NO_FIX:
-            break;
-        default:
-            break;
-        }
-        wait_for_meas(&ctx);
+        // Clear out our read buffer (ask for nothing back)
+        err = m10spg_read(&ctx, UBX_MSG_NONE, (uint8_t *)&payload, sizeof(payload));
+        // TODO - Check err
+        // Wait until the next navigation epoch
+        m10spg_sleep_epoch(&ctx);
     }
     log_print(stderr, LOG_ERROR, "M10SPG exited unexpectedly: %s", strerror(err));
     return (void *)((uint64_t)err);
+}
+
+/** A function implementing the M10SPGMessageHandler definition, for handling PVT messages (not thread safe currently)*/
+int m10spg_pvt_handler(UBXFrame *msg, M10SPGMessageType type) {
+    // TODO - double check the type ourselves
+    if (type != UBX_MSG_NAV_PVT) {
+        log_print(stderr, LOG_ERROR, "Handler was given a type it cannot handle, configuration error");
+        return -1;
+    }
+    UBXNavPVTPayload *payload = msg->payload;
+    log_print(stderr, LOG_INFO, "M10SPG current fix is: %d", payload->fixType);
+
+    // Skip this payload if the fix isn't valid
+    if (!(payload->flags & GNSS_FIX_OK)) {
+        log_print(stderr, LOG_WARN, "M10SPG fix is invalid, skipping this payload");
+        return 0;
+    }
+
+    // Only transmit data that is valid
+    common_t to_send;
+    switch (payload->fixType) {
+    case GPS_3D_FIX:
+        to_send.type = TAG_ALTITUDE_SEA;
+        to_send.data.FLOAT = (((float)payload->hMSL) / ALT_SCALE_TO_METERS);
+        send_msg(sensor_q, to_send, 2);
+        // FALL THROUGH
+    case GPS_FIX_DEAD_RECKONING:
+        // FALL THROUGH
+    case GPS_2D_FIX:
+        // FALL THROUGH
+    case GPS_DEAD_RECKONING:
+        to_send.type = TAG_COORDS;
+        to_send.data.VEC2D_I32.x = payload->lat;
+        to_send.data.VEC2D_I32.y = payload->lon;
+        send_msg(sensor_q, to_send, 3);
+        break;
+    case GPS_TIME_ONLY:
+        break;
+    case GPS_NO_FIX:
+        break;
+    default:
+        break;
+    }
+    return 0;
 }

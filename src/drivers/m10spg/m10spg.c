@@ -35,6 +35,8 @@
 /** How long to wait after issuing a restart command, in usec */
 #define RESTART_SLEEP_TIME 500000
 
+// TODO - add a lookup table for types
+
 /**
  * Gets the total length of a message, including checksums and sync characters
  * @return uint16_t
@@ -144,6 +146,7 @@ int read_bytes(const SensorLocation *loc, void *buf, size_t nbytes) {
     return EOK;
 }
 
+// TODO - auto assembly of our packages?
 /**
  * Sends a UBX message
  * @param loc The m10spg's location on the I2C bus
@@ -174,11 +177,12 @@ static int send_message(const SensorLocation *loc, const UBXFrame *msg) {
  */
 static void init_context(M10SPGContext *ctx, const SensorLocation *loc) {
     for (int i = 0; i < MAX_PERIODIC_MESSAGES; i++) {
-        ctx->handlers[i].type = 0;
+        ctx->handlers[i].type = UBX_MSG_NONE;
     }
     ctx->loc = loc;
 }
 
+// TODO - try this without the small reads?
 /**
  * Gets the next ublox protcol message from the reciever, reading through any non-ublox data
  * @param loc The m10spg's location on the I2C bus
@@ -251,7 +255,7 @@ static int enable_periodic_message(M10SPGContext *ctx, M10SPGMessageType type) {
     uint8_t config_value = 1;
 
     switch (type) {
-    case UBX_NAV_PVT:
+    case UBX_MSG_NAV_PVT:
         config_key = UBX_MSGOUT_I2C_NAV_PVT;
         break;
     default:
@@ -260,7 +264,7 @@ static int enable_periodic_message(M10SPGContext *ctx, M10SPGMessageType type) {
     add_valset_item(&msg, config_key, &config_value, UBX_TYPE_U1);
     int err = send_message(ctx->loc, &msg);
     return_err(err);
-    return m10spg_read(ctx, UBX_ACK, (uint8_t *)&ack_payload, sizeof(ack_payload));
+    return m10spg_read(ctx, UBX_MSG_ACK, (uint8_t *)&ack_payload, sizeof(ack_payload));
 }
 
 /**
@@ -272,10 +276,9 @@ static int enable_periodic_message(M10SPGContext *ctx, M10SPGMessageType type) {
  * @return int 0 if the periodic message was enabled
  */
 int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M10SPGMessageType msg_type) {
-    int i;
-    for (i = 0; i < MAX_PERIODIC_MESSAGES; i++) {
+    for (int i = 0; i < MAX_PERIODIC_MESSAGES; i++) {
         // Made it to a unfilled handler spot or overwrite an existing handler
-        if (ctx->handlers[i].type == UBX_NO_MESSAGE || ctx->handlers[i].type == msg_type) {
+        if (ctx->handlers[i].type == UBX_MSG_NONE || ctx->handlers[i].type == msg_type) {
             int err = enable_periodic_message(ctx, msg_type);
             return_err(err);
             ctx->handlers[i].type = msg_type;
@@ -286,17 +289,21 @@ int m10spg_register_periodic(M10SPGContext *ctx, M10SPGMessageHandler handler, M
 
 static int send_valset_message(M10SPGContext *ctx, UBXFrame *msg) {
     calculate_checksum(msg, &msg->checksum_a, &msg->checksum_b);
-    int err = send_message(ctx->loc, &msg);
+    int err = send_message(ctx->loc, msg);
     return_err(err);
 
     UBXAckPayload ack_payload;
-    err = m10spg_read(ctx, UBX_ACK, (uint8_t *)&ack_payload, sizeof(ack_payload));
+    err = m10spg_read(ctx, UBX_MSG_ACK_NACK, (uint8_t *)&ack_payload, sizeof(ack_payload));
     if (err == ENODATA) {
         // Configuration didn't work
         return ECANCELED;
     }
+    // TODO - check the returned message type
     return err;
 }
+
+// TODO - implement this function
+M10SPGMessageType m10spg_get_payload_type(UBXFrame *msg) { return UBX_MSG_NAV_PVT; }
 
 /**
  * Prepares the M10SPG for reading and sets up its context
@@ -311,6 +318,7 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
     UBXValsetPayload valset_payload;
     UBXConfigResetPayload reset_payload;
 
+    // TODO - replace this with something better
     // Clear the RAM configuration to ensure our settings are the only ones being used
     msg.header.class = 0x06;
     msg.header.id = 0x04;
@@ -351,7 +359,7 @@ int m10spg_open(M10SPGContext *ctx, SensorLocation *loc) {
  * Helper function to sleep this thread until it's likely there will be a new payload in the data buffer soon
  * @param ctx The context of the m10spg sensor that should be waited for
  */
-void wait_for_meas(M10SPGContext *ctx) {
+void m10spg_sleep_epoch(M10SPGContext *ctx) {
     // Sleep the time between measurements, which should be roughly the time between packages
     usleep(UBX_NOMINAL_MEASUREMENT_RATE * 1000);
 }
