@@ -3,12 +3,6 @@
 #include "../logging-utils/logging.h"
 #include "collectors.h"
 
-union read_buffer {
-    UBXNavPositionPayload pos;
-    UBXNavVelocityPayload vel;
-    UBXNavStatusPayload stat;
-};
-
 /**
  * Helper function to simplify sending a message on the message queue
  */
@@ -17,10 +11,13 @@ union read_buffer {
         log_print(stderr, LOG_WARN, "M10SPG couldn't send message: %s.", strerror(errno));                             \
     }
 
-void *m10spg_collector(void *args) {
+int m10spg_pvt_handler(UBXFrame *msg);
+// Share the sensor queue - not thread safe if different m10spg_collector threads use different message queues
+mqd_t sensor_q;
 
+void *m10spg_collector(void *args) {
     /* Open message queue. */
-    mqd_t sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
+    sensor_q = mq_open(SENSOR_QUEUE, O_WRONLY);
     if (sensor_q == -1) {
         log_print(stderr, LOG_ERROR, "M10SPG collector could not open message queue '%s': '%s'", SENSOR_QUEUE,
                   strerror(errno));
@@ -31,84 +28,71 @@ void *m10spg_collector(void *args) {
         .bus = clctr_args(args)->bus,
         .addr = {.addr = (clctr_args(args)->addr), .fmt = I2C_ADDRFMT_7BIT},
     };
-
+    M10SPGContext ctx;
     int err;
     do {
-        err = m10spg_open(&loc);
+        err = m10spg_open(&ctx, &loc);
         if (err != EOK) {
             log_print(stderr, LOG_ERROR, "Could not open M10SPG: %s", strerror(err));
-            return (void *)((uint64_t)err);
+            continue;
+        }
+        err = m10spg_register_periodic(&ctx, m10spg_pvt_handler, UBX_MSG_NAV_PVT);
+        if (err != EOK) {
+            log_print(stderr, LOG_ERROR, "Could not configure periodic message: %s", strerror(err));
+            continue;
         }
     } while (err != EOK);
-
+    UBXFrame msg;
+    UBXNavPVTPayload payload;
+    msg.payload = &payload;
     for (;;) {
-        // TODO - Don't read if the next epoch hasn't happened
-        union read_buffer buf;
-        GPSFixType fix_type = GPS_NO_FIX;
-        common_t msg;
-        err = m10spg_send_command(&loc, UBX_NAV_STAT, &buf, sizeof(UBXNavStatusPayload));
+        // Clear out our read buffer (ask for nothing back)
+        m10spg_read(&ctx, UBX_MSG_NONE, &msg, sizeof(payload));
+        m10spg_sleep_epoch();
+    }
+    log_print(stderr, LOG_ERROR, "M10SPG exited unexpectedly: %s", strerror(err));
+    return (void *)((uint64_t)err);
+}
 
-        // Check if we could send command
-        if (err) {
-            log_print(stderr, LOG_ERROR, "Could not send command to M10SPG: %s", strerror(err));
-            continue;
-        }
+/** A function implementing the M10SPGMessageHandler definition, for handling PVT messages (not thread safe currently)*/
+int m10spg_pvt_handler(UBXFrame *msg) {
+    if (!m10spg_is_type(msg, UBX_MSG_NAV_PVT)) {
+        log_print(stderr, LOG_ERROR, "Handler was given a type it cannot handle, configuration error");
+        return -1;
+    }
+    UBXNavPVTPayload *payload = msg->payload;
+    log_print(stderr, LOG_INFO, "M10SPG current fix is: %d", payload->fixType);
 
-        fix_type = buf.stat.gpsFix;
-
-        // Don't bother reading any information if there's no fix
-        if (fix_type == GPS_NO_FIX) {
-            log_print(stderr, LOG_WARN, "M10SPG could not get fix, fix type: %d", fix_type);
-            continue;
-        }
-
-        // Read position
-        err = m10spg_send_command(&loc, UBX_NAV_POSLLH, &buf, sizeof(UBXNavPositionPayload));
-        if (err) {
-            log_print(stderr, LOG_ERROR, "M10SPG failed to read position: %s", strerror(err));
-            continue;
-        }
-
-        switch (fix_type) {
-        case GPS_3D_FIX:
-            msg.type = TAG_ALTITUDE_SEA;
-            msg.data.FLOAT = (((float)buf.pos.hMSL) / ALT_SCALE_TO_METERS);
-            send_msg(sensor_q, msg, 2);
-            // FALL THROUGH
-        case GPS_FIX_DEAD_RECKONING:
-            // FALL THROUGH
-        case GPS_2D_FIX:
-            // FALL THROUGH
-        case GPS_DEAD_RECKONING:
-            msg.type = TAG_COORDS;
-            msg.data.VEC2D_I32.x = buf.pos.lat;
-            msg.data.VEC2D_I32.y = buf.pos.lon;
-            send_msg(sensor_q, msg, 3);
-            break;
-        case GPS_TIME_ONLY:
-            break;
-        default:
-            break;
-        }
+    // Skip this payload if the fix isn't valid
+    if (!(payload->flags & GNSS_FIX_OK)) {
+        log_print(stderr, LOG_WARN, "M10SPG fix is invalid, skipping this payload");
+        return 0;
     }
 
-    // Read velocity
-    /* err = m10spg_send_command(&loc, UBX_NAV_VELNED, &buf, sizeof(UBXNavVelocityPayload)); */
-    /* if (err == EOK) { */
-    /*     msg.type = TAG_SPEED; */
-    /*     msg.U32 = buf.vel.gSpeed; */
-    /*     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
-    /*         fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
-    /*     } */
-    /*     msg.type = TAG_COURSE; */
-    /*     msg.U32 = buf.vel.heading; */
-    /*     if (mq_send(sensor_q, (char *)&msg, sizeof(msg), 0) == -1) { */
-    /*         fprintf(stderr, "M10SPG couldn't send message: %s.\n", strerror(errno)); */
-    /*     } */
-    /* } else { */
-    /*     fprintf(stderr, "M10SPG failed to read velocity: %s\n", strerror(err)); */
-    /*     continue; */
-    /* } */
-    log_print(stderr, LOG_ERROR, "%s", strerror(err));
-    return (void *)((uint64_t)err);
+    // Only transmit data that is valid
+    common_t to_send;
+    switch (payload->fixType) {
+    case GPS_3D_FIX:
+        to_send.type = TAG_ALTITUDE_SEA;
+        to_send.data.FLOAT = (((float)payload->hMSL) / ALT_SCALE_TO_METERS);
+        send_msg(sensor_q, to_send, 2);
+        // FALL THROUGH
+    case GPS_FIX_DEAD_RECKONING:
+        // FALL THROUGH
+    case GPS_2D_FIX:
+        // FALL THROUGH
+    case GPS_DEAD_RECKONING:
+        to_send.type = TAG_COORDS;
+        to_send.data.VEC2D_I32.x = payload->lat;
+        to_send.data.VEC2D_I32.y = payload->lon;
+        send_msg(sensor_q, to_send, 3);
+        break;
+    case GPS_TIME_ONLY:
+        break;
+    case GPS_NO_FIX:
+        break;
+    default:
+        break;
+    }
+    return 0;
 }

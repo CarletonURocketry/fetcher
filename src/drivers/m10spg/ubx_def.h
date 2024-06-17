@@ -54,6 +54,22 @@ typedef struct {
     uint8_t flags; /**< Flags that describe if this time information is valid (see the interface description) */
 } UBXUTCPayload;
 
+typedef enum {
+    UBX_HARD_RESET = 0x00,      /**< Hardware reset (watchdog), immediate */
+    UBX_SOFT_RESET = 0x01,      /**< Controlled software reset (clears RAM) */
+    UBX_SOFT_GNSS_RESET = 0x02, /**< Controlled software reset, GNSS only */
+    UBX_HARD_WDT_RESET = 0x04,  /**< Hardware reset (watchdog), after shutdown */
+    UBX_STOP_GNSS = 0x08,       /** Controlled GNSS stop */
+    UBX_START_GNSS = 0x09,      /**< Controlled GNSS start */
+} UBXResetMode;
+
+/** A struct representing the UBX-CFG-RST (reset reciever) payload */
+typedef struct {
+    uint8_t navBbrMask[2]; /**< Bit fields that select what BBR data to clear (leave as 0 for a hot start) */
+    uint8_t resetMode;     /**< The type of reset to perform, of type UBXResetMode */
+    uint8_t reserved;      /**< Reserved bytes */
+} UBXConfigResetPayload;
+
 /** Max bytes to be used for valset payload items (limit of 64 items per message) */
 #define MAX_VALSET_ITEM_BYTES 128
 
@@ -64,6 +80,30 @@ typedef struct {
     uint8_t reserved[2]; /** Reserved bytes */
     uint8_t config_items[MAX_VALSET_ITEM_BYTES]; /** An array of keys and value pairs */
 } UBXValsetPayload;
+
+/** A configuration key for enabling or disabling output of NMEA messages on I2C */
+#define NMEA_I2C_OUTPUT_CONFIG_KEY 0x10720002
+
+/** A configuration key for enabling or disabling input of poll requests for NMEA messages on I2C */
+#define NMEA_I2C_INPUT_CONFIG_KEY 0x10710002
+
+/** A configuration key for selecting the platform model of the reciever */
+#define UBX_DYNMODEL_CONFIG_KEY 0x20110021
+
+/** The confirmation value for the platform model that corresponds to an airborne vehicle doing <4G of acceleration */
+#define UBX_DYNMODEL_AIR_4G 8
+
+/** The nominal time between gps measurements in milliseconds */
+#define UBX_NOMINAL_MEASUREMENT_RATE 300
+
+/** A configuration key for enabling or disabling periodic message output of the UBX-NAV-PVT message */
+#define UBX_MSGOUT_I2C_NAV_PVT 0x20910006
+
+/** A configuration key for enabling or disabling the BeiDou satellites */
+#define UBX_BSD_SIGNAL_CONFIG_KEY 0x10310022
+
+/** A configuration key for selecting the number of milliseconds between measurements */
+#define UBX_MEAS_RATE_CONFIG_KEY 0x30210001
 
 /** A struct representing the UBX-NAV-STAT (navigation status) payload */
 typedef struct {
@@ -118,6 +158,59 @@ typedef struct {
     uint32_t sAcc;   /**< Speed accuracy estimate, in cm/s */
     uint32_t cAcc;   /**< Course/heading accuracy estimate, in 0.00001 * degrees */
 } UBXNavVelocityPayload;
+
+/** A payload containing position, velocity, and time information. This payload is reccomended by UBlox over the other
+ * payloads containing position, velocity, or time information (they are only retained for backwards compatability)*/
+typedef struct {
+    uint32_t iTOW; /**< The GPS time of week of the navigation epoch that created this payload */
+    // Time information
+    uint16_t year; /**< A year from 1999 to 2099 (this can be incorrect if the chip was manufactured 20+ years ago) */
+    uint8_t month; /**< A month from 1 to 12 */
+    uint8_t day;   /**< Day of the month in the range 1 to 31 */
+    uint8_t hour;  /**< Hour of the day in the range 0 to 23 */
+    uint8_t min;   /**< Minute of the hour in the range 0 to 59 */
+    uint8_t sec;   /**< Second of the minute in the range 0 to 60 */
+    uint8_t valid; /**< Flags that describe if this time information is valid (see the interface description) */
+    uint32_t tAcc; /**< A time accuracy measurement for the UTC time, in nanoseconds */
+    int32_t nano;  /**< A time correction for the date that follows in this payload, in nanoseconds */
+
+    // Status information
+    uint8_t fixType; /**< The type of fix */
+    uint8_t flags;   /**< Fix status flags */
+    uint8_t flags2;  /**< Additional flags for UTC time validity */
+    uint8_t numSV;   /**< The number of satellites used in solution */
+
+    // Position information
+    int32_t lon;    /**< Longitude, in 0.0000001 * degrees */
+    int32_t lat;    /**< Latitude, in 0.0000001 * degrees */
+    int32_t height; /**< Height above ellipsoid in millimeters */
+    int32_t hMSL;   /**< Height above mean sea level in millimeters */
+    uint32_t hAcc;  /**< Horizontal accuracy measurement in millimeters */
+    uint32_t vAcc;  /**< Vertical accuracy measurement in millimeters */
+
+    // Velocity information
+    int32_t velN;     /**< North velocity component, in cm/s */
+    int32_t velE;     /**< East velocity component, in cm/s */
+    int32_t velD;     /**< Down velocity component, in cm/s */
+    int32_t gSpeed;   /**< Ground speed (2-D), in cm/s */
+    int32_t headMot;  /**< Heading of motion (2-D), in 1e-5 degrees */
+    uint32_t sAcc;    /**< Speed accuracy estimate, in cm/s */
+    uint32_t headAcc; /**< Course/heading accuracy estimate, in 1e-5 degrees */
+
+    uint16_t pDOP;   /**< Position dilution of precision (3D) in increments of 0.01, < 1 is ideal, > 20 is useless  */
+    uint16_t flags3; /**< Additional flags related to position accuracy */
+
+    // Extra information
+    uint8_t reserved[4]; /**< Reserved bytes */
+    int32_t headVeh;     /**< Heading of vehicle (2D), not enabled on the M10SPG */
+    int16_t magDec;      /**< Magnetic declination, not supported on M10SPG */
+    uint16_t magAcc;     /**< Magnetic declination accuracy, not supported on M10SPG*/
+} UBXNavPVTPayload;
+
+/** Bit masks for the "flags" member of the UBX-NAV-PVT message */
+typedef enum {
+    GNSS_FIX_OK = 0x01, /**< A single bit flag, the result of this mask is a 1 if the current fix is valid */
+} UBXFlagsMasks;
 
 /** A struct representing the UBX-ACK-ACK/UBX-ACK-NACK (acknowledgement) payload */
 typedef struct {
