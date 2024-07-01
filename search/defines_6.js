@@ -8,5 +8,6 @@ var searchData=
   ['max_5fsensor_5fname_5',['MAX_SENSOR_NAME',['../main_8c.html#afadb863a7dece64ab5df54bcc753298d',1,'main.c']]],
   ['max_5fsensors_6',['MAX_SENSORS',['../main_8c.html#aa3d1fc2927eec213e6b5f9e854c392d2',1,'main.c']]],
   ['max_5fvalset_5fitem_5fbytes_7',['MAX_VALSET_ITEM_BYTES',['../ubx__def_8h.html#a46e8941a4cd8227a8abe927bef85ffb3',1,'ubx_def.h']]],
-  ['ms5611_5fcoefficient_5fcount_8',['MS5611_COEFFICIENT_COUNT',['../ms5611_8h.html#aff590d73c3bf9725877c9e2ab03ec365',1,'ms5611.h']]]
+  ['measurement_5frate_5fconfig_5fkey_8',['MEASUREMENT_RATE_CONFIG_KEY',['../ubx__def_8h.html#aeede6a964f9bb1e311780b94a61a0c2e',1,'ubx_def.h']]],
+  ['ms5611_5fcoefficient_5fcount_9',['MS5611_COEFFICIENT_COUNT',['../ms5611_8h.html#aff590d73c3bf9725877c9e2ab03ec365',1,'ms5611.h']]]
 ];

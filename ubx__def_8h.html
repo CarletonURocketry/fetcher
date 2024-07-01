@@ -106,6 +106,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXUTCPayload.html">UBXUTCPayload</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXConfigResetPayload.html">UBXConfigResetPayload</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXValsetPayload.html">UBXValsetPayload</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXNavStatusPayload.html">UBXNavStatusPayload</a></td></tr>
@@ -121,6 +123,16 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a46e8941a4cd8227a8abe927bef85ffb3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#a46e8941a4cd8227a8abe927bef85ffb3">MAX_VALSET_ITEM_BYTES</a>&#160;&#160;&#160;128</td></tr>
 <tr class="separator:a46e8941a4cd8227a8abe927bef85ffb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a368d519b930386ba0d39e516a65d82ef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#a368d519b930386ba0d39e516a65d82ef">NMEA_I2C_OUTPUT_CONFIG_KEY</a>&#160;&#160;&#160;0x10720002</td></tr>
+<tr class="separator:a368d519b930386ba0d39e516a65d82ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8286a38d7c7ce797b8ba708fc15dcf7b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#a8286a38d7c7ce797b8ba708fc15dcf7b">NMEA_I2C_INPUT_CONFIG_KEY</a>&#160;&#160;&#160;0x10710002</td></tr>
+<tr class="separator:a8286a38d7c7ce797b8ba708fc15dcf7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb2a0552fcd93e994972009d7fd06f8a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#abb2a0552fcd93e994972009d7fd06f8a">DYNMODEL_CONFIG_KEY</a>&#160;&#160;&#160;0x20110021</td></tr>
+<tr class="separator:abb2a0552fcd93e994972009d7fd06f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af90463d0fcb3d08a45993d0d61416749"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#af90463d0fcb3d08a45993d0d61416749">BSD_SIGNAL_CONFIG_KEY</a>&#160;&#160;&#160;0x10310022</td></tr>
+<tr class="separator:af90463d0fcb3d08a45993d0d61416749"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeede6a964f9bb1e311780b94a61a0c2e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#aeede6a964f9bb1e311780b94a61a0c2e">MEASUREMENT_RATE_CONFIG_KEY</a>&#160;&#160;&#160;0x30210001</td></tr>
+<tr class="separator:aeede6a964f9bb1e311780b94a61a0c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfe3dcaa6f7a901a62f45747f80460cc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#abfe3dcaa6f7a901a62f45747f80460cc">LAT_SCALE_TO_DEGREES</a>&#160;&#160;&#160;1e7f</td></tr>
 <tr class="separator:abfe3dcaa6f7a901a62f45747f80460cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4108b1f1a7d5a3b9c9e68682a217f07"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#ac4108b1f1a7d5a3b9c9e68682a217f07">LON_SCALE_TO_DEGREES</a>&#160;&#160;&#160;1e7f</td></tr>
@@ -141,6 +153,17 @@ Enumerations</h2></td></tr>
 , <a class="el" href="ubx__def_8h.html#ac59c3c9dfa29a546a7098ada548ae889afdbde4860ac581ad9da74a4194d09030">UBX_TYPE_U4</a> = 4
  }</td></tr>
 <tr class="separator:ac59c3c9dfa29a546a7098ada548ae889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae6ef3ded72ebb53d2b4d62f35882951"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951">UBXResetMode</a> { <br />
+&#160;&#160;<a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951a3cc5c9ab37c0c358d8fafed622b89b8c">UBX_HARD_RESET</a> = 0x00
+, <a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951a5b613e769a6878c459890582d882008a">UBX_SOFT_RESET</a> = 0x01
+, <a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951a699602fb9aed402fee8cea58ce849767">UBX_SOFT_GNSS_RESET</a> = 0x02
+, <a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951ae5753926dc70cfd758d0b945665663f1">UBX_HARD_WDT_RESET</a> = 0x04
+, <br />
+&#160;&#160;<a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951a90856cd29fdba69cf825e1d984e72420">UBX_STOP_GNSS</a> = 0x08
+, <a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951acdddad638de52c8afc7b986722e26060">UBX_START_GNSS</a> = 0x09
+<br />
+ }</td></tr>
+<tr class="separator:aae6ef3ded72ebb53d2b4d62f35882951"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5593a1fbaa68a265a62fd586ee2523c0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0">GPSFixType</a> { <br />
 &#160;&#160;<a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0a8f223f7b67de244b4ba89af487e7fc81">GPS_NO_FIX</a> = 0x00
 , <a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0afbd83fa9459731bd8f2c7d72d866ea9a">GPS_DEAD_RECKONING</a> = 0x01
@@ -166,6 +189,36 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >A conversion constant to go from the scale of UBX altitude (mm) to meters </p>
+
+</div>
+</div>
+<a id="af90463d0fcb3d08a45993d0d61416749" name="af90463d0fcb3d08a45993d0d61416749"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af90463d0fcb3d08a45993d0d61416749">&#9670;&nbsp;</a></span>BSD_SIGNAL_CONFIG_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BSD_SIGNAL_CONFIG_KEY&#160;&#160;&#160;0x10310022</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A configuration key for enabling or disabling the BeiDou satellites </p>
+
+</div>
+</div>
+<a id="abb2a0552fcd93e994972009d7fd06f8a" name="abb2a0552fcd93e994972009d7fd06f8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb2a0552fcd93e994972009d7fd06f8a">&#9670;&nbsp;</a></span>DYNMODEL_CONFIG_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DYNMODEL_CONFIG_KEY&#160;&#160;&#160;0x20110021</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A configuration key for selecting the platform model of the reciever </p>
 
 </div>
 </div>
@@ -211,6 +264,51 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Max bytes to be used for valset payload items (limit of 64 items per message) </p>
+
+</div>
+</div>
+<a id="aeede6a964f9bb1e311780b94a61a0c2e" name="aeede6a964f9bb1e311780b94a61a0c2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeede6a964f9bb1e311780b94a61a0c2e">&#9670;&nbsp;</a></span>MEASUREMENT_RATE_CONFIG_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MEASUREMENT_RATE_CONFIG_KEY&#160;&#160;&#160;0x30210001</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A configuration key for selecting the number of milliseconds between measurements </p>
+
+</div>
+</div>
+<a id="a8286a38d7c7ce797b8ba708fc15dcf7b" name="a8286a38d7c7ce797b8ba708fc15dcf7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8286a38d7c7ce797b8ba708fc15dcf7b">&#9670;&nbsp;</a></span>NMEA_I2C_INPUT_CONFIG_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NMEA_I2C_INPUT_CONFIG_KEY&#160;&#160;&#160;0x10710002</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A configuration key for enabling or disabling input of poll requests for NMEA messages on I2C </p>
+
+</div>
+</div>
+<a id="a368d519b930386ba0d39e516a65d82ef" name="a368d519b930386ba0d39e516a65d82ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a368d519b930386ba0d39e516a65d82ef">&#9670;&nbsp;</a></span>NMEA_I2C_OUTPUT_CONFIG_KEY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NMEA_I2C_OUTPUT_CONFIG_KEY&#160;&#160;&#160;0x10720002</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >A configuration key for enabling or disabling output of NMEA messages on I2C </p>
 
 </div>
 </div>
@@ -262,6 +360,33 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="a99a30b5292848ef9d009df8f1ea7d953a9f76ae7800dea63e4b7dd67f14fc13a4" name="a99a30b5292848ef9d009df8f1ea7d953a9f76ae7800dea63e4b7dd67f14fc13a4"></a>BBR_LAYER&#160;</td><td class="fielddoc"><p >The battery backed memory configuration - not cleared unless the backup battery removed </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a99a30b5292848ef9d009df8f1ea7d953a8e076e4f8c1d86316f5fbe2add80880e" name="a99a30b5292848ef9d009df8f1ea7d953a8e076e4f8c1d86316f5fbe2add80880e"></a>FLASH_LAYER&#160;</td><td class="fielddoc"><p >The flash configuration - does not exist on the M10 MAX </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="aae6ef3ded72ebb53d2b4d62f35882951" name="aae6ef3ded72ebb53d2b4d62f35882951"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae6ef3ded72ebb53d2b4d62f35882951">&#9670;&nbsp;</a></span>UBXResetMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951">UBXResetMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aae6ef3ded72ebb53d2b4d62f35882951a3cc5c9ab37c0c358d8fafed622b89b8c" name="aae6ef3ded72ebb53d2b4d62f35882951a3cc5c9ab37c0c358d8fafed622b89b8c"></a>UBX_HARD_RESET&#160;</td><td class="fielddoc"><p >Hardware reset (watchdog), immediate </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aae6ef3ded72ebb53d2b4d62f35882951a5b613e769a6878c459890582d882008a" name="aae6ef3ded72ebb53d2b4d62f35882951a5b613e769a6878c459890582d882008a"></a>UBX_SOFT_RESET&#160;</td><td class="fielddoc"><p >Controlled software reset (clears RAM) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aae6ef3ded72ebb53d2b4d62f35882951a699602fb9aed402fee8cea58ce849767" name="aae6ef3ded72ebb53d2b4d62f35882951a699602fb9aed402fee8cea58ce849767"></a>UBX_SOFT_GNSS_RESET&#160;</td><td class="fielddoc"><p >Controlled software reset, GNSS only </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aae6ef3ded72ebb53d2b4d62f35882951ae5753926dc70cfd758d0b945665663f1" name="aae6ef3ded72ebb53d2b4d62f35882951ae5753926dc70cfd758d0b945665663f1"></a>UBX_HARD_WDT_RESET&#160;</td><td class="fielddoc"><p >Hardware reset (watchdog), after shutdown </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aae6ef3ded72ebb53d2b4d62f35882951a90856cd29fdba69cf825e1d984e72420" name="aae6ef3ded72ebb53d2b4d62f35882951a90856cd29fdba69cf825e1d984e72420"></a>UBX_STOP_GNSS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aae6ef3ded72ebb53d2b4d62f35882951acdddad638de52c8afc7b986722e26060" name="aae6ef3ded72ebb53d2b4d62f35882951acdddad638de52c8afc7b986722e26060"></a>UBX_START_GNSS&#160;</td><td class="fielddoc"><p >Controlled GNSS stop Controlled GNSS start </p>
 </td></tr>
 </table>
 

@@ -1,8 +1,8 @@
 var m10spg_8c =
 [
     [ "DEFAULT_TIMEOUT", "m10spg_8c.html#aad2dd72565852b91c809cd4685833b17", null ],
-    [ "NMEA_I2C_INPUT_CONFIG_KEY", "m10spg_8c.html#a8286a38d7c7ce797b8ba708fc15dcf7b", null ],
-    [ "NMEA_I2C_OUTPUT_CONFIG_KEY", "m10spg_8c.html#a368d519b930386ba0d39e516a65d82ef", null ],
+    [ "DYNMODEL_AIR_4G", "m10spg_8c.html#ad0f81c590370f6b47f7a76c7d34471d6", null ],
+    [ "NOMINAL_MEASUREMENT_RATE", "m10spg_8c.html#ad2eaff7c5a58caf0bfcd5ba0d0c91a23", null ],
     [ "RECV_SLEEP_TIME", "m10spg_8c.html#afd0dee75fc4298eba0b02d3d0063b773", null ],
     [ "return_err", "m10spg_8c.html#a27755b354cac0ca34fbdb8ffd6b0f34c", null ],
     [ "SYNC_ONE", "m10spg_8c.html#ad70d33b01aa24cadbb95ac4b4b11926e", null ],

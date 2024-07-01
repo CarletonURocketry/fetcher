@@ -12,6 +12,7 @@ var annotated_dup =
     [ "SensorTagData", "structSensorTagData.html", "structSensorTagData" ],
     [ "SensorTagList", "structSensorTagList.html", "structSensorTagList" ],
     [ "UBXAckPayload", "structUBXAckPayload.html", "structUBXAckPayload" ],
+    [ "UBXConfigResetPayload", "structUBXConfigResetPayload.html", "structUBXConfigResetPayload" ],
     [ "UBXFrame", "structUBXFrame.html", "structUBXFrame" ],
     [ "UBXHeader", "structUBXHeader.html", "structUBXHeader" ],
     [ "UBXNavPositionPayload", "structUBXNavPositionPayload.html", "structUBXNavPositionPayload" ],

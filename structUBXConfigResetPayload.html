@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>fetcher: Globals</title>
+<title>fetcher: UBXConfigResetPayload Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,7 +68,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('globals_enum.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structUBXConfigResetPayload.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -86,31 +86,74 @@ $(document).ready(function(){initNavTree('globals_enum.html',''); initResizable(
 </iframe>
 </div>
 
+<div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
+  <div class="headertitle"><div class="title">UBXConfigResetPayload Struct Reference</div></div>
+</div><!--header-->
 <div class="contents">
-&#160;<ul>
-<li>accel_fsr_e&#160;:&#160;<a class="el" href="lsm6dso32_8h.html#aec8501b935143099e5f729dee221a81e">lsm6dso32.h</a></li>
-<li>accel_odr_e&#160;:&#160;<a class="el" href="lsm6dso32_8h.html#a51182b854acfdb10a5c2e0e3f64111ed">lsm6dso32.h</a></li>
-<li>GPSFixType&#160;:&#160;<a class="el" href="ubx__def_8h.html#a5593a1fbaa68a265a62fd586ee2523c0">ubx_def.h</a></li>
-<li>gyro_fsr_e&#160;:&#160;<a class="el" href="lsm6dso32_8h.html#a83acdc0eb37e8bfe0c2ae2348ded0a90">lsm6dso32.h</a></li>
-<li>gyro_odr_e&#160;:&#160;<a class="el" href="lsm6dso32_8h.html#a26c87097ac3c2dcd9598373cca75599a">lsm6dso32.h</a></li>
-<li>imu_reg&#160;:&#160;<a class="el" href="lsm6dso32_8c.html#a5ab5accf67ce9df417d9b8c1a5865677">lsm6dso32.c</a></li>
-<li>M10SPG_cmd_t&#160;:&#160;<a class="el" href="m10spg_8h.html#a22d84dde5089d12b98fd352b213a663a">m10spg.h</a></li>
-<li>MS5611Cmd&#160;:&#160;<a class="el" href="ms5611_8c.html#ab828e28448fb0fa3599bf3bd0c75d455">ms5611.c</a></li>
-<li>MS5611DReg&#160;:&#160;<a class="el" href="ms5611_8c.html#a4eb37e79a3b2014efe270c4cd985cf18">ms5611.c</a></li>
-<li>MS5611Resolution&#160;:&#160;<a class="el" href="ms5611_8h.html#aab94c0c8692d1629420105ba506d49eb">ms5611.h</a></li>
-<li>pac195x_channel_e&#160;:&#160;<a class="el" href="pac195x_8h.html#a5992eaccb734effbada90916866af29d">pac195x.h</a></li>
-<li>pac195x_reg_t&#160;:&#160;<a class="el" href="pac195x_8c.html#a3cfd72c4a0fb8f5ec7ad17bf320c741d">pac195x.c</a></li>
-<li>pac195x_sm_e&#160;:&#160;<a class="el" href="pac195x_8h.html#aa7d68fc344c83b942fb4d6ebb01f20b7">pac195x.h</a></li>
-<li>SensorPrecision&#160;:&#160;<a class="el" href="sensor__api_8h.html#a39ae9cf64d9489717d5ec612e4039587">sensor_api.h</a></li>
-<li>SensorTag&#160;:&#160;<a class="el" href="sensor__api_8h.html#af3e5add5316f07be5e3f2f32afe68627">sensor_api.h</a></li>
-<li>SensorTagDType&#160;:&#160;<a class="el" href="sensor__api_8h.html#a12c516a9f3375ec72e5b9a1a2eb74b84">sensor_api.h</a></li>
-<li>sht41_cmd_e&#160;:&#160;<a class="el" href="sht41_8c.html#ae6a9c32be046813d31c4f4ca86a38dad">sht41.c</a></li>
-<li>sht41_dur_e&#160;:&#160;<a class="el" href="sht41_8h.html#aaf07070bc8a669c8d20754a4b26c20c7">sht41.h</a></li>
-<li>sht41_prec_e&#160;:&#160;<a class="el" href="sht41_8h.html#adf81795989bd3f31b5b87973be2ce143">sht41.h</a></li>
-<li>sht41_wattage_e&#160;:&#160;<a class="el" href="sht41_8h.html#a66233f8673010418619872dc555ec438">sht41.h</a></li>
-<li>UBXConfigLayer&#160;:&#160;<a class="el" href="ubx__def_8h.html#a99a30b5292848ef9d009df8f1ea7d953">ubx_def.h</a></li>
-<li>UBXResetMode&#160;:&#160;<a class="el" href="ubx__def_8h.html#aae6ef3ded72ebb53d2b4d62f35882951">ubx_def.h</a></li>
-<li>UBXValueType&#160;:&#160;<a class="el" href="ubx__def_8h.html#ac59c3c9dfa29a546a7098ada548ae889">ubx_def.h</a></li>
+
+<p><code>#include &lt;<a class="el" href="ubx__def_8h_source.html">ubx_def.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a93fa15b175453c01493a813fb28d6408"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXConfigResetPayload.html#a93fa15b175453c01493a813fb28d6408">navBbrMask</a> [2]</td></tr>
+<tr class="separator:a93fa15b175453c01493a813fb28d6408"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b85ac047dafdbff8577513ae00c838d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXConfigResetPayload.html#a2b85ac047dafdbff8577513ae00c838d">resetMode</a></td></tr>
+<tr class="separator:a2b85ac047dafdbff8577513ae00c838d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa6a85bb0f96733789878a622c706658"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structUBXConfigResetPayload.html#afa6a85bb0f96733789878a622c706658">reserved</a></td></tr>
+<tr class="separator:afa6a85bb0f96733789878a622c706658"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >A struct representing the UBX-CFG-RST (reset reciever) payload </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="a93fa15b175453c01493a813fb28d6408" name="a93fa15b175453c01493a813fb28d6408"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93fa15b175453c01493a813fb28d6408">&#9670;&nbsp;</a></span>navBbrMask</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t UBXConfigResetPayload::navBbrMask[2]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Bit fields that select what BBR data to clear (leave as 0 for a hot start) </p>
+
+</div>
+</div>
+<a id="afa6a85bb0f96733789878a622c706658" name="afa6a85bb0f96733789878a622c706658"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa6a85bb0f96733789878a622c706658">&#9670;&nbsp;</a></span>reserved</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t UBXConfigResetPayload::reserved</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reserved bytes </p>
+
+</div>
+</div>
+<a id="a2b85ac047dafdbff8577513ae00c838d" name="a2b85ac047dafdbff8577513ae00c838d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b85ac047dafdbff8577513ae00c838d">&#9670;&nbsp;</a></span>resetMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t UBXConfigResetPayload::resetMode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The type of reset to perform, of type UBXResetMode </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/drivers/m10spg/<a class="el" href="ubx__def_8h_source.html">ubx_def.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
