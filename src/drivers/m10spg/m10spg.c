@@ -30,16 +30,16 @@
 #define SYNC_TWO 0x62
 
 /** How long the recieve command for UBX messages should wait between trying to read a message, in usec */
-#define RECV_SLEEP_TIME 10000
+#define RECV_SLEEP_TIME 1000
 
 /** How long m10spg_read should wait for a response in seconds */
-#define DEFAULT_TIMEOUT 10
+#define DEFAULT_TIMEOUT 2
 
-/** A configuration key for enabling or disabling output of NMEA messages on I2C */
-#define NMEA_I2C_OUTPUT_CONFIG_KEY 0x10720002
+/** The confirmation value for the platform model that corresponds to an airborne vehicle doing <4G of acceleration */
+#define DYNMODEL_AIR_4G 8
 
-/** A configuration key for enabling or disabling input of poll requests for NMEA messages on I2C */
-#define NMEA_I2C_INPUT_CONFIG_KEY 0x10710002
+/** The nominal time between gps measurements in milliseconds */
+#define NOMINAL_MEASUREMENT_RATE 300
 
 static const UBXFrame PREMADE_MESSAGES[] = {
     [UBX_NAV_UTC] = {.header = {.class = 0x01, .id = 0x21, .length = 0x00}, .checksum_a = 0x22, .checksum_b = 0x67},
@@ -306,14 +306,40 @@ int m10spg_open(const SensorLocation *loc) {
     UBXValsetPayload valset_payload;
     UBXAckPayload ack_payload;
 
+    // Clear the RAM configuration to ensure our settings are the only ones being used
+    msg.header.class = 0x06;
+    msg.header.id = 0x04;
+    msg.header.length = 4;
+
+    UBXConfigResetPayload reset_payload;
+    reset_payload.navBbrMask[0] = 0x00;
+    reset_payload.navBbrMask[1] = 0x00;
+    reset_payload.resetMode = UBX_SOFT_RESET;
+    msg.payload = &reset_payload;
+    calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
+    send_message(loc, &msg);
+    // Has no response, sleep to wait for reset
+    sleep(1);
+
     // Configure the chip
     msg.payload = &valset_payload;
+
+    // Put our actual configuration on there
     init_valset_message(&msg, RAM_LAYER);
     uint8_t config_disabled = 0;
+    uint8_t config_dynmodel = DYNMODEL_AIR_4G;
+    uint16_t measurement_rate = NOMINAL_MEASUREMENT_RATE;
     // Disable NMEA output on I2C
     add_valset_item(&msg, (uint32_t)NMEA_I2C_OUTPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
     // Disable NMEA input on I2C
     add_valset_item(&msg, (uint32_t)NMEA_I2C_INPUT_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
+    // Set the dynamic platform model to have the maximum speed, acceleration, and height possible
+    add_valset_item(&msg, (uint32_t)DYNMODEL_CONFIG_KEY, &config_dynmodel, UBX_TYPE_U1);
+    // Set the config update rate
+    add_valset_item(&msg, (uint32_t)MEASUREMENT_RATE_CONFIG_KEY, &measurement_rate, UBX_TYPE_U2);
+    // Turn off the BDS satellites, which increases the maximum update rate, but needs a reset of the GPS subsystem
+    add_valset_item(&msg, (uint32_t)BSD_SIGNAL_CONFIG_KEY, &config_disabled, UBX_TYPE_L);
+
     calculate_checksum(&msg, &msg.checksum_a, &msg.checksum_b);
 
     int err = send_message(loc, &msg);
@@ -321,7 +347,8 @@ int m10spg_open(const SensorLocation *loc) {
 
     // Check if configuration was successful
     msg.payload = &ack_payload;
-    err = recv_message(loc, &msg, sizeof(ack_payload), 1);
+    // Longer timeout for the reboot
+    err = recv_message(loc, &msg, sizeof(ack_payload), DEFAULT_TIMEOUT);
     return_err(err);
     if (msg.header.class == 0x05) {
         if (msg.header.id == 0x01) {
@@ -331,6 +358,9 @@ int m10spg_open(const SensorLocation *loc) {
             return ECANCELED;
         }
     }
+    // Give at least 0.5 seconds for the gps subsystem to restart, because we disabled the BDS signal
+    usleep(500000);
+
     // Some other response interrupted our exchange
     return EINTR;
 }

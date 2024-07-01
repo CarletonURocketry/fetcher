@@ -37,7 +37,6 @@ void *m10spg_collector(void *args) {
         err = m10spg_open(&loc);
         if (err != EOK) {
             log_print(stderr, LOG_ERROR, "Could not open M10SPG: %s", strerror(err));
-            return (void *)((uint64_t)err);
         }
     } while (err != EOK);
 
